@@ -1,26 +1,23 @@
 package com.hanyang.dataportal.dataset.service;
 
 import com.hanyang.dataportal.dataset.domain.Dataset;
-import com.hanyang.dataportal.dataset.domain.Theme;
 import com.hanyang.dataportal.dataset.dto.req.ReqDatasetDto;
 import com.hanyang.dataportal.dataset.repository.DatasetRepository;
-import com.hanyang.dataportal.dataset.repository.ThemeRepository;
-import com.hanyang.dataportal.exception.EntityNotFoundException;
+import com.hanyang.dataportal.exception.CustomException.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class DatasetService {
 
     private final DatasetRepository datasetRepository;
-    private final ThemeRepository themeRepository;
+
 
     public Dataset find(Long id){
-        return  datasetRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return  datasetRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("해당 Dataset은 존재하지 않습니다."));
     }
 
     //datasetList 가져오기
@@ -31,20 +28,10 @@ public class DatasetService {
 
     //dataset 저장
     //datasetId return
-    public Dataset postDataset(ReqDatasetDto reqDatasetDto){
-
-        List<Theme> savedThemes = reqDatasetDto.getThemes()
-                .stream()
-                .map(Theme::new)
-                .map(themeRepository::save)
-                .collect(Collectors.toList());
-
+    public void postDataset(ReqDatasetDto reqDatasetDto){
         Dataset dataset = reqDatasetDto.toEntity();
-        dataset.setThemes(savedThemes);
+        datasetRepository.save(dataset);
 
-        Dataset newDataset = datasetRepository.save(dataset);
-
-        return dataset;
     }
 
     //dataset 보기

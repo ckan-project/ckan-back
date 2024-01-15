@@ -1,7 +1,7 @@
 package com.hanyang.dataportal.dataset.domain;
 
 import com.hanyang.dataportal.dataset.dto.req.ReqDatasetDto;
-import com.hanyang.dataportal.user.domain.Follow;
+import com.hanyang.dataportal.user.domain.Scrap;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,29 +22,20 @@ public class Dataset {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long datasetId;
-
     private String title;
-
     private String description;
-
     private String organization;
-
+    private String theme;
     private LocalDate createdDate;
-
     private LocalDate updateDate;
-
-    private Integer view = 0;
-
-    private Integer download = 0;
-
-    @OneToMany(mappedBy = "dataset", fetch = FetchType.LAZY)
-    private List<Resource> resources = new ArrayList<>();
+    private Integer view;
+    private Integer download;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "resource_id")
+    private Resource resource;
 
     @OneToMany(mappedBy = "dataset", fetch = FetchType.LAZY)
-    private List<Theme> themes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "dataset", fetch = FetchType.LAZY)
-    private List<Follow> followList = new ArrayList<>();
+    private List<Scrap> scrapList = new ArrayList<>();
 
     @PrePersist
     public void onPrePersist() {
@@ -69,10 +60,4 @@ public class Dataset {
        this.description = reqDatasetDto.getDescription();
        this.organization = reqDatasetDto.getOrganization();
     }
-
-    public void setThemes(List<Theme> themes) {
-        this.themes = themes;
-    }
-
-
 }

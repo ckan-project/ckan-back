@@ -3,15 +3,13 @@ package com.hanyang.dataportal.dataset.dto.req;
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class ReqDatasetDto {
 
     private String title;
     private String description;
     private String organization;
-    private List<String> themes;
+    private String theme;
 
     public Dataset toEntity(){
         return Dataset.builder().

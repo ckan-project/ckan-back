@@ -1,10 +1,8 @@
 package com.hanyang.dataportal.user.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 
-import java.lang.management.LockInfo;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,16 +12,19 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userKey;
-
-    private String id;
-
-    private String password;
+    private Long userId;
 
     private String email;
 
+    private String password;
+
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Follow> followList = new ArrayList<>();
+    private List<Scrap> scrapList = new ArrayList<>();
 
 
 }

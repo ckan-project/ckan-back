@@ -6,11 +6,11 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class Follow {
+public class Scrap {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long followId;
+    private Long scrapId;
 
     @ManyToOne
     @JoinColumn(name = "userId")

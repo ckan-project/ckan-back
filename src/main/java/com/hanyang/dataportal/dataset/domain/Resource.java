@@ -16,16 +16,9 @@ public class Resource {
     @Id
     private String resourceId;
 
-    @ManyToOne
-    @JoinColumn(name = "datasetId")
-    private Dataset dataset;
-
     @Column(length = 1000)
     private String url;
 
     private String type;
 
-    public void setDataset(Dataset dataset) {
-        this.dataset = dataset;
-    }
 }

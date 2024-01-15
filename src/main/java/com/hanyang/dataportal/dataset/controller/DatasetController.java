@@ -4,9 +4,8 @@ import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.dto.req.ReqDatasetDto;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetDetailDto;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetDto;
-import com.hanyang.dataportal.dataset.dto.res.ResDatasetIdDto;
 import com.hanyang.dataportal.dataset.service.DatasetService;
-import com.hanyang.dataportal.exception.ApiResponse;
+import com.hanyang.dataportal.utill.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.hanyang.dataportal.exception.ApiResponse.successResponse;
-import static com.hanyang.dataportal.exception.ApiResponse.successResponseNoContent;
+import static com.hanyang.dataportal.utill.ApiResponse.successResponse;
+import static com.hanyang.dataportal.utill.ApiResponse.successResponseNoContent;
 
 @Tag(name = "데이터셋 API")
 @RestController
@@ -37,11 +36,11 @@ public class DatasetController {
 
     @Operation(summary = "dataset 저장")
     @PostMapping("/dataset")
-    public ApiResponse<ResDatasetIdDto> postDataset(@RequestBody ReqDatasetDto reqDatasetDto){
+    public ApiResponse<?> postDataset(@RequestBody ReqDatasetDto reqDatasetDto){
 
-        Dataset dataset = datasetService.postDataset(reqDatasetDto);
+        datasetService.postDataset(reqDatasetDto);
 
-        return successResponse(new ResDatasetIdDto(dataset.getDatasetId()));
+        return successResponseNoContent();
     }
 
     @Operation(summary = "dataset 보기")
@@ -56,7 +55,7 @@ public class DatasetController {
 
     @Operation(summary = "dataset 수정")
     @PutMapping("/dataset/{datasetId}")
-    public ApiResponse<?>updateDataset(@PathVariable Long datasetId,@RequestBody ReqDatasetDto reqDatasetDto){
+    public ApiResponse<?> updateDataset(@PathVariable Long datasetId, @RequestBody ReqDatasetDto reqDatasetDto){
 
         datasetService.updateDataset(datasetId,reqDatasetDto);
 
