@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @AllArgsConstructor
 @Builder
@@ -19,8 +17,6 @@ public class ApiResponse<T> {
     private int status;
     private String msg;
     private T result;
-
-    private final LocalDateTime timestamp = LocalDateTime.now();
 
     public ApiResponse(ErrorApiResponse errorApiResponse) {
         this.success = false;
