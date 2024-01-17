@@ -2,10 +2,14 @@ package com.hanyang.dataportal.dataset.domain;
 
 import com.hanyang.dataportal.user.domain.User;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
+@Setter
+@Getter
 public class Notice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
