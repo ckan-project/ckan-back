@@ -7,6 +7,7 @@ import com.hanyang.dataportal.dataset.service.NoticeService;
 import com.hanyang.dataportal.utill.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,15 +32,24 @@ public class NoticeController {
 
     @Operation(summary = "notice 찾기")
     @GetMapping("/notice")
-    public ApiResponse<ResNoticeDto> getNotice(@RequestParam Long id) {
-        Notice notice = noticeService.findNotice(id);
-        return ApiResponse.successResponse(new ResNoticeDto(notice));
+    public ApiResponse<?> getNotice(@RequestParam Long id) {
+        try {
+            Notice notice = noticeService.findNotice(id);
+            return ApiResponse.successResponse(new ResNoticeDto(notice));
+        } catch (EntityNotFoundException e) {
+            return ApiResponse.errorResponse(404, e.getMessage());
+        }
+
     }
 
     @Operation(summary = "notice 작성")
     @PostMapping("/notice/{userId}")
-    public ApiResponse<ResNoticeDto> postNotice(@PathVariable Long userId, @RequestBody ReqNoticeDto reqNoticeDto) {
-        Notice notice = noticeService.postNotice(reqNoticeDto, userId);
-        return ApiResponse.successResponse(new ResNoticeDto(notice));
+    public ApiResponse<?> postNotice(@PathVariable Long userId, @RequestBody ReqNoticeDto reqNoticeDto) {
+        try {
+            Notice notice = noticeService.postNotice(reqNoticeDto, userId);
+            return ApiResponse.successResponse(new ResNoticeDto(notice));
+        } catch (EntityNotFoundException e) {
+            return ApiResponse.errorResponse(404, e.getMessage());
+        }
     }
 }
