@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,5 +23,8 @@ public class Resource {
     private String url;
 
     private String type;
+
+    @OneToMany(mappedBy = "resource", fetch = FetchType.LAZY)
+    private List<Download> downloadList = new ArrayList<>();
 
 }

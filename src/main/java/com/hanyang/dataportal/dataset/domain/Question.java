@@ -1,5 +1,6 @@
-package com.hanyang.dataportal.user.domain;
+package com.hanyang.dataportal.dataset.domain;
 
+import com.hanyang.dataportal.user.domain.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
