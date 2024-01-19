@@ -39,7 +39,6 @@ public class NoticeController {
         } catch (EntityNotFoundException e) {
             return ApiResponse.errorResponse(404, e.getMessage());
         }
-
     }
 
     @Operation(summary = "notice 작성")
