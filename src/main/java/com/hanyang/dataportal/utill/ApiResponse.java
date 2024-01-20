@@ -34,7 +34,7 @@ public class ApiResponse<T> {
         return new ApiResponse<>(true,200,SUCCESS_MESSAGE, data);
     }
 
-    public static ApiResponse<?> successResponseNoContent() {
+    public static ApiResponse<Void> successResponseNoContent() {
         return new ApiResponse<>(true,SUCCESS_STATUS,SUCCESS_MESSAGE, null);
     }
 
