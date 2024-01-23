@@ -11,15 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class UpdateDatasetService {
-
     private final DatasetRepository datasetRepository;
     private final DatasetService datasetService;
-
     public Dataset create(ReqDatasetDto reqDatasetDto){
         Dataset dataset = reqDatasetDto.toEntity();
         return datasetRepository.save(dataset);
     }
-
     public Dataset modify(Long datasetId, ReqDatasetDto reqDatasetDto){
         Dataset dataset = datasetService.findById(datasetId);
         dataset.updateDataset(reqDatasetDto);

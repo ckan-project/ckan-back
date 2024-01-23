@@ -13,9 +13,7 @@ import static com.hanyang.dataportal.core.dto.ResponseMessage.NOT_EXIST_DATASET;
 @RequiredArgsConstructor
 @Transactional
 public class DatasetService {
-
     private final DatasetRepository datasetRepository;
-
     public Dataset findById(Long id){
         return  datasetRepository.findById(id).orElseThrow(() -> new ResourceNotFound(NOT_EXIST_DATASET));
     }
