@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.hanyang'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+repositories {
+    mavenCentral()
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
