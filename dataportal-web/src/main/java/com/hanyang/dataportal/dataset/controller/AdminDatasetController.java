@@ -19,10 +19,8 @@ import static com.hanyang.dataportal.core.dto.ApiResponse.ok;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class AdminDatasetController {
-
     private final DatasetService datasetService;
     private final UpdateDatasetService updateDatasetService;
-
     @Operation(summary = "dataset 저장")
     @PostMapping("/dataset")
     public ResponseEntity<ApiResponse<ResDatasetDetailDto>> saveDataset(@RequestBody ReqDatasetDto reqDatasetDto){
@@ -41,5 +39,4 @@ public class AdminDatasetController {
         datasetService.deleteDataset(datasetId);
         return ResponseEntity.ok(ok(null));
     }
-
 }

@@ -4,10 +4,7 @@ import com.hanyang.dataportal.dataset.dto.req.ReqDatasetDto;
 import com.hanyang.dataportal.user.domain.Download;
 import com.hanyang.dataportal.user.domain.Scrap;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
