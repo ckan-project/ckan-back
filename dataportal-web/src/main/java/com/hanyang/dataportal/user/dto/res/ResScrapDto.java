@@ -37,7 +37,7 @@ public class ResScrapDto {
         this.datasetId = scrap.getDataset().getDatasetId();
         this.title = scrap.getDataset().getTitle();
         this.description = scrap.getDataset().getDescription();
-        this.type = scrap.getDataset().getResource().getType();
+//        this.type = scrap.getDataset().getResource().getType();
         this.organization = scrap.getDataset().getOrganization();
     }
 }
