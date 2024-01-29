@@ -4,11 +4,10 @@ import com.hanyang.dataportal.core.dto.ResponseMessage;
 import com.hanyang.dataportal.core.exception.ResourceExist;
 import com.hanyang.dataportal.core.exception.ResourceNotFound;
 import com.hanyang.dataportal.dataset.domain.Dataset;
-import com.hanyang.dataportal.dataset.repository.DatasetRepository;
+import com.hanyang.dataportal.dataset.service.DatasetService;
 import com.hanyang.dataportal.user.domain.Scrap;
 import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.repository.ScrapRepository;
-import com.hanyang.dataportal.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -20,9 +19,9 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class ScrapService {
-    private final UserRepository userRepository;
     private final ScrapRepository scrapRepository;
-    private final DatasetRepository datasetRepository;
+    private final UserService userService;
+    private final DatasetService datasetService;
 
     /**
      * 유저가 스크랩한 모든 Scrap 객체를 가져오는 메서드
@@ -30,9 +29,7 @@ public class ScrapService {
      * @return
      */
     public List<Scrap> findAllByEmail(String email) {
-        User user = userRepository.findByEmailAndActiveTrue(email)
-                .orElseThrow(() ->  new ResourceNotFound(ResponseMessage.NOT_EXIST_USER));
-
+        User user = userService.findByEmail(email);
         return scrapRepository.findAllByUser(user);
     }
 
@@ -47,17 +44,25 @@ public class ScrapService {
     }
 
     /**
+     * dataset과 user로 스크랩 객체를 찾는 메서드
+     * @param dataset
+     * @param user
+     * @return
+     */
+    public Scrap findByDatasetAndUser(Dataset dataset, User user) {
+        return scrapRepository.findByDatasetAndUser(dataset, user)
+                .orElseThrow(() -> new ResourceNotFound(ResponseMessage.NOT_EXIST_SCRAP));
+    }
+
+    /**
      * 새로운 Scrap 객체를 생성하는 메서드
      * @param userDetails
      * @param datasetId
      * @return
      */
     public Scrap createScrap(UserDetails userDetails, Long datasetId) {
-        Dataset dataset = datasetRepository.findById(datasetId)
-                        .orElseThrow(() -> new ResourceNotFound(ResponseMessage.NOT_EXIST_DATASET));
-
-        User user = userRepository.findByEmailAndActiveTrue(userDetails.getUsername())
-                .orElseThrow(() -> new ResourceNotFound(ResponseMessage.NOT_EXIST_USER));
+        Dataset dataset = datasetService.findById(datasetId);
+        User user = userService.findByEmail(userDetails.getUsername());
 
         scrapRepository.findByDatasetAndUser(dataset, user)
                 .ifPresent(scrap -> {
@@ -80,14 +85,9 @@ public class ScrapService {
      * @return
      */
     public Scrap removeScrap(UserDetails userDetails, Long datasetId) {
-        Dataset dataset = datasetRepository.findById(datasetId)
-                        .orElseThrow(() -> new ResourceNotFound(ResponseMessage.NOT_EXIST_DATASET));
-
-        User user = userRepository.findByEmailAndActiveTrue(userDetails.getUsername())
-                .orElseThrow(() -> new ResourceNotFound(ResponseMessage.NOT_EXIST_USER));
-
-        Scrap scrap = scrapRepository.findByDatasetAndUser(dataset, user)
-                .orElseThrow(() -> new ResourceNotFound(ResponseMessage.NOT_EXIST_SCRAP));
+        Dataset dataset = datasetService.findById(datasetId);
+        User user = userService.findByEmail(userDetails.getUsername());
+        Scrap scrap = findByDatasetAndUser(dataset, user);
 
         scrapRepository.deleteById(scrap.getScrapId());
 
