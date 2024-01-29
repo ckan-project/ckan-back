@@ -7,8 +7,6 @@ import com.hanyang.dataportal.user.dto.res.ResScrapDto;
 import com.hanyang.dataportal.user.service.ScrapService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -71,7 +69,7 @@ public class ScrapController {
      * @return
      */
     @Operation(summary = "로그인 유저의 특정 스크랩 내역 삭제")
-    @DeleteMapping("/api/scrap/{datasetId}")
+    @DeleteMapping("/api/dataset/{datasetId}/scrap")
     public ResponseEntity<ApiResponse<?>> deleteScrap(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ReqScrapDto reqScrapDto) {
         Scrap scrap = scrapService.removeScrap(userDetails, reqScrapDto);
         return ResponseEntity.ok(ApiResponse.ok(new ResScrapDto(scrap)));
