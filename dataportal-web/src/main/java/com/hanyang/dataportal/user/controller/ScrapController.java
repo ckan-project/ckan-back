@@ -31,16 +31,12 @@ public class ScrapController {
     @Operation(summary = "로그인 유저의 모든 스크랩 내역을 가져옴")
     @GetMapping("/api/scrap")
     public ResponseEntity<ApiResponse<List<ResScrapDto>>> getScraps(@AuthenticationPrincipal UserDetails userDetails) {
-        try {
-            List<Scrap> scrapList = scrapService.findAllByEmail(userDetails.getUsername());
-            List<ResScrapDto> resScrapDtoList = scrapList
-                    .stream()
-                    .map(ResScrapDto::new)
-                    .toList();
-            return ResponseEntity.ok(ApiResponse.ok(resScrapDtoList));
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        List<Scrap> scrapList = scrapService.findAllByEmail(userDetails.getUsername());
+        List<ResScrapDto> resScrapDtoList = scrapList
+                .stream()
+                .map(ResScrapDto::new)
+                .toList();
+        return ResponseEntity.ok(ApiResponse.ok(resScrapDtoList));
     }
 
     /**
@@ -51,12 +47,8 @@ public class ScrapController {
     @Operation(summary = "로그인 유저의 특정 스크랩 내역을 가져옴")
     @GetMapping("/api/scrap/{scrapId}")
     public ResponseEntity<ApiResponse<ResScrapDto>> getScrap(@PathVariable Long scrapId) {
-        try {
-            Scrap scrap = scrapService.findByScrapId(scrapId);
-            return ResponseEntity.ok(ApiResponse.ok(new ResScrapDto(scrap)));
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Scrap scrap = scrapService.findByScrapId(scrapId);
+        return ResponseEntity.ok(ApiResponse.ok(new ResScrapDto(scrap)));
     }
 
     /**
@@ -67,15 +59,9 @@ public class ScrapController {
     @Operation(summary = "로그인 유저의 새로운 스크랩 생성")
     @PostMapping("/api/scrap")
     public ResponseEntity<ApiResponse<?>> createScrap(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ReqScrapDto reqScrapDto) {
-        try {
-            Scrap scrap = scrapService.createScrap(userDetails, reqScrapDto);
-            ResScrapDto resScrapDto = new ResScrapDto(scrap);
-            return ResponseEntity.ok(ApiResponse.ok(resScrapDto));
-        } catch (EntityExistsException e) {
-            return ResponseEntity.badRequest().body(ApiResponse.fail(e.getMessage()));
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Scrap scrap = scrapService.createScrap(userDetails, reqScrapDto);
+        ResScrapDto resScrapDto = new ResScrapDto(scrap);
+        return ResponseEntity.ok(ApiResponse.ok(resScrapDto));
     }
 
     /**
@@ -87,11 +73,7 @@ public class ScrapController {
     @Operation(summary = "로그인 유저의 특정 스크랩 내역 삭제")
     @DeleteMapping("/api/scrap/{datasetId}")
     public ResponseEntity<ApiResponse<?>> deleteScrap(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ReqScrapDto reqScrapDto) {
-        try {
-            Scrap scrap = scrapService.removeScrap(userDetails, reqScrapDto);
-            return ResponseEntity.ok(ApiResponse.ok(new ResScrapDto(scrap)));
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(ApiResponse.fail(e.getMessage()));
-        }
+        Scrap scrap = scrapService.removeScrap(userDetails, reqScrapDto);
+        return ResponseEntity.ok(ApiResponse.ok(new ResScrapDto(scrap)));
     }
 }

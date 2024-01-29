@@ -1,5 +1,8 @@
 package com.hanyang.dataportal.user.service;
 
+import com.hanyang.dataportal.core.dto.ResponseMessage;
+import com.hanyang.dataportal.core.exception.ResourceExist;
+import com.hanyang.dataportal.core.exception.ResourceNotFound;
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.repository.DatasetRepository;
 import com.hanyang.dataportal.user.domain.Scrap;
@@ -7,8 +10,6 @@ import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.dto.req.ReqScrapDto;
 import com.hanyang.dataportal.user.repository.ScrapRepository;
 import com.hanyang.dataportal.user.repository.UserRepository;
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class ScrapService {
      */
     public List<Scrap> findAllByEmail(String email) {
         User user = userRepository.findByEmailAndActiveTrue(email)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 유저 정보입니다."));
+                .orElseThrow(() ->  new ResourceNotFound(ResponseMessage.NOT_EXIST_USER));
 
         return scrapRepository.findAllByUser(user);
     }
@@ -43,25 +44,25 @@ public class ScrapService {
      */
     public Scrap findByScrapId(Long scrapId) {
         return scrapRepository.findById(scrapId)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 스크랩 정보입니다."));
+                .orElseThrow(() -> new ResourceNotFound(ResponseMessage.NOT_EXIST_SCRAP));
     }
 
     /**
      * 새로운 Scrap 객체를 생성하는 메서드
      * @param userDetails
      * @param reqScrapDto
-     * @return
+     * @return 생성한 Scrap 객체
      */
     public Scrap createScrap(UserDetails userDetails, ReqScrapDto reqScrapDto) {
         Dataset dataset = datasetRepository.findById(reqScrapDto.getDatasetId())
-                        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 dataset 정보입니다."));
+                        .orElseThrow(() -> new ResourceNotFound(ResponseMessage.NOT_EXIST_DATASET));
 
         User user = userRepository.findByEmailAndActiveTrue(userDetails.getUsername())
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 유저 정보입니다."));
+                .orElseThrow(() -> new ResourceNotFound(ResponseMessage.NOT_EXIST_USER));
 
         scrapRepository.findByDatasetAndUser(dataset, user)
                 .ifPresent(scrap -> {
-                    throw new EntityExistsException("이미 존재하는 스크랩 내역입니다.");
+                    throw new ResourceExist(ResponseMessage.DUPLICATE_SCRAP);
                 });
 
         Scrap scrap = Scrap.builder()
@@ -81,13 +82,13 @@ public class ScrapService {
      */
     public Scrap removeScrap(UserDetails userDetails, ReqScrapDto reqScrapDto) {
         Dataset dataset = datasetRepository.findById(reqScrapDto.getDatasetId())
-                        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 dataset 정보입니다."));
+                        .orElseThrow(() -> new ResourceNotFound(ResponseMessage.NOT_EXIST_DATASET));
 
         User user = userRepository.findByEmailAndActiveTrue(userDetails.getUsername())
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 유저 정보입니다."));
+                .orElseThrow(() -> new ResourceNotFound(ResponseMessage.NOT_EXIST_USER));
 
         Scrap scrap = scrapRepository.findByDatasetAndUser(dataset, user)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 스크랩 정보입니다."));
+                .orElseThrow(() -> new ResourceNotFound(ResponseMessage.NOT_EXIST_SCRAP));
 
         scrapRepository.deleteById(scrap.getScrapId());
 
