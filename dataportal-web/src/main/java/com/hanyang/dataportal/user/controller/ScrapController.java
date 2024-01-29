@@ -2,7 +2,6 @@ package com.hanyang.dataportal.user.controller;
 
 import com.hanyang.dataportal.core.dto.ApiResponse;
 import com.hanyang.dataportal.user.domain.Scrap;
-import com.hanyang.dataportal.user.dto.req.ReqScrapDto;
 import com.hanyang.dataportal.user.dto.res.ResScrapDto;
 import com.hanyang.dataportal.user.service.ScrapService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,13 +50,14 @@ public class ScrapController {
 
     /**
      * 스크랩 객체를 생성하는 메서드
-     * @param reqScrapDto
+     * @param userDetails
+     * @param datasetId
      * @return
      */
     @Operation(summary = "로그인 유저의 새로운 스크랩 생성")
-    @PostMapping("/api/scrap")
-    public ResponseEntity<ApiResponse<?>> createScrap(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ReqScrapDto reqScrapDto) {
-        Scrap scrap = scrapService.createScrap(userDetails, reqScrapDto);
+    @PostMapping("/api/dataset/{datasetId}/scrap")
+    public ResponseEntity<ApiResponse<?>> createScrap(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long datasetId) {
+        Scrap scrap = scrapService.createScrap(userDetails, datasetId);
         ResScrapDto resScrapDto = new ResScrapDto(scrap);
         return ResponseEntity.ok(ApiResponse.ok(resScrapDto));
     }
@@ -65,13 +65,13 @@ public class ScrapController {
     /**
      * 특정 스크랩 객체를 삭제하는 메서드
      * @param userDetails
-     * @param reqScrapDto
+     * @param datasetId
      * @return
      */
     @Operation(summary = "로그인 유저의 특정 스크랩 내역 삭제")
     @DeleteMapping("/api/dataset/{datasetId}/scrap")
-    public ResponseEntity<ApiResponse<?>> deleteScrap(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ReqScrapDto reqScrapDto) {
-        Scrap scrap = scrapService.removeScrap(userDetails, reqScrapDto);
+    public ResponseEntity<ApiResponse<?>> deleteScrap(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long datasetId) {
+        Scrap scrap = scrapService.removeScrap(userDetails, datasetId);
         return ResponseEntity.ok(ApiResponse.ok(new ResScrapDto(scrap)));
     }
 }
