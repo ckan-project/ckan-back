@@ -7,7 +7,6 @@ import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.repository.DatasetRepository;
 import com.hanyang.dataportal.user.domain.Scrap;
 import com.hanyang.dataportal.user.domain.User;
-import com.hanyang.dataportal.user.dto.req.ReqScrapDto;
 import com.hanyang.dataportal.user.repository.ScrapRepository;
 import com.hanyang.dataportal.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -50,11 +49,11 @@ public class ScrapService {
     /**
      * 새로운 Scrap 객체를 생성하는 메서드
      * @param userDetails
-     * @param reqScrapDto
-     * @return 생성한 Scrap 객체
+     * @param datasetId
+     * @return
      */
-    public Scrap createScrap(UserDetails userDetails, ReqScrapDto reqScrapDto) {
-        Dataset dataset = datasetRepository.findById(reqScrapDto.getDatasetId())
+    public Scrap createScrap(UserDetails userDetails, Long datasetId) {
+        Dataset dataset = datasetRepository.findById(datasetId)
                         .orElseThrow(() -> new ResourceNotFound(ResponseMessage.NOT_EXIST_DATASET));
 
         User user = userRepository.findByEmailAndActiveTrue(userDetails.getUsername())
@@ -77,11 +76,11 @@ public class ScrapService {
     /**
      * 유저가 스크랩한 특정 내역을 삭제하는 메서드
      * @param userDetails
-     * @param reqScrapDto
-     * @return 삭제한 스크랩 객체
+     * @param datasetId
+     * @return
      */
-    public Scrap removeScrap(UserDetails userDetails, ReqScrapDto reqScrapDto) {
-        Dataset dataset = datasetRepository.findById(reqScrapDto.getDatasetId())
+    public Scrap removeScrap(UserDetails userDetails, Long datasetId) {
+        Dataset dataset = datasetRepository.findById(datasetId)
                         .orElseThrow(() -> new ResourceNotFound(ResponseMessage.NOT_EXIST_DATASET));
 
         User user = userRepository.findByEmailAndActiveTrue(userDetails.getUsername())
