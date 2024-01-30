@@ -1,5 +1,6 @@
 package com.hanyang.datastore.service;
 
+import com.hanyang.datastore.domain.TableData;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ResourceService {
+public class TableService {
 
     private final MongoTemplate mongoTemplate;
     private final S3Service s3Service;
@@ -26,31 +27,31 @@ public class ResourceService {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file))) {
 
             CSVReader csvReader = new CSVReader(reader);
-            List<String[]> rows = csvReader.readAll();
+            List<String[]> data = csvReader.readAll();
 
-            if (!rows.isEmpty()) {
-                String[] columns = rows.get(0);
+            if (!data.isEmpty()) {
+                String[] columns = data.get(0); // 예시: CSV 파일의 첫 번째 행을 컬럼 이름으로 설정
 
-                // MongoDB에 컬렉션을 생성합니다.
+                // 나머지 행들을 List<String[]>으로 변환
+                List<String[]> rows = data.subList(1, data.size());
+
                 if (!mongoTemplate.collectionExists(datasetId)) {
                     mongoTemplate.createCollection(datasetId);
-                    System.out.println("Collection created: " + datasetId);
-
-                    // 첫 번째 행을 제외한 나머지 행을 MongoDB에 추가합니다.
-                    for (int i = 1; i < rows.size(); i++) {
-                        String[] data = rows.get(i);
-                        // 데이터를 MongoDB에 추가하는 로직을 추가하세요.
-                        // 여기에서는 간단한 출력만 수행합니다.
-                        System.out.println("Inserting data: " + String.join(", ", data));
-                    }
-                } else {
-                    System.out.println("Collection already exists: " + datasetId);
                 }
-            } else {
-                System.out.println("CSV file is empty.");
+
+                for (String[] record : rows) {
+                    // DynamicData 객체 생성
+                    TableData tableData = new TableData();
+                    ;
+                    // 동적으로 생성되는 컬럼들을 추가로 설정
+                    for (int i = 0; i < columns.length; i++) {
+                        tableData.setAttributes(columns[i], record[i]);
+                    }
+                    // MongoDB에 문서 추가
+                    mongoTemplate.insert(tableData, datasetId);
+                }
+
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (CsvException e) {
             throw new RuntimeException(e);
         }
