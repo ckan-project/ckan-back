@@ -28,7 +28,7 @@ public class Dataset {
     private LocalDate updateDate;
     private Integer view;
     private Integer download;
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "dataset")
     private Resource resource;
     @OneToMany(mappedBy = "dataset", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Scrap> scrapList = new ArrayList<>();
