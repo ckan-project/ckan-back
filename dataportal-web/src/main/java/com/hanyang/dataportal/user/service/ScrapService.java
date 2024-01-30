@@ -4,12 +4,10 @@ import com.hanyang.dataportal.core.dto.ResponseMessage;
 import com.hanyang.dataportal.core.exception.ResourceExist;
 import com.hanyang.dataportal.core.exception.ResourceNotFound;
 import com.hanyang.dataportal.dataset.domain.Dataset;
-import com.hanyang.dataportal.dataset.service.DatasetService;
 import com.hanyang.dataportal.user.domain.Scrap;
 import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.repository.ScrapRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScrapService {
     private final ScrapRepository scrapRepository;
-    private final UserService userService;
-    private final DatasetService datasetService;
 
     /**
      * 유저가 스크랩한 모든 Scrap 객체를 가져오는 메서드
@@ -29,8 +25,7 @@ public class ScrapService {
      * @return
      */
     public List<Scrap> findAllByEmail(String email) {
-        User user = userService.findByEmail(email);
-        return scrapRepository.findAllByUser(user);
+        return scrapRepository.findAllByUserEmail(email);
     }
 
     /**
@@ -55,42 +50,14 @@ public class ScrapService {
     }
 
     /**
-     * 새로운 Scrap 객체를 생성하는 메서드
-     * @param userDetails
-     * @param datasetId
-     * @return
+     * dataset과 user로 중복된 스크랩 객체가 있는지 확인하는 메서드
+     * @param dataset
+     * @param user
      */
-    public Scrap createScrap(UserDetails userDetails, Long datasetId) {
-        Dataset dataset = datasetService.findById(datasetId);
-        User user = userService.findByEmail(userDetails.getUsername());
-
+    public void checkDuplicateByDatasetAndUser(Dataset dataset, User user) {
         scrapRepository.findByDatasetAndUser(dataset, user)
                 .ifPresent(scrap -> {
                     throw new ResourceExist(ResponseMessage.DUPLICATE_SCRAP);
                 });
-
-        Scrap scrap = Scrap.builder()
-                .user(user)
-                .dataset(dataset)
-                .build();
-
-        scrapRepository.save(scrap);
-        return scrap;
-    }
-
-    /**
-     * 유저가 스크랩한 특정 내역을 삭제하는 메서드
-     * @param userDetails
-     * @param datasetId
-     * @return
-     */
-    public Scrap removeScrap(UserDetails userDetails, Long datasetId) {
-        Dataset dataset = datasetService.findById(datasetId);
-        User user = userService.findByEmail(userDetails.getUsername());
-        Scrap scrap = findByDatasetAndUser(dataset, user);
-
-        scrapRepository.deleteById(scrap.getScrapId());
-
-        return scrap;
     }
 }
