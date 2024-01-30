@@ -1,6 +1,6 @@
 package com.hanyang.dataportal.dataset.service;
 
-import com.hanyang.dataportal.core.exception.ResourceNotFound;
+import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetListDto;
 import com.hanyang.dataportal.dataset.repository.DatasetRepository;
@@ -35,7 +35,7 @@ public class ReadDatasetService {
     }
 
     public Dataset getDatasetDetail(Long datasetId){
-        Dataset dataset = datasetRepository.findByIdWithResource(datasetId).orElseThrow(() -> new ResourceNotFound(NOT_EXIST_DATASET));
+        Dataset dataset = datasetRepository.findByIdWithResource(datasetId).orElseThrow(() -> new ResourceNotFoundException(NOT_EXIST_DATASET));
         dataset.updateView(dataset.getView()+1);
         return dataset;
     }

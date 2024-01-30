@@ -1,6 +1,7 @@
 package com.hanyang.dataportal.dataset.service;
 
 
+import com.hanyang.dataportal.core.exception.FileException;
 import com.hanyang.dataportal.dataset.domain.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hanyang.dataportal.core.dto.ResponseMessage.FILE_ERROR;
+
 @Service
 @RequiredArgsConstructor
 public class S3Service {
@@ -21,7 +24,7 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     private final S3Client s3Client;
-    public Resource uploadFile(Long datasetId, MultipartFile multipartFile) throws IOException {
+    public Resource uploadFile(Long datasetId, MultipartFile multipartFile){
 
         String fileName = multipartFile.getOriginalFilename();
 
@@ -36,7 +39,11 @@ public class S3Service {
                 .bucket(bucket)
                 .key(s3ObjectPath)
                 .build();
-        s3Client.putObject(putObjectRequest,RequestBody.fromBytes(multipartFile.getBytes()));
+        try {
+            s3Client.putObject(putObjectRequest,RequestBody.fromBytes(multipartFile.getBytes()));
+        } catch (IOException e) {
+            throw new FileException(FILE_ERROR);
+        }
 
 
         GetUrlRequest getUrlRequest = GetUrlRequest.builder()

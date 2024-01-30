@@ -1,6 +1,6 @@
 package com.hanyang.dataportal.user.service;
 
-import com.hanyang.dataportal.core.exception.ResourceNotFound;
+import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +21,6 @@ public class UserService {
         return userRepository.findByNameAndActiveTrue(name).isPresent();
     }
     public User findByEmail(String email){
-        return userRepository.findByEmailAndActiveTrue(email).orElseThrow(()-> new ResourceNotFound(NOT_EXIST_USER));
+        return userRepository.findByEmailAndActiveTrue(email).orElseThrow(()-> new ResourceNotFoundException(NOT_EXIST_USER));
     }
 }

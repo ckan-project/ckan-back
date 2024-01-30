@@ -11,5 +11,6 @@ public class ResponseMessage {
     public static String WRONG_PASSWORD ="잘못된 비밀번호 입니다";
     public static String ACCESS_DENIED ="접근 권한이 없습니다";
     public static String UN_AUTHORIZED ="인증되지 않은 사용자 입니다";
+    public static String FILE_ERROR ="잘못된 형태의 파일입니다";
 }
 
