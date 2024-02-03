@@ -1,7 +1,10 @@
 package com.hanyang.dataportal.core.dto;
 
+import com.hanyang.dataportal.notice.dto.res.ResNoticeDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.List;
 
 import static com.hanyang.dataportal.core.dto.ResponseMessage.SUCCESS;
 
@@ -24,6 +27,10 @@ public class ApiResponse<T> {
 
     public static ApiResponse<?> fail(String message) {
         return new ApiResponse<>(false, message);
+    }
+
+    public static ApiResponse<List<ResNoticeDto>> error(String noticeNotFound) {
+        return new ApiResponse<>(false,noticeNotFound);
     }
 }
 
