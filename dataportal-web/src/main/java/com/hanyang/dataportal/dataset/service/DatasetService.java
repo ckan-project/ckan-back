@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.hanyang.dataportal.core.dto.ResponseMessage.NOT_EXIST_DATASET;
+import static com.hanyang.dataportal.core.response.ResponseMessage.NOT_EXIST_DATASET;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +20,5 @@ public class DatasetService {
     public void deleteDataset(Long datasetId){
         datasetRepository.deleteById(datasetId);
     }
-
 
 }

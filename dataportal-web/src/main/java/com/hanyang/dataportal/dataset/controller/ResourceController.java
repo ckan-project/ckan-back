@@ -1,6 +1,6 @@
 package com.hanyang.dataportal.dataset.controller;
 
-import com.hanyang.dataportal.core.dto.ApiResponse;
+import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.dataset.dto.res.ResResourceDto;
 import com.hanyang.dataportal.dataset.service.ResourceService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,9 +1,7 @@
 package com.hanyang.dataportal.core.advice;
 
-import com.hanyang.dataportal.core.dto.ApiResponse;
-import com.hanyang.dataportal.core.exception.FileException;
-import com.hanyang.dataportal.core.exception.ResourceExistException;
-import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
+import com.hanyang.dataportal.core.exception.*;
+import com.hanyang.dataportal.core.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,5 +22,10 @@ public class ExceptionHandlerController {
     @ExceptionHandler(FileException.class)
     public ResponseEntity<ApiResponse<?>> handleFileException(ResourceExistException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
+    }
+
+    @ExceptionHandler(UnAuthenticationException.class)
+    public ResponseEntity<ApiResponse<?>> handleUnAuthenticationException(UnAuthenticationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.fail(e.getMessage()));
     }
 }
