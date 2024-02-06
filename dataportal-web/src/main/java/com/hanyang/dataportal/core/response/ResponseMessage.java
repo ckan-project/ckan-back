@@ -13,5 +13,6 @@ public class ResponseMessage {
     public static String UN_AUTHORIZED ="인증되지 않은 사용자 입니다";
     public static String FILE_ERROR ="잘못된 형태의 파일입니다";
     public static String AUTHENTICATION_FAILED = "인증에 실패하였습니다";
+    public static String NOT_EXIST_RESOURCE = "해당 리소스는 존재하지 않습니다";
 }
 

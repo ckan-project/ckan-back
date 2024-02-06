@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface ResourceRepository extends JpaRepository<Resource,String> {
     Optional<Resource> findByDataset(Dataset dataset);
+    Optional<Resource> findById(Long resourceId);
 }
