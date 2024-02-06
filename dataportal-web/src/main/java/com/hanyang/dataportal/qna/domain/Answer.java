@@ -15,7 +15,7 @@ public class Answer {
     @Lob
     private String content;
     private LocalDate date;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "questionId")
     private Question question;
     @ManyToOne(fetch = FetchType.LAZY)
