@@ -19,7 +19,6 @@ public class JwtTokenProvider {
 
     // JWT 토큰 생성
     public TokenDto generateToken(Authentication authentication) {
-
         // role 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)

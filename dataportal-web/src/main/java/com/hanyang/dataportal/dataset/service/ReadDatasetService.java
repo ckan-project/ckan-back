@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.hanyang.dataportal.core.response.ResponseMessage.NOT_EXIST_DATASET;
+import static com.hanyang.dataportal.core.global.reponse.ResponseMessage.NOT_EXIST_DATASET;
 
 @Service
 @RequiredArgsConstructor

@@ -1,7 +1,7 @@
 package com.hanyang.dataportal.core.component;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.hanyang.dataportal.core.response.ApiResponse;
+import com.hanyang.dataportal.core.global.reponse.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

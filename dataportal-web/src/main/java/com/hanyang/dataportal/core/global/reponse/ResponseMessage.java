@@ -1,4 +1,4 @@
-package com.hanyang.dataportal.core.response;
+package com.hanyang.dataportal.core.global.reponse;
 
 public class ResponseMessage {
     public static String SUCCESS ="ok";

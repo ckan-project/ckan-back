@@ -1,7 +1,7 @@
 package com.hanyang.dataportal.core.advice;
 
 import com.hanyang.dataportal.core.exception.*;
-import com.hanyang.dataportal.core.response.ApiResponse;
+import com.hanyang.dataportal.core.global.reponse.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

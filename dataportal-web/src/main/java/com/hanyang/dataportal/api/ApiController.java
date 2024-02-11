@@ -1,6 +1,6 @@
 package com.hanyang.dataportal.api;
 
-import com.hanyang.dataportal.core.response.ApiResponse;
+import com.hanyang.dataportal.core.global.reponse.ApiResponse;
 import com.hanyang.dataportal.dataset.service.ResourceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +16,7 @@ public class ApiController {
 
     @GetMapping("/resource")
     public ResponseEntity<ApiResponse<?>> getFileExist(@RequestParam Long resourceId){
-        return ResponseEntity.ok(ApiResponse.ok(resourceService.findById(resourceId)));
+        resourceService.findById(resourceId);
+        return ResponseEntity.ok(ApiResponse.ok(null));
     }
 }

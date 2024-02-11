@@ -1,6 +1,6 @@
 package com.hanyang.datastore.service;
 
-import com.hanyang.datastore.core.component.ConvertFileType;
+import com.hanyang.datastore.component.ConvertFileType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,6 @@ public class S3Service {
         String key = null;
         for (S3Object object : s3ObjectsList) {
             key =object.key();
-            System.out.println(key);
         }
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucket)

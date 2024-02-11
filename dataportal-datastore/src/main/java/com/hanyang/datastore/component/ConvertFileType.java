@@ -1,9 +1,6 @@
-package com.hanyang.datastore.core.component;
+package com.hanyang.datastore.component;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +13,7 @@ public class ConvertFileType {
     public InputStream convertXlsxToCsv(InputStream inputStream) throws IOException {
         Workbook workbook = new XSSFWorkbook(inputStream);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        DataFormatter dataFormatter = new DataFormatter();
 
         try (Writer writer = new OutputStreamWriter(outputStream)) {
             Sheet sheet = workbook.getSheetAt(0); // 첫 번째 시트를 선택
@@ -26,9 +24,8 @@ public class ConvertFileType {
 
                 while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
-
-                    // 셀 값이 문자열인 경우에 대비하여 String.valueOf() 사용
-                    csvLine.append(cell).append(",");
+                    String cellValue = dataFormatter.formatCellValue(cell);
+                    csvLine.append(cellValue).append(",");
                 }
 
                 // 마지막 쉼표 제거

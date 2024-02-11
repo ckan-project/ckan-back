@@ -15,7 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.hanyang.dataportal.core.response.ResponseMessage.INVALID_JWT;
+import static com.hanyang.dataportal.core.global.reponse.ResponseMessage.INVALID_JWT;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Component
