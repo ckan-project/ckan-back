@@ -10,13 +10,13 @@ public class ResDatasetListDto {
 
     private Integer totalPage;
     private Long totalElement;
-    private List<SimpleDataset> simpleDatasetList;
+    private List<SimpleDataset> data;
 
 
     public ResDatasetListDto(Integer totalPage, Long totalElement, List<Dataset> datasetList) {
         this.totalPage = totalPage;
         this.totalElement = totalElement;
-        this.simpleDatasetList = datasetList.stream().map(SimpleDataset::new).toList();
+        this.data = datasetList.stream().map(SimpleDataset::new).toList();
     }
 
     @Data
