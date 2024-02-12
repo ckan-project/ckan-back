@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.hanyang.dataportal.core.global.reponse.ResponseMessage.DUPLICATE_EMAIL;
+import static com.hanyang.dataportal.core.response.ResponseMessage.DUPLICATE_EMAIL;
 import static com.hanyang.dataportal.user.domain.Role.ROLE_USER;
 
 @Service

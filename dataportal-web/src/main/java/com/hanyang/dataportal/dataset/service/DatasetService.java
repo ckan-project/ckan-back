@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.hanyang.dataportal.core.global.reponse.ResponseMessage.NOT_EXIST_DATASET;
+import static com.hanyang.dataportal.core.response.ResponseMessage.NOT_EXIST_DATASET;
 
 @Service
 @RequiredArgsConstructor

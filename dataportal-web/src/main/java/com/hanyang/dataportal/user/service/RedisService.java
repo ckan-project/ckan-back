@@ -1,7 +1,7 @@
 package com.hanyang.dataportal.user.service;
 
 import com.hanyang.dataportal.core.exception.UnAuthenticationException;
-import com.hanyang.dataportal.core.global.reponse.ResponseMessage;
+import com.hanyang.dataportal.core.response.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;

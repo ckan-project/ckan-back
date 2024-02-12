@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import static com.hanyang.dataportal.core.global.reponse.ResponseMessage.INVALID_JWT;
+import static com.hanyang.dataportal.core.response.ResponseMessage.INVALID_JWT;
 
 @Component
 @RequiredArgsConstructor

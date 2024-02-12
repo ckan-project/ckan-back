@@ -1,7 +1,7 @@
 package com.hanyang.datastore.service;
 
-import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
-import com.hanyang.dataportal.core.global.reponse.ResponseMessage;
+import com.hanyang.datastore.core.exception.ResourceNotFoundException;
+import com.hanyang.datastore.core.response.ResponseMessage;
 import org.springframework.stereotype.Service;
 
 import java.net.HttpURLConnection;

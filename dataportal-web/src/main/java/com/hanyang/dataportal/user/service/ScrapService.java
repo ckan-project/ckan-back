@@ -1,6 +1,6 @@
 package com.hanyang.dataportal.user.service;
 
-import com.hanyang.dataportal.core.global.reponse.ResponseMessage;
+import com.hanyang.dataportal.core.response.ResponseMessage;
 import com.hanyang.dataportal.core.exception.ResourceExistException;
 import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.dataset.domain.Dataset;

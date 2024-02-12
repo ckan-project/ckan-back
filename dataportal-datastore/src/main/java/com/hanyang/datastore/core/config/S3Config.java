@@ -1,4 +1,4 @@
-package com.hanyang.dataportal.core.global.config;
+package com.hanyang.datastore.core.config;
 
 
 import org.springframework.beans.factory.annotation.Value;

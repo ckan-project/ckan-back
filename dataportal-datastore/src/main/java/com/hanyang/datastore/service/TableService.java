@@ -1,7 +1,7 @@
 package com.hanyang.datastore.service;
 
-import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
-import com.hanyang.dataportal.core.global.reponse.ResponseMessage;
+import com.hanyang.datastore.core.exception.ResourceNotFoundException;
+import com.hanyang.datastore.core.response.ResponseMessage;
 import com.hanyang.datastore.domain.TableData;
 import com.hanyang.datastore.dto.ResTableDto;
 import com.opencsv.CSVReader;

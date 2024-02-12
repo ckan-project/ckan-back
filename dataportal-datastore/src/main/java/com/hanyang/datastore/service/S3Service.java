@@ -1,6 +1,6 @@
 package com.hanyang.datastore.service;
 
-import com.hanyang.datastore.component.ConvertFileType;
+import com.hanyang.datastore.core.component.ConvertFileType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

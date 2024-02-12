@@ -1,7 +1,7 @@
 package com.hanyang.dataportal.user.controller;
 
 import com.hanyang.dataportal.core.jwt.dto.TokenDto;
-import com.hanyang.dataportal.core.global.reponse.ApiResponse;
+import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.user.dto.req.ReqCodeDto;
 import com.hanyang.dataportal.user.dto.req.ReqEmailDto;
 import com.hanyang.dataportal.user.dto.req.ReqLoginDto;

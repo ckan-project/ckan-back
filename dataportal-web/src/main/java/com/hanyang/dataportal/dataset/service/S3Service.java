@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hanyang.dataportal.core.global.reponse.ResponseMessage.FILE_ERROR;
+import static com.hanyang.dataportal.core.response.ResponseMessage.FILE_ERROR;
 
 @Service
 @RequiredArgsConstructor

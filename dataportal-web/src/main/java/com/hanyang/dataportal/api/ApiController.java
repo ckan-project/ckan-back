@@ -1,6 +1,6 @@
 package com.hanyang.dataportal.api;
 
-import com.hanyang.dataportal.core.global.reponse.ApiResponse;
+import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.dataset.service.ResourceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

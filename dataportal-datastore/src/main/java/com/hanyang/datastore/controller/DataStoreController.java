@@ -1,7 +1,7 @@
 package com.hanyang.datastore.controller;
 
-import com.hanyang.dataportal.core.global.reponse.ApiResponse;
-import com.hanyang.dataportal.core.global.reponse.ResponseMessage;
+import com.hanyang.datastore.core.response.ApiResponse;
+import com.hanyang.datastore.core.response.ResponseMessage;
 import com.hanyang.datastore.dto.ResTableDto;
 import com.hanyang.datastore.service.TableService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,11 +42,7 @@ public class DataStoreController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.fail(ResponseMessage.NOT_EXIST_RESOURCE));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<?>> handleException(Exception ex) {
-        ex.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.fail(ex.getMessage()));
-    }
+
 
 
 }

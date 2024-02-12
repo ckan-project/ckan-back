@@ -1,7 +1,7 @@
 package com.hanyang.dataportal.dataset.service;
 
 import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
-import com.hanyang.dataportal.core.global.reponse.ResponseMessage;
+import com.hanyang.dataportal.core.response.ResponseMessage;
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.domain.Resource;
 import com.hanyang.dataportal.dataset.repository.ResourceRepository;

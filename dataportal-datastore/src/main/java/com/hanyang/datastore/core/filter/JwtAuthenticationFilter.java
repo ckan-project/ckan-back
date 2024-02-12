@@ -1,8 +1,8 @@
-package com.hanyang.dataportal.core.filter;
+package com.hanyang.datastore.core.filter;
 
-import com.hanyang.dataportal.core.component.ApiResponseBuilder;
-import com.hanyang.dataportal.core.jwt.component.JwtTokenResolver;
-import com.hanyang.dataportal.core.jwt.component.JwtTokenValidator;
+import com.hanyang.datastore.core.component.ApiResponseBuilder;
+import com.hanyang.datastore.core.jwt.JwtTokenResolver;
+import com.hanyang.datastore.core.jwt.JwtTokenValidator;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.hanyang.dataportal.core.response.ResponseMessage.INVALID_JWT;
+import static com.hanyang.datastore.core.response.ResponseMessage.INVALID_JWT;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Component

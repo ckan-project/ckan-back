@@ -1,6 +1,6 @@
 package com.hanyang.dataportal.dataset.controller;
 
-import com.hanyang.dataportal.core.global.reponse.ApiResponse;
+import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.dto.req.ReqDatasetDto;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetDetailDto;
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.hanyang.dataportal.core.global.reponse.ApiResponse.ok;
+import static com.hanyang.dataportal.core.response.ApiResponse.ok;
 
 @Tag(name = "관리자 데이터셋 관리 API")
 @RestController

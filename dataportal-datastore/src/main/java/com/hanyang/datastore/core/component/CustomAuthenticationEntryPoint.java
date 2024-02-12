@@ -1,5 +1,6 @@
-package com.hanyang.dataportal.core.component;
+package com.hanyang.datastore.core.component;
 
+import com.hanyang.datastore.core.component.ApiResponseBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-import static com.hanyang.dataportal.core.response.ResponseMessage.UN_AUTHORIZED;
+import static com.hanyang.datastore.core.response.ResponseMessage.UN_AUTHORIZED;
 
 /**
  * 인증이 안된 사용자(JWT 존재 X) 401 에러 처리
