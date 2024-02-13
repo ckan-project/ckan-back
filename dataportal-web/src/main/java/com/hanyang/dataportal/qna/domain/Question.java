@@ -22,6 +22,6 @@ public class Question {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
-    @OneToOne(mappedBy = "question")
+    @OneToOne(mappedBy = "question",cascade = CascadeType.ALL)
     private Answer answer;
 }

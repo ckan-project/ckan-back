@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  ## 서비스 이름
+  mysql:
+    image: mysql
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: hanyang
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: 1234
+      TZ: 'Asia/Seoul'
+    ports:
+      - "3306:3306"
+    command: ["--character-set-server=utf8mb4","--collation-server=utf8mb4_unicode_ci"]
+    networks:
+      - my_network
+
+  redis:
+    image: redis
+    container_name: redis
+    hostname: root
+    ports:
+      - "6379:6379"
+    networks:
+      - my_network
+
+  dataportal_web:
+    container_name: dataportal-web
+    image: choco181/web
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hanyang?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "1234"
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - my_network
+
+networks:
+  my_network:

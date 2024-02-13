@@ -22,11 +22,11 @@ dependencies {
     implementation 'org.apache.poi:poi-ooxml:5.1.0'
 }
 bootJar {
-    enabled = false
+    enabled = true
 }
 
 jar {
-    enabled = true
+    enabled = false
 }
 
 tasks.named('test') {
