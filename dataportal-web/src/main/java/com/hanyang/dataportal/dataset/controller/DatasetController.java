@@ -29,7 +29,7 @@ public class DatasetController {
 
     @Operation(summary = "dataset 리스트 보기")
     @GetMapping("/datasets")
-    public ResponseEntity<ApiResponse<?>> getDatasetList(@RequestParam(required = false) String keyword,
+    public ResponseEntity<ApiResponse<ResDatasetListDto>> getDatasetList(@RequestParam(required = false) String keyword,
                                                          @RequestParam(required = false) Organization organization,
                                                          @RequestParam(required = false) List<Theme> themeList,
                                                          @RequestParam(defaultValue = "최신") DatasetSort sort,

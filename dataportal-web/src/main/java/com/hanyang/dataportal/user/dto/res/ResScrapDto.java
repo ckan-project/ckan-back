@@ -1,6 +1,6 @@
 package com.hanyang.dataportal.user.dto.res;
 
-import com.hanyang.dataportal.dataset.domain.Dataset;
+import com.hanyang.dataportal.dataset.domain.Organization;
 import com.hanyang.dataportal.user.domain.Scrap;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -11,7 +11,7 @@ public class ResScrapDto {
      * scrap id
      */
     @Schema(description = "스크랩 객체의 id값", example = "1")
-    private Long id;
+    private Long scrapId;
     /**
      * 스크랩한 dataset
      */
@@ -36,14 +36,16 @@ public class ResScrapDto {
      * 스크랩한 dataset의 조직
      */
     @Schema(description = "스크랩한 데이터셋의 조직", example = "입학처")
-    private String organization;
+    private Organization organization;
 
     public ResScrapDto(Scrap scrap) {
-        this.id = scrap.getScrapId();
+        this.scrapId = scrap.getScrapId();
         this.datasetId = scrap.getDataset().getDatasetId();
         this.title = scrap.getDataset().getTitle();
         this.description = scrap.getDataset().getDescription();
-//        this.type = scrap.getDataset().getResource().getType();
+        if(scrap.getDataset().getResource() !=null) {
+            this.type = scrap.getDataset().getResource().getType();
+        }
         this.organization = scrap.getDataset().getOrganization();
     }
 }
