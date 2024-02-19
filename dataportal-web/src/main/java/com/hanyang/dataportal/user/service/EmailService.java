@@ -19,8 +19,8 @@ import java.util.Random;
 public class EmailService {
     private final JavaMailSender mailSender;
     private final RedisService redisService;
-    @Value("${email.setForm}")
-    private String setForm;
+    @Value("${email.setFrom}")
+    private String setFrom;
     private static final String EMAIL_TITLE = "한양대 에리카 DATA 포털 - 회원 가입을 위한 인증 이메일";
     private static final String EMAIL_CONTENT_TEMPLATE = "한양대 에리카 DATA 포털 사이트에 가입해주셔서 감사합니다! " +
             "아래의 인증번호를 입력하여 회원가입을 완료해주세요."+
@@ -30,7 +30,7 @@ public class EmailService {
     public String joinEmail(String email) {
         String code = Integer.toString(makeRandomNumber());
         String content = String.format(EMAIL_CONTENT_TEMPLATE, code);
-        mailSend(setForm, email, EMAIL_TITLE,content);
+        mailSend(setFrom, email, EMAIL_TITLE,content);
         redisService.setCode(email,code);
         return code;
     }

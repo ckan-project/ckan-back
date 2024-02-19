@@ -4,7 +4,10 @@ import com.hanyang.dataportal.dataset.dto.req.ReqDatasetDto;
 import com.hanyang.dataportal.user.domain.Download;
 import com.hanyang.dataportal.user.domain.Scrap;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,21 +25,27 @@ public class Dataset {
     private String title;
     @Lob
     private String description;
-    private String organization;
-    private String theme;
+    @Enumerated(EnumType.STRING)
+    private Organization organization;
     private LocalDate createdDate;
     private LocalDate updateDate;
     private Integer view;
     private Integer download;
     @OneToOne(mappedBy = "dataset")
     private Resource resource;
+    @Builder.Default
+    @OneToMany(mappedBy = "dataset", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<DatasetTheme> datasetThemeList = new ArrayList<>();
+    @Builder.Default
     @OneToMany(mappedBy = "dataset", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Scrap> scrapList = new ArrayList<>();
+    @Builder.Default
     @OneToMany(mappedBy = "dataset", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Download> downloadList = new ArrayList<>();
     @PrePersist
     public void onPrePersist() {
         createdDate = LocalDate.now();
+        updateDate = createdDate;
     }
     @PreUpdate
     public void onPreUpdate() {
@@ -49,6 +58,13 @@ public class Dataset {
        this.title = reqDatasetDto.getTitle();
        this.description = reqDatasetDto.getDescription();
        this.organization = reqDatasetDto.getOrganization();
-       this.theme = reqDatasetDto.getTheme();
     }
+    public void addTheme(Theme theme){
+        datasetThemeList.add(new DatasetTheme(this,theme));
+    }
+    public void removeTheme(){
+        datasetThemeList.clear();
+    }
+
+
 }

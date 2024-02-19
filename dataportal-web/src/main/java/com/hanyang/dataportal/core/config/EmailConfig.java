@@ -11,7 +11,7 @@ import java.util.Properties;
 @Configuration
 public class EmailConfig {
 
-    @Value("${email.setForm}")
+    @Value("${email.setFrom}")
     private String email;
     @Value("${email.password}")
     private String password;

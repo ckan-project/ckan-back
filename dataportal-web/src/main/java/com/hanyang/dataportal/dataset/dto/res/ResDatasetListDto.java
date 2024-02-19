@@ -1,7 +1,10 @@
 package com.hanyang.dataportal.dataset.dto.res;
 
 import com.hanyang.dataportal.dataset.domain.Dataset;
+import com.hanyang.dataportal.dataset.domain.DatasetTheme;
+import com.hanyang.dataportal.dataset.domain.Theme;
 import lombok.Data;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -12,11 +15,10 @@ public class ResDatasetListDto {
     private Long totalElement;
     private List<SimpleDataset> data;
 
-
-    public ResDatasetListDto(Integer totalPage, Long totalElement, List<Dataset> datasetList) {
-        this.totalPage = totalPage;
-        this.totalElement = totalElement;
-        this.data = datasetList.stream().map(SimpleDataset::new).toList();
+    public ResDatasetListDto(Page<Dataset> datasets) {
+        this.totalPage = datasets.getTotalPages();
+        this.totalElement = datasets.getTotalElements();
+        this.data = datasets.getContent().stream().map(SimpleDataset::new).toList();
     }
 
     @Data
@@ -25,11 +27,20 @@ public class ResDatasetListDto {
         private String title;
         private String description;
         private Integer view;
+        private String type;
+        private List<Theme> themeList;
+
         public SimpleDataset(Dataset dataset) {
             this.datasetId = dataset.getDatasetId();
             this.title = dataset.getTitle();
             this.description = dataset.getDescription();
             this.view = dataset.getView();
+            if(dataset.getResource()!=null) {
+                this.type = dataset.getResource().getType();
+            }
+            if(dataset.getDatasetThemeList()!=null) {
+                this.themeList = dataset.getDatasetThemeList().stream().map(DatasetTheme::getTheme).toList();
+            }
         }
     }
 }

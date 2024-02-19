@@ -4,7 +4,6 @@ import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.dto.req.ReqDatasetDto;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetDetailDto;
-import com.hanyang.dataportal.dataset.dto.res.ResDatasetListDto;
 import com.hanyang.dataportal.dataset.service.DatasetService;
 import com.hanyang.dataportal.dataset.service.UpdateDatasetService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,9 +23,9 @@ public class AdminDatasetController {
     private final UpdateDatasetService updateDatasetService;
     @Operation(summary = "dataset 저장")
     @PostMapping("/dataset")
-    public ResponseEntity<ApiResponse<ResDatasetListDto.SimpleDataset>> saveDataset(@RequestBody ReqDatasetDto reqDatasetDto){
+    public ResponseEntity<ApiResponse<ResDatasetDetailDto>> saveDataset(@RequestBody ReqDatasetDto reqDatasetDto){
         Dataset dataset = updateDatasetService.create(reqDatasetDto);
-        return ResponseEntity.ok(ok(new ResDatasetListDto.SimpleDataset(dataset)));
+        return ResponseEntity.ok(ok(new ResDatasetDetailDto(dataset)));
     }
     @Operation(summary = "dataset 수정")
     @PutMapping("/dataset/{datasetId}")
