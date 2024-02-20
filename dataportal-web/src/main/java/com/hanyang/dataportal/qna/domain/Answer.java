@@ -2,6 +2,7 @@ package com.hanyang.dataportal.qna.domain;
 
 import com.hanyang.dataportal.user.domain.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -21,4 +22,17 @@ public class Answer {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User admin;
+
+    @Builder
+    public Answer(Long answerId, String content, LocalDate date, Question question, User admin) {
+        this.answerId = answerId;
+        this.content = content;
+        this.date = date;
+        this.question = question;
+        this.admin = admin;
+    }
+
+    public Answer() {
+
+    }
 }

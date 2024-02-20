@@ -4,13 +4,15 @@ import com.hanyang.dataportal.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Builder
+@Setter
 public class Notice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +23,7 @@ public class Notice {
     private String content;
     
     private LocalDate createDate;
-    private LocalDateTime  updateDateTime;
+    private LocalDate  updateDate;
     private Integer view;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
@@ -33,6 +35,7 @@ public class Notice {
     }
 
     //AllargConstructor ~ 개방폐쇄원칙?
+    @Builder
     public Notice(Long noticeId, String title, String content, LocalDate createDate, Integer view, User admin) {
         this.noticeId = noticeId;
         this.title = title;
@@ -43,23 +46,27 @@ public class Notice {
     }
 
     public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setContent(String content) {
+        this.content = content;
     }
 
-    public void setCreateDate(LocalDateTime now) {
-
+    public void setCreateDate(LocalDate now) {
+        this.createDate= now;
     }
 
     public void setview(int i) {
+        this.view = i;
 
     }
 
-    public void setUser(String user) {
+    public void setUser(User user) {
+        this.admin = user;
     }
 
-    public void setUpdateDateTime(LocalDateTime now) {
-
+    public void setUpdateDateTime(LocalDate now) {
+        this.updateDate = now;
     }
 }

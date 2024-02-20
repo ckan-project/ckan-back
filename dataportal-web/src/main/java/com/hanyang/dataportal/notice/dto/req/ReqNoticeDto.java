@@ -2,6 +2,7 @@ package com.hanyang.dataportal.notice.dto.req;
 
 
 import com.hanyang.dataportal.notice.domain.Notice;
+import com.hanyang.dataportal.notice.dto.res.ResNoticeDto;
 import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.dto.req.ReqSignupDto;
 import jakarta.validation.constraints.NotBlank;
@@ -32,4 +33,6 @@ public class ReqNoticeDto {
                     createDate(LocalDate.now()).
                     build();
     }
+
+
 }

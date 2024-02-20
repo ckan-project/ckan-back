@@ -17,11 +17,13 @@ public class ReqUpdateNoticeDto {
     private String content;
 
 
+
+    // Dto ~ Controller 에서 Service(Business 로직)으로 데이터를 넘겨줄때 toEntity를 사용
     public Notice toEntity() {
         return Notice.builder().
                 title(title).
                 content(content).
-                updateDateTime(LocalDateTime.now()).
+                createDate(LocalDate.from(LocalDateTime.now())).
                 build();
     }
 
