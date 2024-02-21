@@ -1,57 +1,53 @@
 package com.hanyang.dataportal.notice.service;
 
 
+import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.notice.domain.Notice;
-import com.hanyang.dataportal.notice.dto.req.ReqUpdateNoticeDto;
 import com.hanyang.dataportal.notice.repository.NoticeRepository;
 import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.service.UserService;
-import jakarta.persistence.EntityExistsException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service (value = "공지사항 ~ 단건조회")
 public class NoticeDetailService {
-    private final NoticeDetailService noticeService;
     private final NoticeRepository noticeRepository;
     private final UserService userService;
-    NoticeDetailService(NoticeRepository noticeRepository, NoticeDetailService noticeService, UserService userService) {
+    NoticeDetailService(NoticeRepository noticeRepository,UserService userService) {
         this.noticeRepository = noticeRepository;
-        this.noticeService = noticeService;
         this.userService =  userService;
     }
 
-
     // 1. Notice Create
-    public Notice createNotice(Notice reqNoticeDto, String admin) {
-        //회원정보의 존재의 검증
-        User adin  = userService.findByEmail(admin);
+    public Notice createNotice(Notice notice, String email) {
+        User user  = userService.findByEmail(email);
+        notice.setAdmin(user);
 
-        //Dto에서 넘겨받은 정보를 Notice 타입의 notice 변수에 저장.
-        Notice notice = new Notice();
-        notice.setTitle(reqNoticeDto.getTitle());
-        notice.setContent(reqNoticeDto.getContent());
-        notice.setCreateDate(LocalDateTime.now());
-        notice.setview(0);
-        notice.setUser(admin);
-        // noticeRepository에 save.
         return noticeRepository.save(notice);
     }
     public Notice findNotice(Long noticeId){
         return noticeRepository.findNoticeByNoticeId(noticeId)
-                .orElseThrow(() -> new EntityExistsException("공지글이 없음"));
+                .orElseThrow(() -> new ResourceNotFoundException("공지글이 없음"));
     }
 
-    public Notice updateNotice(ReqUpdateNoticeDto reqUpdateNoticeDto, Long noticeId) {
+    public Optional<Notice> updateNotice(Notice notice, Long noticeId) {
+       // noticeId를 통해 username을 찾아와서,
+        // notice에 넣어준다...
+        Notice getNotice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new ResourceNotFoundException("공지글의 없읍니다. "));
+
+        // ResNoticeDto noticeEntity = Notice.toNoticeUpdateDto(getNotice);
+        notice.setAdmin(getNotice.getAdmin());
+       // notice.setTitle(getNotice.getTitle());
+       // notice.setContent(getNotice.getContent());
+        notice.setNoticeId(getNotice.getNoticeId());
         // Notie 게시글의 존재검증
-        if(noticeRepository.existsById(noticeId)){
-        Notice notice = new Notice();
-        notice.setTitle(reqUpdateNoticeDto.getTitle());
-        notice.setContent(reqUpdateNoticeDto.getContent());
-        notice.setUpdateDateTime(LocalDateTime.now());
-            return noticeRepository.save(notice);
-        } else  return null;
+       // if(noticeRepository.existsById(noticeId)){
+        // Notice notice = new Notice();
+             noticeRepository.save(notice);
+        return Optional.of(getNotice);
+      //  } else  return null;
     }
 
     public boolean deleteNotice(Long noticeId) {

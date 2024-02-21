@@ -2,16 +2,13 @@ package com.hanyang.dataportal.notice.dto.req;
 
 
 import com.hanyang.dataportal.notice.domain.Notice;
-import com.hanyang.dataportal.user.domain.User;
-import com.hanyang.dataportal.user.dto.req.ReqSignupDto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-
-import static org.hibernate.boot.model.process.spi.MetadataBuildingProcess.build;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -31,5 +28,13 @@ public class ReqNoticeDto {
                     view(0).
                     createDate(LocalDate.now()).
                     build();
+    }
+    public Notice toUpdateEntity() {
+        return Notice.builder()
+                .title(title)
+                .content(content)
+                .updateDateTime(LocalDateTime.now())
+                .view(toEntity().getView())
+                .build();
     }
 }
