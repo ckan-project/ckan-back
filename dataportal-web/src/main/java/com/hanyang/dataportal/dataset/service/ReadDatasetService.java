@@ -20,6 +20,7 @@ public class ReadDatasetService {
     private final DatasetRepository datasetRepository;
     private final DatasetSearchRepository datasetSearchRepository;
 
+    @Transactional(readOnly = true)
     public Page<Dataset> getDatasetList(DatasetSearchCond datasetSearchCond){
         return datasetSearchRepository.searchDatasetList(datasetSearchCond);
     }

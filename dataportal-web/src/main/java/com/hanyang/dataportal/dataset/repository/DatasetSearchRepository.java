@@ -30,7 +30,7 @@ public class DatasetSearchRepository {
         Pageable pageable = PageRequest.of(datasetSearchCond.getPage(), 10);
         JPAQuery<Dataset> query = queryFactory.selectFrom(dataset)
                 .leftJoin(dataset.resource, resource).fetchJoin()
-                .leftJoin(dataset.datasetThemeList, datasetTheme).fetchJoin()
+                .leftJoin(dataset.datasetThemeList, datasetTheme)
                 .where(organizationEq(datasetSearchCond.getOrganization()),
                         titleLike(datasetSearchCond.getKeyword()),
                         themeIn(datasetSearchCond.getTheme()));
