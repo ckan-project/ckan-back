@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import static com.hanyang.dataportal.core.response.ApiResponse.ok;
@@ -23,13 +24,13 @@ public class AdminDatasetController {
     private final UpdateDatasetService updateDatasetService;
     @Operation(summary = "dataset 저장")
     @PostMapping("/dataset")
-    public ResponseEntity<ApiResponse<ResDatasetDetailDto>> saveDataset(@RequestBody ReqDatasetDto reqDatasetDto){
+    public ResponseEntity<ApiResponse<ResDatasetDetailDto>> saveDataset(@Validated @RequestBody ReqDatasetDto reqDatasetDto){
         Dataset dataset = updateDatasetService.create(reqDatasetDto);
         return ResponseEntity.ok(ok(new ResDatasetDetailDto(dataset)));
     }
     @Operation(summary = "dataset 수정")
     @PutMapping("/dataset/{datasetId}")
-    public ResponseEntity<ApiResponse<ResDatasetDetailDto>> updateDataset(@PathVariable Long datasetId, @RequestBody ReqDatasetDto reqDatasetDto){
+    public ResponseEntity<ApiResponse<ResDatasetDetailDto>> updateDataset(@PathVariable Long datasetId,@Validated @RequestBody ReqDatasetDto reqDatasetDto){
         Dataset dataset = updateDatasetService.modify(datasetId, reqDatasetDto);
         return ResponseEntity.ok(ok(new ResDatasetDetailDto(dataset)));
     }
