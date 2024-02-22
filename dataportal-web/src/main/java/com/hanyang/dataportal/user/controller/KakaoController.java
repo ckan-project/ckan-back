@@ -34,10 +34,6 @@ public class KakaoController {
         formData.add("redirect_uri", redirect_uri);
         formData.add("code", code);
 
-        formData.forEach((key, value) -> {
-            System.out.println("key: "+key+" value: "+value);
-        });
-
         WebClient webClient = WebClient.create(token_url);
         ResKakaoDto response = webClient.post()
                 .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
@@ -52,5 +48,6 @@ public class KakaoController {
                 .block();
 
         System.out.println(response);
+        // TODO: user 정보 확인 -> DB 저장 or 유저 검증
     }
 }
