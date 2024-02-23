@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @Tag(name = "kakao 로그인 API")
 @RestController
 @RequiredArgsConstructor
@@ -15,6 +17,9 @@ public class KakaoController {
     @GetMapping("login/oauth2/kakao")
     public void kakaoLogin(@RequestParam String code) {
         String accessToken = kakaoLoginService.getAccessToken(code);
-        System.out.println("accessToken: \n"+accessToken);
+        Map<String, Object> userInfo = kakaoLoginService.getUserInfo(accessToken);
+        userInfo.forEach((key, value) -> {
+            System.out.println("key: " + key + ", value: " + value);
+        });
     }
 }

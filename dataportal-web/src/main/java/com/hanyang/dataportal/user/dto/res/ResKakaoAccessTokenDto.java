@@ -3,7 +3,7 @@ package com.hanyang.dataportal.user.dto.res;
 import lombok.Data;
 
 @Data
-public class ResKakaoDto {
+public class ResKakaoAccessTokenDto {
     private final String token_type = "bearer";
 
     private String access_token;
