@@ -4,7 +4,7 @@ import com.hanyang.dataportal.TestQueryDSLConfig;
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.domain.Organization;
 import com.hanyang.dataportal.dataset.domain.Theme;
-import com.hanyang.dataportal.dataset.dto.DatasetSearchCond;
+import com.hanyang.dataportal.dataset.dto.req.DatasetSearchCond;
 import com.hanyang.dataportal.dataset.utill.DatasetSort;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +20,8 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -80,7 +82,7 @@ class DatasetSearchRepositoryTest {
         //given
         DatasetSearchCond datasetSearchCond = new DatasetSearchCond();
         datasetSearchCond.setPage(0);
-        datasetSearchCond.setOrganization(Organization.소프트융합대학);
+        datasetSearchCond.setOrganization(Stream.of(Organization.소프트융합대학, Organization.경상대학).collect(Collectors.toList()));
         datasetSearchCond.setSort(DatasetSort.최신);
         //when
         Page<Dataset> datasets = datasetSearchRepository.searchDatasetList(datasetSearchCond);

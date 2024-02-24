@@ -3,6 +3,7 @@ package com.hanyang.dataportal.dataset.dto.res;
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.domain.DatasetTheme;
 import com.hanyang.dataportal.dataset.domain.Theme;
+import com.hanyang.dataportal.dataset.domain.Type;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 
@@ -27,7 +28,7 @@ public class ResDatasetListDto {
         private String title;
         private String description;
         private Integer view;
-        private String type;
+        private Type type;
         private List<Theme> themeList;
 
         public SimpleDataset(Dataset dataset) {

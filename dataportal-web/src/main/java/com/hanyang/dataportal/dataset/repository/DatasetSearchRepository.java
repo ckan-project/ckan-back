@@ -3,7 +3,8 @@ package com.hanyang.dataportal.dataset.repository;
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.domain.Organization;
 import com.hanyang.dataportal.dataset.domain.Theme;
-import com.hanyang.dataportal.dataset.dto.DatasetSearchCond;
+import com.hanyang.dataportal.dataset.domain.Type;
+import com.hanyang.dataportal.dataset.dto.req.DatasetSearchCond;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -31,8 +32,9 @@ public class DatasetSearchRepository {
         JPAQuery<Dataset> query = queryFactory.selectFrom(dataset)
                 .leftJoin(dataset.resource, resource).fetchJoin()
                 .leftJoin(dataset.datasetThemeList, datasetTheme)
-                .where(organizationEq(datasetSearchCond.getOrganization()),
-                        titleLike(datasetSearchCond.getKeyword()),
+                .where(titleLike(datasetSearchCond.getKeyword()),
+                        organizationIn(datasetSearchCond.getOrganization()),
+                        typeIn(datasetSearchCond.getType()),
                         themeIn(datasetSearchCond.getTheme()));
 
         switch (datasetSearchCond.getSort().name()) {
@@ -58,22 +60,27 @@ public class DatasetSearchRepository {
 
         Long count = queryFactory.select(dataset.count())
                 .from(dataset)
-                .where(organizationEq(datasetSearchCond.getOrganization()),
-                        titleLike(datasetSearchCond.getKeyword()),
+                .where(titleLike(datasetSearchCond.getKeyword()),
+                        organizationIn(datasetSearchCond.getOrganization()),
+                        typeIn(datasetSearchCond.getType()),
                         themeIn(datasetSearchCond.getTheme()))
                 .fetchOne();
         return new PageImpl<>(content, pageable, count);
-    }
-
-    private BooleanExpression organizationEq(Organization organization) {
-        return organization != null ? dataset.organization.eq(organization) : null;
     }
 
     private BooleanExpression titleLike(String keyword) {
         return keyword != null ? dataset.title.contains(keyword) : null;
     }
 
+    private BooleanExpression organizationIn(List<Organization> organizationList) {
+        return organizationList != null ? dataset.organization.in(organizationList) : null;
+    }
+
     private BooleanExpression themeIn(List<Theme> themeList){
         return themeList !=null ? dataset.datasetThemeList.any().theme.in(themeList) : null;
+    }
+
+    private BooleanExpression typeIn(List<Type> typeList) {
+        return typeList != null ? dataset.resource.type.in(typeList) : null;
     }
 }

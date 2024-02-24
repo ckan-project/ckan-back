@@ -1,6 +1,7 @@
 package com.hanyang.dataportal.user.dto.res;
 
 import com.hanyang.dataportal.dataset.domain.Organization;
+import com.hanyang.dataportal.dataset.domain.Type;
 import com.hanyang.dataportal.user.domain.Scrap;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -31,7 +32,7 @@ public class ResScrapDto {
      * 스크랩한 dataset의 리소스 타입
      */
     @Schema(description = "스크랩한 데이터셋의 리소스 타입", example = "csv")
-    private String type;
+    private Type type;
     /**
      * 스크랩한 dataset의 조직
      */

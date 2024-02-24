@@ -17,13 +17,14 @@ public class Resource {
     private Long resourceId;
     @Lob
     private String resourceUrl;
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private  Type type;
     private String resourceName;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "datasetId")
     private Dataset dataset;
 
-    public void updateResource(String url, String type,String fileName) {
+    public void updateResource(String url, Type type,String fileName) {
         this.resourceUrl = url;
         this.type = type;
         this.resourceName = fileName;

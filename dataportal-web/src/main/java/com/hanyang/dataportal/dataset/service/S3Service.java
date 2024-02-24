@@ -3,6 +3,7 @@ package com.hanyang.dataportal.dataset.service;
 
 import com.hanyang.dataportal.core.exception.FileException;
 import com.hanyang.dataportal.dataset.domain.Resource;
+import com.hanyang.dataportal.dataset.domain.Type;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,7 @@ public class S3Service {
                 .build();
 
         return  Resource.builder().
-                type(ext).
+                type(Type.valueOf(ext)).
                 resourceUrl(String.valueOf(s3Client.utilities().getUrl(getUrlRequest))).
                 resourceName(resourceName).
                 build();

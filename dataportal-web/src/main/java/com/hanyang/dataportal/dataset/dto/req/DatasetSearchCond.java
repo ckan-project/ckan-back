@@ -1,7 +1,8 @@
-package com.hanyang.dataportal.dataset.dto;
+package com.hanyang.dataportal.dataset.dto.req;
 
 import com.hanyang.dataportal.dataset.domain.Organization;
 import com.hanyang.dataportal.dataset.domain.Theme;
+import com.hanyang.dataportal.dataset.domain.Type;
 import com.hanyang.dataportal.dataset.utill.DatasetSort;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,9 +14,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DatasetSearchCond {
-    String keyword;
-    Organization organization;
-    List<Theme> theme;
-    DatasetSort sort;
-    int page;
+    private String keyword;
+    private List<Organization> organization;
+    private List<Theme> theme;
+    private List<Type> type;
+    private DatasetSort sort = DatasetSort.최신;
+    private int page = 0;
+
+
 }

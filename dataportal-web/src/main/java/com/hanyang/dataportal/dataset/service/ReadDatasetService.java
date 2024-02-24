@@ -2,7 +2,7 @@ package com.hanyang.dataportal.dataset.service;
 
 import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.dataset.domain.Dataset;
-import com.hanyang.dataportal.dataset.dto.DatasetSearchCond;
+import com.hanyang.dataportal.dataset.dto.req.DatasetSearchCond;
 import com.hanyang.dataportal.dataset.repository.DatasetRepository;
 import com.hanyang.dataportal.dataset.repository.DatasetSearchRepository;
 import lombok.RequiredArgsConstructor;
