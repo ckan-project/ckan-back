@@ -26,6 +26,12 @@ public class EmailService {
             "아래의 인증번호를 입력하여 회원가입을 완료해주세요."+
             "<br><br>" +
             "인증번호 %s";
+    private static final String EMAIL_TITLE_TEMPORARY_PASSWORD = "한양대 에리카 DATA 포털 - 임시 비밀번호 발급";
+    private static final String EMAIL_CONTENT_TEMPLATE_TEMPORARY_PASSWORD = "한양대 에리카 DATA 포털 임시 비밀번호 입니다. " +
+            "아래의 임시번호를 입력하여 로그인 해주세요."+
+            "<br><br>" +
+            "임시 비밀번호 %s";
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     public String joinEmail(String email) {
         String code = Integer.toString(makeRandomNumber());
@@ -33,6 +39,13 @@ public class EmailService {
         mailSend(setFrom, email, EMAIL_TITLE,content);
         redisService.setCode(email,code);
         return code;
+    }
+    public String temporaryPasswordEmail(String email) {
+        String temporaryPassword = generateRandomString();
+        String content = String.format(EMAIL_TITLE_TEMPORARY_PASSWORD, temporaryPassword);
+        mailSend(setFrom, email, EMAIL_CONTENT_TEMPLATE_TEMPORARY_PASSWORD,content);
+        redisService.setCode(email,temporaryPassword);
+        return temporaryPassword;
     }
     public void mailSend(String setFrom, String toMail, String title, String content) {
         MimeMessage message = mailSender.createMimeMessage();
@@ -60,6 +73,15 @@ public class EmailService {
             randomNumber.append(r.nextInt(10));
         }
         return Integer.parseInt(randomNumber.toString());
+    }
+
+    public String generateRandomString() {
+        Random r = new Random();
+        StringBuilder stringBuilder = new StringBuilder(10);
+        for (int i = 0; i < 10; i++) {
+            stringBuilder.append(CHARACTERS.charAt(r.nextInt(10)));
+        }
+        return stringBuilder.toString();
     }
 
 }

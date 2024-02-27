@@ -2,10 +2,7 @@ package com.hanyang.dataportal.user.controller;
 
 import com.hanyang.dataportal.core.jwt.dto.TokenDto;
 import com.hanyang.dataportal.core.response.ApiResponse;
-import com.hanyang.dataportal.user.dto.req.ReqCodeDto;
-import com.hanyang.dataportal.user.dto.req.ReqEmailDto;
-import com.hanyang.dataportal.user.dto.req.ReqLoginDto;
-import com.hanyang.dataportal.user.dto.req.ReqSignupDto;
+import com.hanyang.dataportal.user.dto.req.*;
 import com.hanyang.dataportal.user.dto.res.ResCodeDto;
 import com.hanyang.dataportal.user.dto.res.ResUserDto;
 import com.hanyang.dataportal.user.service.EmailService;
@@ -15,10 +12,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "유저 권한 API")
 @RestController
@@ -50,5 +46,26 @@ public class UserAuthController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<TokenDto>> login(@RequestBody ReqLoginDto reqLoginDto){
         return ResponseEntity.ok(ApiResponse.ok(userLoginService.login(reqLoginDto)));
+    }
+
+    @Operation(summary = "유저 기존 비밀번호 확인")
+    @GetMapping("/password/check")
+    public ResponseEntity<ApiResponse<?>> passwordCheck(@AuthenticationPrincipal UserDetails userDetail, @RequestBody ReqPasswordDto reqPasswordDto){
+        userLoginService.passwordCheck(userDetail,reqPasswordDto);
+        return ResponseEntity.ok(ApiResponse.ok(null));
+    }
+
+    @Operation(summary = "유저 비밀번호 변경")
+    @PutMapping("/password")
+    public ResponseEntity<ApiResponse<?>> passwordChange(@AuthenticationPrincipal UserDetails userDetail,@RequestBody ReqPasswordDto reqPasswordDto){
+        userLoginService.changePassword(userDetail,reqPasswordDto.getPassword());
+        return ResponseEntity.ok(ApiResponse.ok(null));
+    }
+
+    @Operation(summary = "유저 비밀번호 분실시 임시 비밀번호 발급")
+    @GetMapping("/password")
+    public ResponseEntity<ApiResponse<?>> passwordChange(@AuthenticationPrincipal UserDetails userDetail){
+        userLoginService.findPassword(userDetail);
+        return ResponseEntity.ok(ApiResponse.ok(null));
     }
 }

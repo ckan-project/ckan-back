@@ -16,4 +16,6 @@ public interface DatasetRepository extends JpaRepository<Dataset,Long>{
     @Query("select d from Dataset d left join fetch d.datasetThemeList where d.datasetId = :datasetId")
     Optional<Dataset> findByIdWithTheme(Long datasetId);
 
+    Optional<Dataset> findByTitle(String title);
+
 }
