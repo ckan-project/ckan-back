@@ -6,6 +6,8 @@ import com.hanyang.dataportal.dataset.domain.Theme;
 import com.hanyang.dataportal.dataset.domain.Type;
 import com.hanyang.dataportal.dataset.dto.req.DatasetSearchCond;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.hanyang.dataportal.dataset.domain.QDataset.dataset;
-import static com.hanyang.dataportal.dataset.domain.QDatasetTheme.datasetTheme;
 import static com.hanyang.dataportal.dataset.domain.QResource.resource;
 import static com.hanyang.dataportal.user.domain.QScrap.scrap;
 
@@ -31,7 +32,6 @@ public class DatasetSearchRepository {
         Pageable pageable = PageRequest.of(datasetSearchCond.getPage(), 10);
         JPAQuery<Dataset> query = queryFactory.selectFrom(dataset)
                 .leftJoin(dataset.resource, resource).fetchJoin()
-                .leftJoin(dataset.datasetThemeList, datasetTheme)
                 .where(titleLike(datasetSearchCond.getKeyword()),
                         organizationIn(datasetSearchCond.getOrganization()),
                         typeIn(datasetSearchCond.getType()),
@@ -53,10 +53,10 @@ public class DatasetSearchRepository {
             }
         }
 
+
         List<Dataset> content = query
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+                .limit(pageable.getPageSize()).fetch();
 
         Long count = queryFactory.select(dataset.count())
                 .from(dataset)
@@ -69,7 +69,12 @@ public class DatasetSearchRepository {
     }
 
     private BooleanExpression titleLike(String keyword) {
-        return keyword != null ? dataset.title.contains(keyword) : null;
+        if(keyword == null){
+            return null;
+        }
+        NumberTemplate<Double> booleanTemplateTitle = Expressions.numberTemplate(Double.class,
+                "function('match',{0},{1})", dataset.title,keyword+"*");
+        return booleanTemplateTitle.gt(0);
     }
 
     private BooleanExpression organizationIn(List<Organization> organizationList) {

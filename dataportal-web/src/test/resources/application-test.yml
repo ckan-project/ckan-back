@@ -21,5 +21,5 @@ spring:
           characterEncoding: utf-8
         default_batch_fetch_size: 100
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
 
