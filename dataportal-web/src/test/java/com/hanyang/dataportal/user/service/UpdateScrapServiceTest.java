@@ -1,7 +1,7 @@
 package com.hanyang.dataportal.user.service;
 
-import com.hanyang.dataportal.core.dto.ResponseMessage;
-import com.hanyang.dataportal.core.exception.ResourceExist;
+import com.hanyang.dataportal.core.exception.ResourceExistException;
+import com.hanyang.dataportal.core.response.ResponseMessage;
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.service.DatasetService;
 import com.hanyang.dataportal.user.domain.Scrap;
@@ -94,11 +94,11 @@ class UpdateScrapServiceTest {
                 when(datasetService.findById(datasetId)).thenReturn(dataset);
                 when(userDetails.getUsername()).thenReturn(userEmail);
                 when(userService.findByEmail(userEmail)).thenReturn(user);
-                doThrow(new ResourceExist(ResponseMessage.DUPLICATE_SCRAP))
+                doThrow(new ResourceExistException(ResponseMessage.DUPLICATE_SCRAP))
                         .when(scrapService).checkDuplicateByDatasetAndUser(dataset, user);
 
                 // when
-                Exception exception = assertThrows(ResourceExist.class, () -> {
+                Exception exception = assertThrows(ResourceExistException.class, () -> {
                     updateScrapService.createScrap(userDetails, datasetId); // fail
                 });
 

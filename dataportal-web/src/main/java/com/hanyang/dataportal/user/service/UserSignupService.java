@@ -1,6 +1,6 @@
 package com.hanyang.dataportal.user.service;
 
-import com.hanyang.dataportal.core.exception.ResourceNotFound;
+import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.dto.req.ReqSignupDto;
 import com.hanyang.dataportal.user.repository.UserRepository;
@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.hanyang.dataportal.core.dto.ResponseMessage.DUPLICATE_EMAIL;
+import static com.hanyang.dataportal.core.response.ResponseMessage.DUPLICATE_EMAIL;
 import static com.hanyang.dataportal.user.domain.Role.ROLE_USER;
 
 @Service
@@ -31,6 +31,6 @@ public class UserSignupService {
             return userRepository.save(user);
         }
 
-        throw new ResourceNotFound(DUPLICATE_EMAIL);
+        throw new ResourceNotFoundException(DUPLICATE_EMAIL);
     }
 }

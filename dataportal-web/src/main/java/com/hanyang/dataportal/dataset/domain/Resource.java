@@ -13,11 +13,24 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Resource {
     @Id
-    private String resourceId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long resourceId;
     @Lob
-    private String url;
-    private String type;
+    private String resourceUrl;
+    @Enumerated(EnumType.STRING)
+    private  Type type;
+    private String resourceName;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "datasetId")
     private Dataset dataset;
+
+    public void updateResource(String url, Type type,String fileName) {
+        this.resourceUrl = url;
+        this.type = type;
+        this.resourceName = fileName;
+    }
+
+    public void setDataset(Dataset dataset) {
+        this.dataset = dataset;
+    }
 }

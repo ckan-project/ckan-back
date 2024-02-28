@@ -1,17 +1,22 @@
 package com.hanyang.dataportal.dataset.controller;
 
-import com.hanyang.dataportal.core.dto.ApiResponse;
+import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.dataset.domain.Dataset;
+import com.hanyang.dataportal.dataset.dto.req.DatasetSearchCond;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetDetailDto;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetListDto;
 import com.hanyang.dataportal.dataset.service.ReadDatasetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import static com.hanyang.dataportal.core.dto.ApiResponse.ok;
+import static com.hanyang.dataportal.core.response.ApiResponse.ok;
 
 @Tag(name = "데이터셋 API")
 @RestController
@@ -22,13 +27,9 @@ public class DatasetController {
 
     @Operation(summary = "dataset 리스트 보기")
     @GetMapping("/datasets")
-    public ResponseEntity<ApiResponse<ResDatasetListDto>> getDatasetList(@RequestParam(defaultValue = "입학") String theme,
-                                                                               @RequestParam(defaultValue = "입학처") String organization,
-                                                                               @RequestParam(defaultValue = "") String keyword,
-                                                                               @RequestParam(defaultValue = "view") String sort,
-                                                                               @RequestParam(defaultValue = "0") int page){
-        ResDatasetListDto datasets = readDatasetService.getDatasetList(theme,organization,keyword,sort,page);
-        return ResponseEntity.ok(ok(datasets));
+    public ResponseEntity<ApiResponse<ResDatasetListDto>> getDatasetList(DatasetSearchCond datasetSearchCond){
+        Page<Dataset> datasetList = readDatasetService.getDatasetList(datasetSearchCond);
+        return ResponseEntity.ok(ok(new ResDatasetListDto(datasetList)));
     }
 
 

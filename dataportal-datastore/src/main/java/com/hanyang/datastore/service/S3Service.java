@@ -1,73 +1,57 @@
 package com.hanyang.datastore.service;
 
-import com.amazonaws.SdkClientException;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.*;
-import com.amazonaws.util.IOUtils;
-import com.hanyang.datastore.dto.ResourceDto;
+import com.hanyang.datastore.core.component.ConvertFileType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.ResponseBytes;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import static com.hanyang.datastore.utill.RandomStringGenerator.generateRandomString;
+import java.util.List;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class S3Service {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
-    private final AmazonS3 amazonS3;
+    private final S3Client s3Client;
+    private final ConvertFileType convertFileType;
 
+    public InputStream getFile(String datasetId) throws IOException {
 
-    //s3는 datasetId/resourceId/파일명 으로 구성되어있음
-    public ResourceDto uploadFile(Long datasetId, MultipartFile multipartFile) throws IOException {
+        ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder()
+                .bucket(bucket)
+                .prefix(datasetId+"/")
+                .build();
 
-        String fileName = multipartFile.getOriginalFilename();
+        ListObjectsV2Response response = s3Client.listObjectsV2(listObjectsRequest);
+        List<S3Object> s3ObjectsList = response.contents();
 
-        //파일 형식 구하기
-        String ext = fileName.split("\\.")[1];
-        String contentType = switch (ext) {
-            case "jpeg" -> "image/jpeg";
-            case "jpg" -> "image/jpg";
-            case "png" -> "image/png";
-            default -> "";
-
-            //content type을 지정해서 올려주지 않으면 자동으로 "application/octet-stream"으로 고정이 되서 링크 클릭시 웹에서 열리는게 아니라 자동 다운이 시작됨.
-        };
-
-        String resourceId = generateRandomString();
-
-        String s3ObjectName = datasetId+ "/" +resourceId;
-
-        try {
-            byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(contentType);
-            metadata.setContentLength(bytes.length);
-
-            amazonS3.putObject(new PutObjectRequest(bucket, s3ObjectName, multipartFile.getInputStream(), metadata)
-                    .withCannedAcl(CannedAccessControlList.PublicRead));
-        } catch (SdkClientException e) {
-            e.printStackTrace();
+        String key = null;
+        for (S3Object object : s3ObjectsList) {
+            key =object.key();
         }
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .build();
 
-        ResourceDto resourceDto = new ResourceDto();
-        resourceDto.setResourceId(resourceId);
-        resourceDto.setType(ext);
-        resourceDto.setResourceUrl(String.valueOf(amazonS3.getUrl(bucket, s3ObjectName)));
+        ResponseBytes<GetObjectResponse> objectBytes = s3Client.getObjectAsBytes(getObjectRequest);
+        byte[] data = objectBytes.asByteArray();
 
-        return resourceDto;
-    }
+        assert key != null;
+        String type = key.split("\\.")[1];
 
-    public InputStream getFile(String datasetId, String resourceId){
-        S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucket, datasetId + "/" + resourceId));
-        return s3Object.getObjectContent();
+        if(type.equals("xlsx")){
+            return convertFileType.convertXlsxToCsv(new ByteArrayInputStream(data));
+        }
+        else {
+            return new ByteArrayInputStream(data);
+        }
     }
 }

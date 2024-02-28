@@ -1,13 +1,13 @@
 package com.hanyang.dataportal.core.config;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 
 @Configuration
 public class S3Config {
@@ -16,17 +16,14 @@ public class S3Config {
 
     @Value("${cloud.aws.credentials.secretKey}")
     private String secretKey;
-    @Value("${cloud.aws.region.static}")
-    private String region;
 
     @Bean
-    public AmazonS3 amazonS3Client() {
-        AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+    public S3Client amazonS3Client() {
+        AwsBasicCredentials awsCredentials = AwsBasicCredentials.create(accessKey, secretKey);
 
-        return AmazonS3ClientBuilder
-                .standard()
-                .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(region)
+        return S3Client.builder()
+                .region(Region.AP_NORTHEAST_2) // 본인의 S3 버킷이 있는 리전으로 변경
+                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
                 .build();
     }
 

@@ -1,13 +1,13 @@
 package com.hanyang.dataportal.dataset.service;
 
-import com.hanyang.dataportal.core.exception.ResourceNotFound;
+import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.repository.DatasetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.hanyang.dataportal.core.dto.ResponseMessage.NOT_EXIST_DATASET;
+import static com.hanyang.dataportal.core.response.ResponseMessage.NOT_EXIST_DATASET;
 
 @Service
 @RequiredArgsConstructor
@@ -15,11 +15,10 @@ import static com.hanyang.dataportal.core.dto.ResponseMessage.NOT_EXIST_DATASET;
 public class DatasetService {
     private final DatasetRepository datasetRepository;
     public Dataset findById(Long id){
-        return  datasetRepository.findById(id).orElseThrow(() -> new ResourceNotFound(NOT_EXIST_DATASET));
+        return  datasetRepository.findByIdWithTheme(id).orElseThrow(() -> new ResourceNotFoundException(NOT_EXIST_DATASET));
     }
     public void deleteDataset(Long datasetId){
         datasetRepository.deleteById(datasetId);
     }
-
 
 }

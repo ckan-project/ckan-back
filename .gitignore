@@ -2,10 +2,9 @@ HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-application.yml
+generated/
+application-dev.yml
+application-prod.yml
 
 ### STS ###
 .apt_generated
@@ -16,8 +15,7 @@ application.yml
 .springBeans
 .sts4-cache
 bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
+
 
 ### IntelliJ IDEA ###
 .idea

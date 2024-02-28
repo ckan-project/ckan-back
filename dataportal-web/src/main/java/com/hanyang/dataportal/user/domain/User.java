@@ -40,4 +40,8 @@ public class User{
     private List<Question> questionList = new ArrayList<>();
     @OneToMany(mappedBy = "admin", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Answer> answers = new ArrayList<>();
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
 }

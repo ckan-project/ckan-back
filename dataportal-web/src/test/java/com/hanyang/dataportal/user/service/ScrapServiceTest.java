@@ -1,7 +1,7 @@
 package com.hanyang.dataportal.user.service;
 
-import com.hanyang.dataportal.core.dto.ResponseMessage;
-import com.hanyang.dataportal.core.exception.ResourceExist;
+import com.hanyang.dataportal.core.exception.ResourceExistException;
+import com.hanyang.dataportal.core.response.ResponseMessage;
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.user.domain.Scrap;
 import com.hanyang.dataportal.user.domain.User;
@@ -57,7 +57,7 @@ class ScrapServiceTest {
                     .thenReturn(Optional.of(scrap));
 
             // when
-            Exception exception = assertThrows(ResourceExist.class, () -> {
+            Exception exception = assertThrows(ResourceExistException.class, () -> {
                 scrapService.checkDuplicateByDatasetAndUser(dataset, user);
             });
 

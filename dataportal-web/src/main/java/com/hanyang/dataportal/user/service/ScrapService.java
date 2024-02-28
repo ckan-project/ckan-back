@@ -1,8 +1,8 @@
 package com.hanyang.dataportal.user.service;
 
-import com.hanyang.dataportal.core.dto.ResponseMessage;
-import com.hanyang.dataportal.core.exception.ResourceExist;
-import com.hanyang.dataportal.core.exception.ResourceNotFound;
+import com.hanyang.dataportal.core.response.ResponseMessage;
+import com.hanyang.dataportal.core.exception.ResourceExistException;
+import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.user.domain.Scrap;
 import com.hanyang.dataportal.user.domain.User;
@@ -35,7 +35,7 @@ public class ScrapService {
      */
     public Scrap findByScrapId(Long scrapId) {
         return scrapRepository.findById(scrapId)
-                .orElseThrow(() -> new ResourceNotFound(ResponseMessage.NOT_EXIST_SCRAP));
+                .orElseThrow(() -> new ResourceNotFoundException(ResponseMessage.NOT_EXIST_SCRAP));
     }
 
     /**
@@ -46,7 +46,7 @@ public class ScrapService {
      */
     public Scrap findByDatasetAndUser(Dataset dataset, User user) {
         return scrapRepository.findByDatasetAndUser(dataset, user)
-                .orElseThrow(() -> new ResourceNotFound(ResponseMessage.NOT_EXIST_SCRAP));
+                .orElseThrow(() -> new ResourceNotFoundException(ResponseMessage.NOT_EXIST_SCRAP));
     }
 
     /**
@@ -57,7 +57,7 @@ public class ScrapService {
     public void checkDuplicateByDatasetAndUser(Dataset dataset, User user) {
         scrapRepository.findByDatasetAndUser(dataset, user)
                 .ifPresent(scrap -> {
-                    throw new ResourceExist(ResponseMessage.DUPLICATE_SCRAP);
+                    throw new ResourceExistException(ResponseMessage.DUPLICATE_SCRAP);
                 });
     }
 }
