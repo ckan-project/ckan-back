@@ -1,5 +1,9 @@
 package com.hanyang.dataportal.user.service;
 
+import com.hanyang.dataportal.core.jwt.dto.TokenDto;
+import com.hanyang.dataportal.user.domain.User;
+import com.hanyang.dataportal.user.dto.req.ReqLoginDto;
+import com.hanyang.dataportal.user.dto.req.ReqSignupDto;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -35,6 +39,9 @@ public class KakaoLoginService {
     private String userInfo_url;
 
     private final JSONParser jsonParser = new JSONParser();
+
+    private final UserLoginService userLoginService;
+    private final UserSignupService userSignupService;
 
     /**
      * 액세스 토큰을 발급받는 메서드
@@ -96,5 +103,31 @@ public class KakaoLoginService {
         result.put("name", name);
 
         return result;
+    }
+
+    /**
+     * 카카오 client id로 로그인하는 메서드
+     * @param userId - 카카오 api에서 전달받은 사용자 id
+     * @return
+     */
+    public TokenDto kakaoLogin(String userId) {
+        ReqLoginDto reqLoginDto = new ReqLoginDto();
+        reqLoginDto.setEmail(userId);
+        reqLoginDto.setPassword(userId);
+        return userLoginService.login(reqLoginDto);
+    }
+
+    /**
+     * 카카오 정보로 회원가입을 진행하는 메서드
+     * @param userId - 카카오 api에서 전달받은 사용자 id
+     * @param nickname - 카카오 api에서 전달받은 사용자 닉네임
+     * @return
+     */
+    public User kakaoSignup(String userId, String nickname) {
+        ReqSignupDto reqSignupDto = new ReqSignupDto();
+        reqSignupDto.setEmail(userId);
+        reqSignupDto.setPassword(userId);
+        reqSignupDto.setName(nickname);
+        return userSignupService.signUp(reqSignupDto);
     }
 }
