@@ -1,6 +1,7 @@
 package com.hanyang.dataportal.core.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hanyang.dataportal.qna.dto.res.ResQuestionDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -20,7 +21,7 @@ public class ApiResponse<T> {
         this.msg = msg;
     }
 
-    public static <T> ApiResponse<T> ok(T data) {
+    public static <T> ApiResponse<ResQuestionDto> ok(T data) {
         return new ApiResponse<>(true, SUCCESS, data);
     }
 
