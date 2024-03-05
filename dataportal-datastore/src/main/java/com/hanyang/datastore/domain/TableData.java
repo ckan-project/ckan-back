@@ -16,9 +16,11 @@ import java.util.Map;
 public class TableData {
     @Id
     private String id;
-    private Map<String, Object> attributes = new LinkedHashMap<>();
+    private Map<String, String> attributes = new LinkedHashMap<>();
 
     public void setAttributes(String col,String row) {
         this.attributes.put(col,row);
     }
+
+
 }

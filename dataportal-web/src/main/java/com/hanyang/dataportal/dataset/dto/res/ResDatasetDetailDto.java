@@ -21,6 +21,8 @@ public class ResDatasetDetailDto {
     private LocalDate updateDate;
     private Integer view;
     private Integer download;
+    private String resourceName;
+    private String resourceUrl;
 
     public ResDatasetDetailDto(Dataset dataset) {
         this.datasetId = dataset.getDatasetId();
@@ -32,5 +34,7 @@ public class ResDatasetDetailDto {
         this.updateDate = dataset.getUpdateDate();
         this.view = dataset.getView();
         this.download = dataset.getDownload();
+        this.resourceName = dataset.getResource().getResourceName();
+        this.resourceUrl = dataset.getResource().getResourceUrl();
     }
 }

@@ -27,12 +27,15 @@ public class ConvertFileType {
                     String cellValue = dataFormatter.formatCellValue(cell);
                     csvLine.append(cellValue).append(",");
                 }
+                if (!csvLine.toString().equals("")) {
+                    // 마지막 쉼표 제거
+                    csvLine.deleteCharAt(csvLine.length() - 1);
 
-                // 마지막 쉼표 제거
-                csvLine.deleteCharAt(csvLine.length() - 1);
+                    // CSV 파일에 한 줄 추가
+                    writer.write(csvLine + "\n");
+                }
 
-                // CSV 파일에 한 줄 추가
-                writer.write(csvLine + "\n");
+
             }
         }
         return new ByteArrayInputStream(outputStream.toByteArray());

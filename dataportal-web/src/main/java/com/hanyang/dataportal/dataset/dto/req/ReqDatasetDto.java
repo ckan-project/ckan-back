@@ -11,6 +11,7 @@ import java.util.List;
 
 @Data
 public class ReqDatasetDto {
+
     @Schema(description = "제목", example = "2024 한양대학교 에리카 입학 경쟁률")
     private String title;
     @Schema(description = "설명", example = "2024 한양대학교 에리카 입학 경쟁률에 대한 데이터 입니다.")

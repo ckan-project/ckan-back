@@ -1,6 +1,7 @@
 package com.hanyang.dataportal.dataset.repository;
 
 import com.hanyang.dataportal.dataset.domain.Dataset;
+import com.hanyang.dataportal.dataset.domain.Resource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,6 +17,6 @@ public interface DatasetRepository extends JpaRepository<Dataset,Long>{
     @Query("select d from Dataset d left join fetch d.datasetThemeList where d.datasetId = :datasetId")
     Optional<Dataset> findByIdWithTheme(Long datasetId);
 
-    Optional<Dataset> findByTitle(String title);
+    Optional<Dataset> findByResource(Resource resource);
 
 }
