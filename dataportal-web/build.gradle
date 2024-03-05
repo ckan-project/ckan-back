@@ -27,8 +27,6 @@ dependencies {
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-
-    implementation "com.googlecode.json-simple:json-simple:1.1.1"
 }
 
 def generated = 'src/main/generated'
@@ -52,7 +50,7 @@ configurations {
     querydsl.extendsFrom compileClasspath
 }
 
-tasks.compileQuerydsl.dependsOn(clean);
+tasks.compileQuerydsl.dependsOn(clean)
 
 compileQuerydsl{
     options.annotationProcessorPath = configurations.querydsl
