@@ -1,11 +1,11 @@
 package com.hanyang.dataportal.core.jwt.component;
 
 import com.hanyang.dataportal.core.jwt.dto.TokenDto;
+import com.hanyang.dataportal.user.service.RedisService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -20,8 +20,10 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     private final JwtSecretKey jwtSecretKey;
-    @Resource(name = "redisTemplate")
-    private ValueOperations<String, Object> valueOperations;
+    private final RedisService redisService;
+
+    @Value("${jwt.expire.refresh}")
+    private Long refreshExpire;
 
     // JWT 토큰 생성
     public TokenDto generateToken(Authentication authentication) {
@@ -33,7 +35,7 @@ public class JwtTokenProvider {
         long now = (new Date()).getTime();
 
         // Access Token 생성
-        long millisecondsInADay = 1000L * 60L * 60L * 24L;
+        long millisecondsInADay = 1000L * 60L * 30L;
         Date accessTokenExpiresIn = new Date(now + millisecondsInADay);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
@@ -47,7 +49,7 @@ public class JwtTokenProvider {
         // Redis 저장
         User user = (User) authentication.getPrincipal();
         String username = user.getUsername();
-        valueOperations.set(username, refreshToken);
+        redisService.setCode(username, refreshToken, refreshExpire);
 
         return TokenDto.builder()
                 .grantType("Bearer")
