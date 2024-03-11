@@ -3,12 +3,16 @@ package com.hanyang.dataportal.core.jwt.component;
 import com.hanyang.dataportal.core.jwt.dto.TokenDto;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -16,6 +20,8 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     private final JwtSecretKey jwtSecretKey;
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, Object> valueOperations;
 
     // JWT 토큰 생성
     public TokenDto generateToken(Authentication authentication) {
@@ -36,9 +42,17 @@ public class JwtTokenProvider {
                 .signWith(jwtSecretKey.getKey(), SignatureAlgorithm.HS256)
                 .compact();
 
+        // Refresh Token 생성
+        String refreshToken = UUID.randomUUID().toString();
+        // Redis 저장
+        User user = (User) authentication.getPrincipal();
+        String username = user.getUsername();
+        valueOperations.set(username, refreshToken);
+
         return TokenDto.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 }
