@@ -4,7 +4,6 @@ import com.hanyang.dataportal.core.exception.UnAuthenticationException;
 import com.hanyang.dataportal.core.response.ResponseMessage;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +12,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 public class RedisService {
-    private final RedisTemplate<String, Object> redisTemplate;
-
     @Resource(name = "redisTemplate")
     private ValueOperations<String, Object> valueOperations;
 
@@ -39,5 +36,14 @@ public class RedisService {
             throw new UnAuthenticationException(ResponseMessage.UN_AUTHORIZED);
         }
         return code.toString();
+    }
+
+    /**
+     * redis 칼럼을 삭제하는 메서드
+     * @param email 삭제할 칼럼의 key 값
+     * @return 삭제된 칼럼의 value
+     */
+    public Object deleteCode(String email) {
+        return valueOperations.getAndDelete(email);
     }
 }
