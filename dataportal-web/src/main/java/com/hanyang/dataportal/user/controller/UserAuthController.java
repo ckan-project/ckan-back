@@ -5,9 +5,7 @@ import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.user.dto.req.*;
 import com.hanyang.dataportal.user.dto.res.ResCodeDto;
 import com.hanyang.dataportal.user.dto.res.ResUserDto;
-import com.hanyang.dataportal.user.service.EmailService;
-import com.hanyang.dataportal.user.service.UserLoginService;
-import com.hanyang.dataportal.user.service.UserSignupService;
+import com.hanyang.dataportal.user.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserAuthController {
     private final UserSignupService userSignupService;
     private final UserLoginService userLoginService;
+    private final UserLogoutService userLogoutService;
     private final EmailService emailService;
     @Operation(summary = "이메일로 인증 번호 받기")
     @PostMapping("/email")
@@ -46,6 +45,13 @@ public class UserAuthController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<TokenDto>> login(@RequestBody ReqLoginDto reqLoginDto){
         return ResponseEntity.ok(ApiResponse.ok(userLoginService.login(reqLoginDto)));
+    }
+
+    @Operation(summary = "유저 로그아웃")
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<?>> logout(@AuthenticationPrincipal UserDetails userDetails) {
+        userLogoutService.logout(userDetails);
+        return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
     @Operation(summary = "유저 기존 비밀번호 확인")
