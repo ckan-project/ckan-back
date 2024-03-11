@@ -34,8 +34,7 @@ public class RedisService {
     }
 
     public String getCode(String email){
-        ValueOperations<String, Object> valOperations = redisTemplate.opsForValue();
-        Object code = valOperations.get(email);
+        Object code = valueOperations.get(email);
         if(code == null){
             throw new UnAuthenticationException(ResponseMessage.UN_AUTHORIZED);
         }
