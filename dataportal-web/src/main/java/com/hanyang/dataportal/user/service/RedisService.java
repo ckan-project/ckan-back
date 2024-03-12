@@ -1,5 +1,6 @@
 package com.hanyang.dataportal.user.service;
 
+import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.core.exception.UnAuthenticationException;
 import com.hanyang.dataportal.core.response.ResponseMessage;
 import jakarta.annotation.Resource;
@@ -44,6 +45,9 @@ public class RedisService {
      * @return 삭제된 칼럼의 value
      */
     public Object deleteCode(String email) {
+        if (valueOperations.get(email) == null) {
+            throw new ResourceNotFoundException("유저의 refresh token 정보가 존재하지 않습니다.");
+        }
         return valueOperations.getAndDelete(email);
     }
 }

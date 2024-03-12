@@ -1,5 +1,6 @@
 package com.hanyang.dataportal.user.service;
 
+import com.hanyang.dataportal.core.exception.UnAuthenticationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,9 @@ public class UserLogoutService {
      * @param userDetails
      */
     public void logout(UserDetails userDetails) {
+        if (userDetails == null) {
+           throw new UnAuthenticationException("로그인 상태가 아닙니다.");
+        }
         redisService.deleteCode(userDetails.getUsername());
     }
 }
