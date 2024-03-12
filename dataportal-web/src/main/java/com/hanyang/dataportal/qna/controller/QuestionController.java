@@ -5,14 +5,13 @@ import com.hanyang.dataportal.qna.domain.Question;
 import com.hanyang.dataportal.qna.dto.req.ReqQuestionDto;
 import com.hanyang.dataportal.qna.dto.res.ResQuestionDto;
 import com.hanyang.dataportal.qna.dto.res.ResQuestionListDto;
-import com.hanyang.dataportal.qna.dto.res.ResQuestionMyListDto;
 import com.hanyang.dataportal.qna.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,50 +21,49 @@ public class QuestionController {
     private final QuestionService questionService;
 
     //    1. 질문하기 (생성, 수정, 삭제)
-    @PostMapping(value = "/create", name = "질문하기 API (생성) ")
-    public ResponseEntity<ApiResponse<ResQuestionDto>> createQuestion(@RequestBody ReqQuestionDto reqQuestionDto) {
+    @PostMapping(value = "/", name = "질문하기 API (생성) ")
+    public ResponseEntity<ApiResponse<ResQuestionDto>> createQuestion(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ReqQuestionDto reqQuestionDto) {
         Question question = reqQuestionDto.toEntity();
-        questionService.save(question);
-        return ResponseEntity.ok(ApiResponse.ok(reqQuestionDto));
+        String username = userDetails.getUsername();
+        questionService.save(question, username);
+        ResQuestionDto resQuestionDto = ResQuestionDto.toQuestionDto((question));
+        return ResponseEntity.ok(ApiResponse.ok(resQuestionDto));
     }
 
-    @PostMapping(value = "/update/{questionId}", name = "질문하기 API (수정)")
-    public ResponseEntity<ApiResponse<ResQuestionDto>> updateQuestion(@PathVariable long questionId, @RequestBody ReqQuestionDto reqQuestionDto) {
+    @PostMapping(value = "/{questionId}", name = "질문하기 API (수정)")
+    public ResponseEntity<ApiResponse<ResQuestionDto>> updateQuestion(@RequestBody ReqQuestionDto reqQuestionDto, @PathVariable long questionId) {
         Question question = reqQuestionDto.toUpdateEntity();
         questionService.updateQuestion(question, questionId);
         ResQuestionDto resQuestionDto = ResQuestionDto.toQuestionDto(question);
         return ResponseEntity.ok(ApiResponse.ok(resQuestionDto));
     }
 
-    @DeleteMapping(value = "{questionId}", name = "질문하기 API (삭제)")
-    public ResponseEntity<ApiResponse<?>> deleteQuestion(@PathVariable long questionId) {
+    @DeleteMapping(value = "/{questionId}", name = "질문하기 API (삭제)")
+    public ResponseEntity<ApiResponse<?>> deleteQuestion(@PathVariable long questionId, @AuthenticationPrincipal UserDetails userDetails) {
         questionService.deleteQuestion(questionId);
         return null;
     }
 
     //    2. 질문 내역 리스트보기 (페이징, size는 10으로 고정~ 총 페이지:총데이터 갯수:질문리스트(QuestionId,title,date,view,username)) 응답
-    @GetMapping("/questionList")
-    public ResponseEntity<ApiResponse<ResQuestionDto>> getQuestionList() {
-        List<Question> reqQuestionListDto = questionService.getAllQuestion();
-        List<ResQuestionDto> resQuestionDtoList = new ArrayList<>();
-        for (Question question : reqQuestionListDto) {
-            resQuestionDtoList.add(ResQuestionListDto.toResQuestionListDto(question));
-        }
-        /* 페이징 처리 부분은 미구현 상태임 */
-        return ResponseEntity.ok(ApiResponse.ok(resQuestionDtoList));
-    }
+    //restful? ~ 클라이언트로부터 요청을 받는데, (몇페이지에 있는 게시글을볼 것인지?)
+    // 페이징 조건 ~ 최신순, 인기순, 댓글순
+    // 게시판 리스트 ~ 게시글번호, 작성일자, 제목, 작성자, 답변여부 , 조회수
+    @GetMapping({"/list", "list?page={pageNum}&size={listSize}"})
+    public ResponseEntity<ApiResponse<List<?>>> getQuestionList(@RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
+                                                                            @RequestParam(value = "size", defaultValue = "10") int listSize) throws Exception {
+
+        List<ResQuestionListDto> resQuestionListDto = questionService.getQuestionList(pageNum,listSize);
+        return ResponseEntity.ok(ApiResponse.ok(resQuestionListDto));
+   }
 
     //    3. 나의 질문 내역 리스트보기 _로그인 value를 전달하여 findbyuser...로 긁어오기?
-    @GetMapping(value = "/myQuestionList")
-    public ResponseEntity<ApiResponse<ResQuestionDto>> getMyQuestionList(@AuthenticationPrincipal String loginKey) {
-        List<Question> reqQuestionMyListDto = questionService.getAllMyQuestion(loginKey);
-        List<ResQuestionDto> resQuestionMyDtoList = new ArrayList<>();
-        for (Question question : reqQuestionMyListDto) {
-            resQuestionMyDtoList.add(ResQuestionMyListDto.toResQuestionMyListDto(question));
-        }
-        /* 페이징 처리 부분은 미구현 상태임 */
-        return ResponseEntity.ok(ApiResponse.ok(resQuestionMyDtoList));
-    }
+   @GetMapping({ "/list/my", "list/my"})
+    public ResponseEntity<ApiResponse<List<ResQuestionListDto>>> getMyQuestionList(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(value ="page", required = false, defaultValue = "1") int pageNum,
+                                                                               @RequestParam(value = "size", defaultValue = "10") int listSize)
+   { String userName = userDetails.getUsername();
+    List<ResQuestionListDto> resQuestionListDtos = questionService.getMyQuestionList(userName,pageNum,listSize);
+    return ResponseEntity.ok(ApiResponse.ok(resQuestionListDtos));
+   }
 
     // 4. 질문 내역 상세보기
     @GetMapping(value = "{questionId}", name = "질문 내역 상세보기 ")

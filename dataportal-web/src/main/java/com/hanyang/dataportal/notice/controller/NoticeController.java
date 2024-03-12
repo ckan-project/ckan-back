@@ -7,7 +7,6 @@ import com.hanyang.dataportal.notice.dto.res.ResNoticeDto;
 import com.hanyang.dataportal.notice.dto.res.ResNoticeListDto;
 import com.hanyang.dataportal.notice.service.NoticeDetailService;
 import com.hanyang.dataportal.notice.service.NoticeListService;
-import com.hanyang.dataportal.qna.dto.res.ResQuestionDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,7 +27,7 @@ public class NoticeController {
 
     // 1. 공지사항 작성
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse<ResQuestionDto>> createNotice(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ReqNoticeDto reqNoticeDto ) {
+    public ResponseEntity<ApiResponse<ResNoticeDto>> createNotice(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ReqNoticeDto reqNoticeDto ) {
         Notice notice = reqNoticeDto.toEntity();
         String username = userDetails.getUsername();
         noticeDetailService.createNotice(notice, username);
@@ -40,15 +39,15 @@ public class NoticeController {
 
     // 2-1. 공지사항 조회 (단건조회)
     @GetMapping("/{noticeId}")
-    public ResponseEntity<ApiResponse<ResQuestionDto>> findNotice(@PathVariable Long noticeId) {
+    public ResponseEntity<ApiResponse<ResNoticeDto>> findNotice(@PathVariable Long noticeId) {
        Notice notice = noticeDetailService.findNotice(noticeId);
             ResNoticeDto resNoticeDto = ResNoticeDto.toNoticeDetailDto(notice);
-            return ResponseEntity.ok(ApiResponse.ok(List.of(resNoticeDto)));
+            return ResponseEntity.ok(ApiResponse.ok(resNoticeDto));
     }
 
     // 2-2. 공지사항 조회 (리스트 조회)
     @GetMapping("/list")
-    public ResponseEntity<ApiResponse<ResQuestionDto>> findListNotice() {
+    public ResponseEntity<ApiResponse<List<ResNoticeListDto>>> findListNotice() {
 
         List<Notice> noticeList = noticeListService.findAllNotice();
         List<ResNoticeListDto> resNoticeListDtoList = new ArrayList<>();
@@ -64,7 +63,7 @@ public class NoticeController {
 
     // 3. 공지사항 수정 (update)
     @PostMapping("/update/{noticeId}")
-    public ResponseEntity<ApiResponse<ResQuestionDto>> updateNotice(@PathVariable Long noticeId, @RequestBody ReqNoticeDto reqNoticeDto) {
+    public ResponseEntity<ApiResponse<ResNoticeDto>> updateNotice(@PathVariable Long noticeId, @RequestBody ReqNoticeDto reqNoticeDto) {
         Notice notice = reqNoticeDto.toUpdateEntity();
         noticeDetailService.updateNotice(notice, noticeId);
         ResNoticeDto resNoticeDto = toNoticeDto(notice);

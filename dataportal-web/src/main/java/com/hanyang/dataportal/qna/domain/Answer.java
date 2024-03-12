@@ -26,13 +26,14 @@ public class Answer {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User admin;
-    private Long questionId;
 
-    public void setQuestionId(Long questionId) {
-        this.questionId = questionId;
-    }
 
-    public Long getQuestionId() {
-        return questionId;
-    }
+
+//    public void setQuestionId(Long questionId) {
+//        this.questionId = questionId;
+//    }
+//
+//    public Long getQuestionId() {
+//        return questionId;
+//    }
 }

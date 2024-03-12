@@ -2,13 +2,12 @@ package com.hanyang.dataportal.qna.service;
 
 import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.qna.domain.Answer;
+import com.hanyang.dataportal.qna.domain.Question;
 import com.hanyang.dataportal.qna.repository.AnswerRepository;
 import com.hanyang.dataportal.qna.repository.QuestionRepository;
 import com.hanyang.dataportal.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,12 +16,14 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final UserRepository userRepository;
 
+    public Answer saveAnswer(Answer reqAnswerEntity, Long questionId) {
+//        Optional<Question> byId = questionRepository.findById(questionId);
+//        reqAnswerEntity.setQuestion(byId.orElseThrow( () -> new ResourceNotFoundException("질문글이 없음. ")));
 
-    public Answer saveAnswer(Answer reqAnswerDto, Long questionId) {
-//        Optional<Question> getQuestion = Optional.ofNullable(questionRepository.findById(questionId)
-//            .orElseThrow(() -> new ResourceNotFoundException("답변할 질문글이 없음")));
-    reqAnswerDto.setQuestionId(questionId);
-    return answerRepository.save(reqAnswerDto);
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new ResourceNotFoundException("질문글이 없음"));
+        reqAnswerEntity.setQuestion(question);
+        return answerRepository.save(reqAnswerEntity);
     }
 
     public Answer getDetailAnswer(Long answerId) {
@@ -30,10 +31,9 @@ public class AnswerService {
                 .orElseThrow(()-> new ResourceNotFoundException("답변글이 없음"));
     }
 
-    public List<Answer> getTodoAnswerList() {
-        return (List<Answer>) answerRepository.findByStatus("Waiting");
-//        if (Answer.isEmpty()) {
-//            throw new ResourceNotFoundException("답변해야 할 글이 없음");
-        }
-
+//    public List<Answer> getTodoAnswerList() {
+//        return (List<Answer>) answerRepository.findByStatus("Waiting");
+////        if (Answer.isEmpty()) {
+////            throw new ResourceNotFoundException("답변해야 할 글이 없음");
+//        }
 }
