@@ -5,7 +5,7 @@ import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.dto.req.DatasetSearchCond;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetDetailDto;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetListDto;
-import com.hanyang.dataportal.dataset.service.ReadDatasetService;
+import com.hanyang.dataportal.dataset.service.DatasetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +23,12 @@ import static com.hanyang.dataportal.core.response.ApiResponse.ok;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class DatasetController {
-    private final ReadDatasetService readDatasetService;
+    private final DatasetService datasetService;
 
     @Operation(summary = "dataset 리스트 보기")
     @GetMapping("/datasets")
     public ResponseEntity<ApiResponse<ResDatasetListDto>> getDatasetList(DatasetSearchCond datasetSearchCond){
-        Page<Dataset> datasetList = readDatasetService.getDatasetList(datasetSearchCond);
+        Page<Dataset> datasetList = datasetService.getDatasetList(datasetSearchCond);
         return ResponseEntity.ok(ok(new ResDatasetListDto(datasetList)));
     }
 
@@ -36,7 +36,7 @@ public class DatasetController {
     @Operation(summary = "dataset 상세 보기")
     @GetMapping("/dataset/{datasetId}")
     public ResponseEntity<ApiResponse<ResDatasetDetailDto>> getDataset(@PathVariable Long datasetId){
-        Dataset dataset = readDatasetService.getDatasetDetail(datasetId);
+        Dataset dataset = datasetService.getDatasetDetail(datasetId);
         return ResponseEntity.ok(ok(new ResDatasetDetailDto(dataset)));
     }
 

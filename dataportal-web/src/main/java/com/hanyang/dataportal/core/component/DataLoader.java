@@ -1,7 +1,5 @@
 package com.hanyang.dataportal.core.component;
 
-import com.hanyang.dataportal.dataset.repository.DatasetRepository;
-import com.hanyang.dataportal.dataset.service.UpdateDatasetService;
 import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +14,6 @@ import static com.hanyang.dataportal.user.domain.Role.ROLE_USER;
 @RequiredArgsConstructor
 public class DataLoader implements CommandLineRunner {
     private final UserRepository userRepository;
-    private final UpdateDatasetService updateDatasetService;
-    private final DatasetRepository datasetRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override

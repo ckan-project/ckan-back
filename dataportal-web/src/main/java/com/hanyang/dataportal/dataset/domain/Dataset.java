@@ -45,7 +45,6 @@ public class Dataset {
     @PrePersist
     public void onPrePersist() {
         createdDate = LocalDate.now();
-        updateDate = createdDate;
     }
     @PreUpdate
     public void onPreUpdate() {

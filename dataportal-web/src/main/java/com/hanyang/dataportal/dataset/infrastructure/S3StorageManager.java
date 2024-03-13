@@ -1,12 +1,11 @@
-package com.hanyang.dataportal.dataset.service;
-
+package com.hanyang.dataportal.dataset.infrastructure;
 
 import com.hanyang.dataportal.core.exception.FileException;
-import com.hanyang.dataportal.dataset.domain.Resource;
 import com.hanyang.dataportal.dataset.domain.Type;
+import com.hanyang.dataportal.dataset.infrastructure.dto.FileInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -16,23 +15,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hanyang.dataportal.core.response.ResponseMessage.FILE_ERROR;
-
-@Service
+@Component
 @RequiredArgsConstructor
-public class S3Service {
-
+public class S3StorageManager {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     private final S3Client s3Client;
-    public Resource uploadFile(Long datasetId, MultipartFile multipartFile){
+
+    public FileInfoDto uploadFile(Long datasetId, MultipartFile multipartFile){
 
         String fileName = multipartFile.getOriginalFilename();
 
         //파일 형식 구하기
         assert fileName != null;
         String ext = fileName.split("\\.")[1];
-        String resourceName = fileName.split("\\.")[0];
 
         String s3ObjectPath = datasetId + "/" + fileName;
 
@@ -41,9 +37,9 @@ public class S3Service {
                 .key(s3ObjectPath)
                 .build();
         try {
-            s3Client.putObject(putObjectRequest,RequestBody.fromBytes(multipartFile.getBytes()));
+            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(multipartFile.getBytes()));
         } catch (IOException e) {
-            throw new FileException(FILE_ERROR);
+            throw new FileException("잘못된 형태의 파일입니다");
         }
 
 
@@ -52,11 +48,11 @@ public class S3Service {
                 .key(s3ObjectPath)
                 .build();
 
-        return  Resource.builder().
-                type(Type.valueOf(ext)).
-                resourceUrl(String.valueOf(s3Client.utilities().getUrl(getUrlRequest))).
-                resourceName(resourceName).
-                build();
+        FileInfoDto fileInfoDto = new FileInfoDto();
+        fileInfoDto.setUrl(String.valueOf(s3Client.utilities().getUrl(getUrlRequest)));
+        fileInfoDto.setType(Type.valueOf(ext));
+
+        return fileInfoDto;
     }
 
     public void deleteFolder(Long datasetId) {
@@ -80,5 +76,4 @@ public class S3Service {
         s3Client.deleteObjects(deleteObjectsRequest);
 
     }
-
 }

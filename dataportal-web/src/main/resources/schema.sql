@@ -77,6 +77,7 @@ create table if not exists hanyang.download
 create table if not exists hanyang.notice
 (
     create_date date         null,
+    update_date date         null,
     view        int          null,
     notice_id   bigint auto_increment
         primary key,
