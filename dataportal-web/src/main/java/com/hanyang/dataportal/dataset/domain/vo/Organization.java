@@ -7,7 +7,7 @@ import jakarta.persistence.Lob;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Embeddable
@@ -15,8 +15,18 @@ import java.util.Objects;
 @NoArgsConstructor
 public class Organization {
 
-    private static final String[] organizationList = new String[] {"소프트융합대학", "공과대학", "경상대학", "과학기술융합대학",
-            "국제문화대학", "디자인대학", "약학대학", "언론정보대학", "예체능대학","입학처"};
+    private static final HashSet<String> organizationSet = new HashSet<>() {{
+        add("소프트융합대학");
+        add("공과대학");
+        add("경상대학");
+        add("과학기술융합대학");
+        add("국제문화대학");
+        add("디자인대학");
+        add("약학대학");
+        add("언론정보대학");
+        add("예체능대학");
+        add("입학처");
+    }};
 
     @Column(name = "organization")
     @Lob
@@ -31,7 +41,7 @@ public class Organization {
         if (Objects.isNull(value)) {
             throw new NullException("조직명은 null일 수 없습니다.");
         }
-        if(Arrays.stream(organizationList).noneMatch(s -> s.equals(value))){
+        if(organizationSet.contains(value)){
             throw new NullException("지정하지 않은 조직명 입니다.");
         }
 
