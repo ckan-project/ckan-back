@@ -1,7 +1,6 @@
 package com.hanyang.dataportal.dataset.infrastructure;
 
 import com.hanyang.dataportal.core.exception.FileException;
-import com.hanyang.dataportal.dataset.domain.Type;
 import com.hanyang.dataportal.dataset.infrastructure.dto.FileInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,8 +27,6 @@ public class S3StorageManager {
 
         //파일 형식 구하기
         assert fileName != null;
-        String ext = fileName.split("\\.")[1];
-
         String s3ObjectPath = datasetId + "/" + fileName;
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -39,9 +36,8 @@ public class S3StorageManager {
         try {
             s3Client.putObject(putObjectRequest, RequestBody.fromBytes(multipartFile.getBytes()));
         } catch (IOException e) {
-            throw new FileException("잘못된 형태의 파일입니다");
+            throw new FileException("s3 서버 오류");
         }
-
 
         GetUrlRequest getUrlRequest = GetUrlRequest.builder()
                 .bucket(bucket)
@@ -50,7 +46,6 @@ public class S3StorageManager {
 
         FileInfoDto fileInfoDto = new FileInfoDto();
         fileInfoDto.setUrl(String.valueOf(s3Client.utilities().getUrl(getUrlRequest)));
-        fileInfoDto.setType(Type.valueOf(ext));
 
         return fileInfoDto;
     }
@@ -61,6 +56,10 @@ public class S3StorageManager {
                 .prefix(datasetId+"/")
                 .build();
         ListObjectsV2Response listObjectsResponse = s3Client.listObjectsV2(listObjectsRequest);
+
+        if (listObjectsResponse.contents().isEmpty()) {
+            return;
+        }
 
         List<ObjectIdentifier> objectIdentifiers = new ArrayList<>();
         for (S3Object s3Object : listObjectsResponse.contents()) {

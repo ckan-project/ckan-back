@@ -1,9 +1,6 @@
 package com.hanyang.dataportal.dataset.dto.res;
 
 import com.hanyang.dataportal.dataset.domain.Dataset;
-import com.hanyang.dataportal.dataset.domain.DatasetTheme;
-import com.hanyang.dataportal.dataset.domain.Organization;
-import com.hanyang.dataportal.dataset.domain.Theme;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -15,8 +12,8 @@ public class ResDatasetDetailDto {
     private Long datasetId;
     private String title;
     private String description;
-    private Organization organization;
-    private List<Theme> theme;
+    private String organization;
+    private List<String> theme;
     private LocalDate createdDate;
     private LocalDate updateDate;
     private Integer view;
@@ -28,13 +25,15 @@ public class ResDatasetDetailDto {
         this.datasetId = dataset.getDatasetId();
         this.title = dataset.getTitle();
         this.description = dataset.getDescription();
-        this.organization = dataset.getOrganization();
-        this.theme = dataset.getDatasetThemeList().stream().map(DatasetTheme::getTheme).toList();
+        this.organization = dataset.getOrganization().getValue();
+        this.theme = dataset.getDatasetThemeList().stream().map(datasetTheme -> datasetTheme.getTheme().getValue()).toList();
         this.createdDate = dataset.getCreatedDate();
         this.updateDate = dataset.getUpdateDate();
         this.view = dataset.getView();
         this.download = dataset.getDownload();
-        this.resourceName = dataset.getResource().getResourceName();
-        this.resourceUrl = dataset.getResource().getResourceUrl();
+        if(dataset.getResource() != null){
+            this.resourceName = dataset.getResource().getResourceName();
+            this.resourceUrl = dataset.getResource().getResourceUrl();
+        }
     }
 }

@@ -1,9 +1,6 @@
 package com.hanyang.dataportal.core.advice;
 
-import com.hanyang.dataportal.core.exception.FileException;
-import com.hanyang.dataportal.core.exception.ResourceExistException;
-import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
-import com.hanyang.dataportal.core.exception.UnAuthenticationException;
+import com.hanyang.dataportal.core.exception.*;
 import com.hanyang.dataportal.core.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,7 +25,7 @@ public class ExceptionHandlerController {
     }
 
     @ExceptionHandler(FileException.class)
-    public ResponseEntity<ApiResponse<?>> handleFileException(ResourceExistException e) {
+    public ResponseEntity<ApiResponse<?>> handleFileException(FileException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
     }
 
@@ -51,5 +48,10 @@ public class ExceptionHandlerController {
         String message = objectError.getDefaultMessage();
         log.warn(e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(message));
+    }
+
+    @ExceptionHandler(NullException.class)
+    public ResponseEntity<ApiResponse<?>> handleNullException(NullException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
     }
 }

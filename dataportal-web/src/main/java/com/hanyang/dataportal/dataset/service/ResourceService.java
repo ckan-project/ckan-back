@@ -1,5 +1,6 @@
 package com.hanyang.dataportal.dataset.service;
 
+import com.hanyang.dataportal.core.exception.FileException;
 import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.domain.Resource;
@@ -19,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.hanyang.dataportal.dataset.domain.Type.findByType;
+
 @Service
 @RequiredArgsConstructor
 public class ResourceService {
@@ -29,31 +32,33 @@ public class ResourceService {
     private final DatasetRepository datasetRepository;
     private final ResourceRepository resourceRepository;
 
-    public Resource save(Long datasetId, MultipartFile multipartFile){
+    public void save(Long datasetId, MultipartFile multipartFile){
         Dataset dataset = datasetRepository.findByIdWithTheme(datasetId).orElseThrow(() -> new ResourceNotFoundException("해당 데이터셋은 존재하지 않습니다"));
 
         Optional<Resource> optionalResource = resourceRepository.findByDataset(dataset);
         String fileName = Objects.requireNonNull(multipartFile.getOriginalFilename()).split("\\.")[0];
+        String ext = multipartFile.getOriginalFilename().split("\\.")[1];
+        if(findByType(ext) == null){
+            throw new  FileException("지정되지 않은 파일 형식 입니다");
+        }
 
         //해당 리소스가 존재하면 s3에서 폴더 삭제 후 생성
         if(optionalResource.isPresent()){
             s3StorageManager.deleteFolder(datasetId);
             Resource resource = optionalResource.get();
             FileInfoDto fileInfoDto = s3StorageManager.uploadFile(datasetId, multipartFile);
-            resource.updateResource(fileInfoDto.getUrl(), fileInfoDto.getType(), fileName);
-            return resource;
+            resource.updateResource(fileInfoDto.getUrl(),fileInfoDto.getType(),fileName);
         }
         else{
             FileInfoDto fileInfoDto = s3StorageManager.uploadFile(datasetId, multipartFile);
-
             Resource resource = Resource.builder().
                     resourceUrl(fileInfoDto.getUrl()).
                     type(fileInfoDto.getType()).
                     resourceName(fileName).
+                    dataset(dataset).
                     build();
 
-            resource.setDataset(dataset);
-            return resourceRepository.save(resource);
+            resourceRepository.save(resource);
         }
     }
 

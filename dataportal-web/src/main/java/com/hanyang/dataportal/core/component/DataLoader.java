@@ -1,5 +1,7 @@
 package com.hanyang.dataportal.core.component;
 
+import com.hanyang.dataportal.dataset.domain.Theme;
+import com.hanyang.dataportal.dataset.repository.ThemeRepository;
 import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import static com.hanyang.dataportal.user.domain.Role.ROLE_USER;
 public class DataLoader implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ThemeRepository themeRepository;
 
     @Override
     public void run(String... args){
@@ -38,5 +41,11 @@ public class DataLoader implements CommandLineRunner {
 //            reqDatasetDto.setOrganization(Organization.소프트융합대학);
 //            updateDatasetService.create(reqDatasetDto);
 //        }
+        String[] themeList = new String[] { "입학", "학생", "학사", "국제", "복지", "재정", "취창업", "학술", "장학"};
+        for (String theme:themeList) {
+            themeRepository.save(Theme.builder().
+                    value(theme).
+                    build());
+        }
     }
 }

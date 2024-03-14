@@ -1,13 +1,11 @@
 package com.hanyang.dataportal.dataset.repository;
 
 import com.hanyang.dataportal.dataset.domain.Dataset;
-import com.hanyang.dataportal.dataset.domain.Organization;
 import com.hanyang.dataportal.dataset.domain.Theme;
 import com.hanyang.dataportal.dataset.domain.Type;
-import com.hanyang.dataportal.dataset.dto.req.DatasetSearchCond;
+import com.hanyang.dataportal.dataset.domain.vo.Organization;
+import com.hanyang.dataportal.dataset.dto.DataSearch;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -29,16 +27,16 @@ import static com.hanyang.dataportal.user.domain.QScrap.scrap;
 public class DatasetSearchRepository {
     private final JPAQueryFactory queryFactory;
 
-    public Page<Dataset> searchDatasetList(DatasetSearchCond datasetSearchCond){
-        Pageable pageable = PageRequest.of(datasetSearchCond.getPage(), 10);
+    public Page<Dataset> searchDatasetList(DataSearch dataSearch){
+        Pageable pageable = PageRequest.of(dataSearch.getPage(), 10);
         JPAQuery<Dataset> query = queryFactory.selectFrom(dataset)
                 .leftJoin(dataset.resource, resource).fetchJoin()
-                .where(titleLike(datasetSearchCond.getKeyword()),
-                        organizationIn(datasetSearchCond.getOrganization()),
-                        typeIn(datasetSearchCond.getType()),
-                        themeIn(datasetSearchCond.getTheme()));
+                .where(titleLike(dataSearch.getKeyword()),
+                        organizationIn(dataSearch.getOrganization()),
+                        typeIn(dataSearch.getType()),
+                        themeIn(dataSearch.getTheme()));
 
-        switch (datasetSearchCond.getSort().name()) {
+        switch (dataSearch.getSort().name()) {
             case "스크랩" -> {
                 query.leftJoin(dataset.scrapList, scrap).
                         orderBy(dataset.scrapList.size().desc());
@@ -61,29 +59,31 @@ public class DatasetSearchRepository {
 
         Long count = queryFactory.select(dataset.count())
                 .from(dataset)
-                .where(titleLike(datasetSearchCond.getKeyword()),
-                        organizationIn(datasetSearchCond.getOrganization()),
-                        typeIn(datasetSearchCond.getType()),
-                        themeIn(datasetSearchCond.getTheme()))
+                .where(titleLike(dataSearch.getKeyword()),
+                        organizationIn(dataSearch.getOrganization()),
+                        typeIn(dataSearch.getType()),
+                        themeIn(dataSearch.getTheme()))
                 .fetchOne();
         return new PageImpl<>(content, pageable, count);
     }
 
+    //TODO 개발 어느정도 완료 됐을땐 match로 적용해 보고 TEST
     private BooleanExpression titleLike(String keyword) {
-        if(keyword == null){
-            return null;
-        }
-        NumberTemplate<Double> booleanTemplateTitle = Expressions.numberTemplate(Double.class,
-                "function('match',{0},{1})", dataset.title,keyword+"*");
-        return booleanTemplateTitle.gt(0);
+//        if(keyword == null){
+//            return null;
+//        }
+//        NumberTemplate<Double> booleanTemplateTitle = Expressions.numberTemplate(Double.class,
+//                "function('match',{0},{1})", dataset.title,keyword+"*");
+        //  dataset.title.like(keyword);
+        return keyword != null ? dataset.title.contains(keyword) : null;
     }
 
     private BooleanExpression organizationIn(List<Organization> organizationList) {
-        return organizationList != null ? dataset.organization.in(organizationList) : null;
+        return organizationList.size() !=0  ? dataset.organization.in(organizationList) : null;
     }
 
     private BooleanExpression themeIn(List<Theme> themeList){
-        return themeList !=null ? dataset.datasetThemeList.any().theme.in(themeList) : null;
+        return themeList.size() != 0 ? dataset.datasetThemeList.any().theme.in(themeList) : null;
     }
 
     private BooleanExpression typeIn(List<Type> typeList) {

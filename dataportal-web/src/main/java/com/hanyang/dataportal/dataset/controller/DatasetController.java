@@ -2,7 +2,7 @@ package com.hanyang.dataportal.dataset.controller;
 
 import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.dataset.domain.Dataset;
-import com.hanyang.dataportal.dataset.dto.req.DatasetSearchCond;
+import com.hanyang.dataportal.dataset.dto.req.ReqDataSearchDto;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetDetailDto;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetListDto;
 import com.hanyang.dataportal.dataset.service.DatasetService;
@@ -27,8 +27,8 @@ public class DatasetController {
 
     @Operation(summary = "dataset 리스트 보기")
     @GetMapping("/datasets")
-    public ResponseEntity<ApiResponse<ResDatasetListDto>> getDatasetList(DatasetSearchCond datasetSearchCond){
-        Page<Dataset> datasetList = datasetService.getDatasetList(datasetSearchCond);
+    public ResponseEntity<ApiResponse<ResDatasetListDto>> getDatasetList(ReqDataSearchDto datasearch){
+        Page<Dataset> datasetList = datasetService.getDatasetList(datasearch);
         return ResponseEntity.ok(ok(new ResDatasetListDto(datasetList)));
     }
 

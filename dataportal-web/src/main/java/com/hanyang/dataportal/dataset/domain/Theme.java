@@ -1,5 +1,24 @@
 package com.hanyang.dataportal.dataset.domain;
 
-public enum Theme {
-    입학, 학생, 학사, 국제, 복지, 재정, 취창업, 학술, 장학
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Theme {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long themeId;
+    private String value;
+
+
 }
