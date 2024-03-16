@@ -3,12 +3,14 @@ package com.hanyang.dataportal.user.service;
 import com.hanyang.dataportal.core.exception.ResourceExistException;
 import com.hanyang.dataportal.core.response.ResponseMessage;
 import com.hanyang.dataportal.dataset.domain.Dataset;
-import com.hanyang.dataportal.dataset.service.DatasetService;
+import com.hanyang.dataportal.dataset.repository.DatasetRepository;
 import com.hanyang.dataportal.user.domain.Scrap;
 import com.hanyang.dataportal.user.domain.User;
-import com.hanyang.dataportal.user.repository.ScrapRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -22,16 +24,12 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UpdateScrapServiceTest {
     @InjectMocks
-    private UpdateScrapService updateScrapService;
-
-    @Mock
     private ScrapService scrapService;
-    @Mock
-    private ScrapRepository scrapRepository;
+
     @Mock
     private UserService userService;
     @Mock
-    private DatasetService datasetService;
+    private DatasetRepository datasetRepository;
 
     @Mock
     private UserDetails userDetails;
@@ -62,12 +60,12 @@ class UpdateScrapServiceTest {
                         .email(userEmail)
                         .build();
 
-                when(datasetService.findById(datasetId)).thenReturn(dataset);
+                when(datasetRepository.findById(datasetId).get()).thenReturn(dataset);
                 when(userService.findByEmail(userEmail)).thenReturn(user);
                 when(userDetails.getUsername()).thenReturn(userEmail);
 
                 // when
-                Scrap scrap = updateScrapService.createScrap(userDetails, dataset.getDatasetId());
+                Scrap scrap = scrapService.create(userDetails.getUsername(), dataset.getDatasetId());
 
                 // then
                 Assertions.assertThat(scrap.getDataset().getDatasetId())
@@ -91,7 +89,7 @@ class UpdateScrapServiceTest {
                         .email(userEmail)
                         .build();
 
-                when(datasetService.findById(datasetId)).thenReturn(dataset);
+                when(datasetRepository.findById(datasetId).get()).thenReturn(dataset);
                 when(userDetails.getUsername()).thenReturn(userEmail);
                 when(userService.findByEmail(userEmail)).thenReturn(user);
                 doThrow(new ResourceExistException(ResponseMessage.DUPLICATE_SCRAP))
@@ -99,7 +97,7 @@ class UpdateScrapServiceTest {
 
                 // when
                 Exception exception = assertThrows(ResourceExistException.class, () -> {
-                    updateScrapService.createScrap(userDetails, datasetId); // fail
+                    scrapService.create(userDetails.getUsername(), datasetId); // fail
                 });
 
                 // then

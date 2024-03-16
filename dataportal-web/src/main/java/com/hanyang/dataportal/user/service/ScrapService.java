@@ -1,9 +1,10 @@
 package com.hanyang.dataportal.user.service;
 
-import com.hanyang.dataportal.core.response.ResponseMessage;
 import com.hanyang.dataportal.core.exception.ResourceExistException;
 import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
+import com.hanyang.dataportal.core.response.ResponseMessage;
 import com.hanyang.dataportal.dataset.domain.Dataset;
+import com.hanyang.dataportal.dataset.repository.DatasetRepository;
 import com.hanyang.dataportal.user.domain.Scrap;
 import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.repository.ScrapRepository;
@@ -18,6 +19,44 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScrapService {
     private final ScrapRepository scrapRepository;
+    private final DatasetRepository datasetRepository;
+    private final UserService userService;
+
+    /**
+     * 새로운 Scrap 객체를 생성하는 메서드
+     * @param email
+     * @param datasetId
+     * @return
+     */
+    public Scrap create(String email, Long datasetId) {
+        Dataset dataset = datasetRepository.findByIdWithTheme(datasetId).orElseThrow(() -> new ResourceNotFoundException("해당 데이터셋은 존재하지 않습니다"));
+        User user = userService.findByEmail(email);
+        checkDuplicateByDatasetAndUser(dataset, user);
+
+        Scrap scrap = Scrap.builder()
+                .user(user)
+                .dataset(dataset)
+                .build();
+
+        scrapRepository.save(scrap);
+        return scrap;
+    }
+
+    /**
+     * 유저가 스크랩한 특정 내역을 삭제하는 메서드
+     * @param email
+     * @param datasetId
+     * @return
+     */
+    public Scrap delete(String email, Long datasetId) {
+        Dataset dataset = datasetRepository.findByIdWithTheme(datasetId).orElseThrow(() -> new ResourceNotFoundException("해당 데이터셋은 존재하지 않습니다"));
+        User user = userService.findByEmail(email);
+        Scrap scrap = findByDatasetAndUser(dataset, user);
+
+        scrapRepository.deleteById(scrap.getScrapId());
+
+        return scrap;
+    }
 
     /**
      * 유저가 스크랩한 모든 Scrap 객체를 가져오는 메서드

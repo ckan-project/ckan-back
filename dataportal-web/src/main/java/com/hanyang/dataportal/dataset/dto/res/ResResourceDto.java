@@ -1,7 +1,7 @@
 package com.hanyang.dataportal.dataset.dto.res;
 
 import com.hanyang.dataportal.dataset.domain.Resource;
-import com.hanyang.dataportal.dataset.domain.Type;
+import com.hanyang.dataportal.dataset.domain.vo.Type;
 import lombok.Data;
 
 @Data

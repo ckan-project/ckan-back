@@ -4,7 +4,6 @@ import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.user.domain.Scrap;
 import com.hanyang.dataportal.user.dto.res.ResScrapDto;
 import com.hanyang.dataportal.user.service.ScrapService;
-import com.hanyang.dataportal.user.service.UpdateScrapService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ import java.util.List;
 @Tag(name = "스크랩 API")
 public class ScrapController {
     private final ScrapService scrapService;
-    private final UpdateScrapService updateScrapService;
 
     /**
      * 유저의 모든 스크랩 내역을 가져오는 메서드
@@ -59,7 +57,7 @@ public class ScrapController {
     @Operation(summary = "로그인 유저의 새로운 스크랩 생성")
     @PostMapping("/api/dataset/{datasetId}/scrap")
     public ResponseEntity<ApiResponse<?>> createScrap(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long datasetId) {
-        Scrap scrap = updateScrapService.createScrap(userDetails, datasetId);
+        Scrap scrap = scrapService.create(userDetails.getUsername(), datasetId);
         ResScrapDto resScrapDto = new ResScrapDto(scrap);
         return ResponseEntity.ok(ApiResponse.ok(resScrapDto));
     }
@@ -73,7 +71,7 @@ public class ScrapController {
     @Operation(summary = "로그인 유저의 특정 스크랩 내역 삭제")
     @DeleteMapping("/api/dataset/{datasetId}/scrap")
     public ResponseEntity<ApiResponse<?>> deleteScrap(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long datasetId) {
-        Scrap scrap = updateScrapService.removeScrap(userDetails, datasetId);
+        Scrap scrap = scrapService.delete(userDetails.getUsername(), datasetId);
         return ResponseEntity.ok(ApiResponse.ok(new ResScrapDto(scrap)));
     }
 }
