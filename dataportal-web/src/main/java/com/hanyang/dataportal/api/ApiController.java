@@ -15,18 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ApiController {
 
-    private final ResourceService resourceService;
     private final DatasetService datasetService;
 
-    @GetMapping("/resource")
-    public ResponseEntity<ApiResponse<?>> getFileExist(@RequestParam Long resourceId){
-        resourceService.findById(resourceId);
-        return ResponseEntity.ok(ApiResponse.ok(null));
-    }
-
     @GetMapping("/dataset")
-    public ResponseEntity<ResTitleDescDto> getDatasetMetaData(@RequestParam Long resourceId){
-        Dataset dataset = datasetService.findByResourceId(resourceId);
+    public ResponseEntity<ResTitleDescDto> getDatasetMetaData(@RequestParam Long datasetId){
+        Dataset dataset = datasetService.findById(datasetId);
         return ResponseEntity.ok(new ResTitleDescDto(dataset.getDatasetId(),dataset.getTitle(), dataset.getDescription()));
     }
 }

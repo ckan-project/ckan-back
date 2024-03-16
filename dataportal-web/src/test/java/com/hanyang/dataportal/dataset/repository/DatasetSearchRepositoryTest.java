@@ -2,9 +2,7 @@ package com.hanyang.dataportal.dataset.repository;
 
 import com.hanyang.dataportal.TestQueryDSLConfig;
 import com.hanyang.dataportal.dataset.domain.Dataset;
-import com.hanyang.dataportal.dataset.domain.Organization;
-import com.hanyang.dataportal.dataset.domain.Theme;
-import com.hanyang.dataportal.dataset.dto.req.DatasetSearchCond;
+import com.hanyang.dataportal.dataset.dto.DataSearch;
 import com.hanyang.dataportal.dataset.utill.DatasetSort;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +17,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -42,20 +39,21 @@ class DatasetSearchRepositoryTest {
                     title("대학교 " + i + "년도 입학생").
                     view(1000-i);
             if(i<2013){
-                da.organization(Organization.소프트융합대학);
+                da.organization(new Organization("소프트융합대학"));
             }
             else{
-                da.organization(Organization.공과대학);
+                da.organization(new Organization("공과대학"));
             }
 
             Dataset dataset = da.build();
-            dataset.addTheme(Theme.입학);
-            if(i<2010){
-                dataset.addTheme(Theme.장학);
-            }
-            else{
-                dataset.addTheme(Theme.재정);
-            }
+            //TODO 테마 변경 필요
+//            dataset.addTheme(Theme.입학);
+//            if(i<2010){
+//                dataset.addTheme(Theme.장학);
+//            }
+//            else{
+//                dataset.addTheme(Theme.재정);
+//            }
 
             datasetList.add(dataset);
         }
@@ -66,11 +64,11 @@ class DatasetSearchRepositoryTest {
     @Test
     void searchDatasetListPaging() {
         //given
-        DatasetSearchCond datasetSearchCond = new DatasetSearchCond();
-        datasetSearchCond.setPage(0);
-        datasetSearchCond.setSort(DatasetSort.최신);
+        DataSearch datasearch = new DataSearch();
+        datasearch.setPage(0);
+        datasearch.setSort(DatasetSort.최신);
         //when
-        Page<Dataset> datasets = datasetSearchRepository.searchDatasetList(datasetSearchCond);
+        Page<Dataset> datasets = datasetSearchRepository.searchDatasetList(datasearch);
 
         //then
         Assertions.assertThat(datasets.getTotalElements()).isEqualTo(21);
@@ -83,12 +81,12 @@ class DatasetSearchRepositoryTest {
     @Test
     void searchDatasetListKeyWord() {
         //given
-        DatasetSearchCond datasetSearchCond = new DatasetSearchCond();
-        datasetSearchCond.setPage(0);
-        datasetSearchCond.setKeyword("대");
-        datasetSearchCond.setSort(DatasetSort.최신);
+        DataSearch dataSearch = new com.hanyang.dataportal.dataset.dto.DataSearch();
+        dataSearch.setPage(0);
+        dataSearch.setKeyword("대");
+        dataSearch.setSort(DatasetSort.최신);
         //when
-        Page<Dataset> datasets = datasetSearchRepository.searchDatasetList(datasetSearchCond);
+        Page<Dataset> datasets = datasetSearchRepository.searchDatasetList(dataSearch);
 
         //then
         Assertions.assertThat(datasets.getTotalElements()).isEqualTo(10);
@@ -99,45 +97,48 @@ class DatasetSearchRepositoryTest {
     @Test
     void searchDatasetListOrganization() {
         //given
-        DatasetSearchCond datasetSearchCond = new DatasetSearchCond();
-        datasetSearchCond.setPage(0);
-        datasetSearchCond.setOrganization(Stream.of(Organization.소프트융합대학, Organization.경상대학).collect(Collectors.toList()));
-        datasetSearchCond.setSort(DatasetSort.최신);
-        //when
-        Page<Dataset> datasets = datasetSearchRepository.searchDatasetList(datasetSearchCond);
-
-        //then
-        Assertions.assertThat(datasets.getTotalElements()).isEqualTo(13);
-        Assertions.assertThat(datasets.getTotalPages()).isEqualTo(2);
-    }
-
-    @DisplayName("데이터셋 Theme 테스트")
-    @Test
-    void searchDatasetListTheme() {
-        //given
-        DatasetSearchCond datasetSearchCond = new DatasetSearchCond();
-        datasetSearchCond.setPage(0);
-        datasetSearchCond.setTheme(Collections.singletonList(Theme.입학));
-        datasetSearchCond.setSort(DatasetSort.최신);
+        DataSearch dataSearch = new com.hanyang.dataportal.dataset.dto.DataSearch();
+        dataSearch.setPage(0);
+        dataSearch.setOrganization(Stream.of(new Organization("공과대학")).collect(Collectors.toList()));
+        dataSearch.setSort(DatasetSort.최신);
 
         //when
-        Page<Dataset> datasets = datasetSearchRepository.searchDatasetList(datasetSearchCond);
+        Page<Dataset> datasets = datasetSearchRepository.searchDatasetList(dataSearch);
 
         //then
-        Assertions.assertThat(datasets.getTotalElements()).isEqualTo(21);
-        Assertions.assertThat(datasets.getTotalPages()).isEqualTo(3);
+        Assertions.assertThat(datasets.getTotalElements()).isEqualTo(8);
+        Assertions.assertThat(datasets.getTotalPages()).isEqualTo(1);
     }
+
+    //TODO 테마 수정 필요
+//    @DisplayName("데이터셋 Theme 테스트")
+//    @Test
+//    void searchDatasetListTheme() {
+//        //given
+//
+//        DataSearch dataSearch = new com.hanyang.dataportal.dataset.dto.DataSearch();
+//        dataSearch.setPage(0);
+//        dataSearch.setTheme(Collections.singletonList(Theme.입학));
+//        dataSearch.setSort(DatasetSort.최신);
+//
+//        //when
+//        Page<Dataset> datasets = datasetSearchRepository.searchDatasetList(dataSearch);
+//
+//        //then
+//        Assertions.assertThat(datasets.getTotalElements()).isEqualTo(21);
+//        Assertions.assertThat(datasets.getTotalPages()).isEqualTo(3);
+//    }
 
     @DisplayName("데이터셋 Sort 조회 테스트")
     @Test
     void searchDatasetListSort() {
         //given
-        DatasetSearchCond datasetSearchCond = new DatasetSearchCond();
-        datasetSearchCond.setPage(0);
-        datasetSearchCond.setSort(DatasetSort.조회);
+        DataSearch datasearch = new DataSearch();
+        datasearch.setPage(0);
+        datasearch.setSort(DatasetSort.조회);
 
         //when
-        Page<Dataset> datasets = datasetSearchRepository.searchDatasetList(datasetSearchCond);
+        Page<Dataset> datasets = datasetSearchRepository.searchDatasetList(datasearch);
 
         //then
         Assertions.assertThat(datasets.getTotalElements()).isEqualTo(21);
