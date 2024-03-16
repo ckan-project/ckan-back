@@ -2,6 +2,7 @@ package com.hanyang.dataportal.dataset.dto.req;
 
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.domain.vo.Organization;
+import com.hanyang.dataportal.dataset.domain.vo.Theme;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -16,15 +17,15 @@ public class ReqDatasetDto {
     private String description;
 
     @Schema(description = "조직", example = "입학처")
-    private String organization;
+    private Organization organization;
 
     @Schema(description = "주제", example = "[\"입학\",\"학생\"]")
-    private List<String> theme;
+    private List<Theme> theme;
     public Dataset toEntity(){
         return Dataset.builder().
                 title(title).
                 description(description).
-                organization(new Organization(organization)).
+                organization(organization).
                 view(0).
                 download(0).
                 build();

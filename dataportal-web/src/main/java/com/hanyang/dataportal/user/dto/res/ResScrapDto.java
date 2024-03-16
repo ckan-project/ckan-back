@@ -1,7 +1,7 @@
 package com.hanyang.dataportal.user.dto.res;
 
 
-import com.hanyang.dataportal.dataset.domain.Type;
+import com.hanyang.dataportal.dataset.domain.vo.Type;
 import com.hanyang.dataportal.user.domain.Scrap;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -47,6 +47,6 @@ public class ResScrapDto {
         if(scrap.getDataset().getResource() !=null) {
             this.type = scrap.getDataset().getResource().getType();
         }
-        this.organization = scrap.getDataset().getOrganization().getValue();
+        this.organization = scrap.getDataset().getOrganization().name();
     }
 }

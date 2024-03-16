@@ -1,8 +1,8 @@
 package com.hanyang.dataportal.dataset.dto;
 
-import com.hanyang.dataportal.dataset.domain.Theme;
-import com.hanyang.dataportal.dataset.domain.Type;
 import com.hanyang.dataportal.dataset.domain.vo.Organization;
+import com.hanyang.dataportal.dataset.domain.vo.Theme;
+import com.hanyang.dataportal.dataset.domain.vo.Type;
 import com.hanyang.dataportal.dataset.utill.DatasetSort;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

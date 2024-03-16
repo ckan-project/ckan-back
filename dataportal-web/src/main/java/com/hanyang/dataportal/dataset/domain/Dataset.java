@@ -1,6 +1,7 @@
 package com.hanyang.dataportal.dataset.domain;
 
 import com.hanyang.dataportal.dataset.domain.vo.Organization;
+import com.hanyang.dataportal.dataset.domain.vo.Theme;
 import com.hanyang.dataportal.dataset.dto.req.ReqDatasetDto;
 import com.hanyang.dataportal.user.domain.Download;
 import com.hanyang.dataportal.user.domain.Scrap;
@@ -26,7 +27,6 @@ public class Dataset {
     private String title;
     @Lob
     private String description;
-    @Embedded
     private Organization organization;
     private LocalDate createdDate;
     private LocalDate updateDate;

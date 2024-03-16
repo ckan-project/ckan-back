@@ -2,7 +2,6 @@ package com.hanyang.dataportal.dataset.repository;
 
 import com.hanyang.dataportal.TestQueryDSLConfig;
 import com.hanyang.dataportal.dataset.domain.Dataset;
-import com.hanyang.dataportal.dataset.domain.vo.Organization;
 import com.hanyang.dataportal.dataset.dto.DataSearch;
 import com.hanyang.dataportal.dataset.utill.DatasetSort;
 import org.assertj.core.api.Assertions;

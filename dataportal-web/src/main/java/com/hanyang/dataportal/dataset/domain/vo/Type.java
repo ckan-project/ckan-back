@@ -1,6 +1,7 @@
-package com.hanyang.dataportal.dataset.domain;
+package com.hanyang.dataportal.dataset.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.hanyang.dataportal.core.exception.NullException;
 
 import java.util.stream.Stream;
 
@@ -11,6 +12,6 @@ public enum Type {
         return Stream.of(Type.values())
                 .filter(o -> o.toString().equals(type))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new NullException("해당 파일유형은 존재하지 않습니다"));
     }
 }

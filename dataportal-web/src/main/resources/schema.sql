@@ -16,7 +16,7 @@ create table if not exists hanyang.dataset
     view         int                                                                                               null,
     dataset_id   bigint auto_increment
         primary key,
-    organization enum ('경상대학', '공과대학', '과학기술융합대학', '국제문화대학', '디자인대학', '소프트융합대학', '약학대학', '언론정보대학', '예체능대학', '입학처') null,
+    organization    varchar(255) null,
     title        varchar(255)                                                                                      null,
     description  tinytext                                                                                          null,
     FULLTEXT idx_title (title)
@@ -27,7 +27,7 @@ create table if not exists hanyang.dataset_theme
     dataset_id       bigint                                                       null,
     dataset_theme_id bigint auto_increment
         primary key,
-    theme            enum ('국제', '복지', '입학', '장학', '재정', '취창업', '학사', '학생', '학술') null,
+    theme    varchar(255) null,
     constraint FKgcerm44anuenpnm627hscd0gx
         foreign key (dataset_id) references hanyang.dataset (dataset_id)
 );

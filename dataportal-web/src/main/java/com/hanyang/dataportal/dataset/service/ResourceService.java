@@ -20,7 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.hanyang.dataportal.dataset.domain.Type.findByType;
+import static com.hanyang.dataportal.dataset.domain.vo.Type.findByType;
+
 
 @Service
 @RequiredArgsConstructor
