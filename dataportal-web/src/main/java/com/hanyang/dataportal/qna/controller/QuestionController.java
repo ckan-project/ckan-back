@@ -23,9 +23,9 @@ public class QuestionController {
     //    1. 질문하기 (생성, 수정, 삭제)
     @PostMapping(value = "/", name = "질문하기 API (생성) ")
     public ResponseEntity<ApiResponse<ResQuestionDto>> createQuestion(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ReqQuestionDto reqQuestionDto) {
-        Question question = reqQuestionDto.toEntity();
+        Question question = reqQuestionDto.toEntity(); // 여기도 불편사항 접수하겠습니다.
         String username = userDetails.getUsername();
-        questionService.save(question, username);
+        questionService.save(question, username); // 여기 불편사항 이신거죠? 시정하겠습니다.
         ResQuestionDto resQuestionDto = ResQuestionDto.toQuestionDto((question));
         return ResponseEntity.ok(ApiResponse.ok(resQuestionDto));
     }
@@ -57,6 +57,9 @@ public class QuestionController {
    }
 
     //    3. 나의 질문 내역 리스트보기 _로그인 value를 전달하여 findbyuser...로 긁어오기?
+
+
+    //전체페이지 수와 total element 수?
    @GetMapping({ "/list/my", "list/my"})
     public ResponseEntity<ApiResponse<List<ResQuestionListDto>>> getMyQuestionList(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(value ="page", required = false, defaultValue = "1") int pageNum,
                                                                                @RequestParam(value = "size", defaultValue = "10") int listSize)

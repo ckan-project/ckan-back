@@ -3,7 +3,6 @@ package com.hanyang.dataportal.qna.dto.res;
 
 import com.hanyang.dataportal.qna.domain.AnswerStatus;
 import com.hanyang.dataportal.qna.domain.Question;
-import com.hanyang.dataportal.user.domain.User;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -15,7 +14,7 @@ public class ResQuestionListDto {
     private  Long id;
     private  String title;
     private  AnswerStatus status;
-    private  User user;
+    private  String user;
     private  LocalDate date;
     private  Integer view;
 
@@ -29,7 +28,7 @@ public class ResQuestionListDto {
     ResQuestionListDto resQuestionListDto = new ResQuestionListDto();
     resQuestionListDto.setId(question.getId());
     resQuestionListDto.setTitle(question.getTitle());
-    resQuestionListDto.setUser(question.getUser());
+    resQuestionListDto.setUser(question.getUser().getName());
     resQuestionListDto.setDate(question.getDate());
     resQuestionListDto.setStatus(question.getAnswerStatus());
     resQuestionListDto.setView(question.getView());

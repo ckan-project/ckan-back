@@ -65,7 +65,7 @@ public class QuestionService {
         // 1. userservice에서 유저를 찾아
         // 2. questionId로 question을 찾아
         // 3. question의 작성자가 위에 파라미터로 들어온 username인지 확인 -> 다르면 예외 발생
-     if(questionRepository.existsById(questionId)){
+     if(questionRepository.existsById(questionId)){ // throw 로 확실히 예외처리를 하겠습니다.
          questionRepository.deleteById(questionId);
          return true;
         } else return false;
@@ -78,7 +78,7 @@ public class QuestionService {
     getContent() */
 
     public List<ResQuestionListDto> getQuestionList(int pageNum, int listSize) {
-        Pageable pageable = PageRequest.of(pageNum, listSize, Sort.by("date").descending());
+        Pageable pageable = PageRequest.of(pageNum-1, listSize, Sort.by("date").descending());
         Page<Question> questions = questionRepository.findAll(pageable);
 
         List<ResQuestionListDto> resQuestionDtoList = new ArrayList<>();
@@ -99,8 +99,11 @@ public class QuestionService {
 
     public List<ResQuestionListDto> getMyQuestionList(String userName, int pageNum, int listSize) {
         User user = userService.findByEmail(userName);
-        Pageable pageable = PageRequest.of(pageNum, listSize, Sort.by("date").descending());
+        Pageable pageable = PageRequest.of(pageNum-1, listSize, Sort.by("date").descending());
         Page<Question> questions = questionRepository.findByUser(user,pageable);
+        questions.getContent();
+        questions.getTotalElements();
+        questions.getTotalPages();
         /*
         each-for 문 사용법
         for (type 변수명: iterate) {

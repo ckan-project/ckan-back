@@ -8,6 +8,8 @@ import com.hanyang.dataportal.qna.dto.res.ResAnswerDto;
 import com.hanyang.dataportal.qna.service.AnswerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,11 +17,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/answer")
 public class AnswerController {
     private final AnswerService answerService;
-    // 6. 답변하기
+    // 6. 답변하기 (생성, 수정, 삭제)
     @PostMapping(value = "/" , name = "답변하기")
-    public ResponseEntity<ApiResponse<?>> saveAnswer(@RequestBody ReqAnswerDto reqAnswerDto, Long questionId) {
+    public ResponseEntity<ApiResponse<?>> saveAnswer(@RequestBody ReqAnswerDto reqAnswerDto, Long questionId, @AuthenticationPrincipal UserDetails userDetails) {
         Answer answer = reqAnswerDto.toEntity();
-        answerService.saveAnswer(answer, questionId);
+        String username = userDetails.getUsername();
+        answerService.save(answer, questionId, username);
      ResAnswerDto resAnswerDto = ResAnswerDto.toDto(answer);
      return ResponseEntity.ok(ApiResponse.ok(resAnswerDto));
     }

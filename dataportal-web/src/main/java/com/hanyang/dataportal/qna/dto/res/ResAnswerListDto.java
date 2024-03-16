@@ -24,7 +24,7 @@ public class ResAnswerListDto {
 
     }
 
-    public static ResAnswerListDto toListDto(Answer answer){
+    public static ResAnswerListDto toDto(Answer answer){
         ResAnswerListDto resAnswerListDto = new ResAnswerListDto();
         resAnswerListDto.setAnswerId(answer.getAnswerId());
         resAnswerListDto.setAnswerTitle(answer.getAnswerTitle());

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question,Long> {
@@ -16,6 +17,7 @@ public interface QuestionRepository extends JpaRepository<Question,Long> {
     Page<Question> findByUser(User user, Pageable pageable);
     List<Question> findAllByUser(User user);
 
+    Optional<Question> findById(Question questionId);
 
 
     // Question findByUser(User user);

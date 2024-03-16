@@ -19,6 +19,7 @@ public class ResAnswerDetailDto {
 
     }
 
+    // 생성자로 바꾸세요
     public static ResAnswerDetailDto toDetailDto(Answer answer) {
      ResAnswerDetailDto resAnswerDetailDto = new ResAnswerDetailDto();
      resAnswerDetailDto.setAnswerId(answer.getAnswerId());
