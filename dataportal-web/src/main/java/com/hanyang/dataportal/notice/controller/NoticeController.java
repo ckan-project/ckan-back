@@ -39,10 +39,10 @@ public class NoticeController {
 
     // 2-1. 공지사항 조회 (단건조회)
     @GetMapping("/{noticeId}")
-    public ResponseEntity<ApiResponse<List<ResNoticeDto>>> findNotice(@PathVariable Long noticeId) {
+    public ResponseEntity<ApiResponse<ResNoticeDto>> findNotice(@PathVariable Long noticeId) {
        Notice notice = noticeDetailService.findNotice(noticeId);
             ResNoticeDto resNoticeDto = ResNoticeDto.toNoticeDetailDto(notice);
-            return ResponseEntity.ok(ApiResponse.ok(List.of(resNoticeDto)));
+            return ResponseEntity.ok(ApiResponse.ok(resNoticeDto));
     }
 
     // 2-2. 공지사항 조회 (리스트 조회)
