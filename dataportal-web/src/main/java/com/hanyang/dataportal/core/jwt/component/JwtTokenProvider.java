@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -24,35 +23,47 @@ public class JwtTokenProvider {
 
     @Value("${jwt.expire.refresh}")
     private Long refreshExpire;
+    @Value("${jwt.expire.access}")
+    private Long accessExpire;
 
     // JWT 토큰 생성
-    public TokenDto generateToken(Authentication authentication) {
+    private String generateToken(final Authentication authentication, final Long expiredInMillisecond) {
         // role 가져오기
-        String authorities = authentication.getAuthorities().stream()
+        final String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        long now = (new Date()).getTime();
+        final long now = (new Date()).getTime();
+        final Date accessTokenExpiresIn = new Date(now + expiredInMillisecond);
 
         // Access Token 생성
-        long millisecondsInADay = 1000L * 60L * 30L;
-        Date accessTokenExpiresIn = new Date(now + millisecondsInADay);
-        String accessToken = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(jwtSecretKey.getKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
 
-        // Refresh Token 생성
-        String refreshToken = UUID.randomUUID().toString();
-        // Redis 저장
-        User user = (User) authentication.getPrincipal();
-        String username = user.getUsername();
-        redisService.setCode(username, refreshToken, refreshExpire);
+    /**
+     * refresh token 생성 메서드
+     * @param username
+     */
+     private String generateRefreshToken(final String username, final Long expiredInMillisecond) {
+        final String refreshToken = UUID.randomUUID().toString();
+        redisService.setCode(username, refreshToken, expiredInMillisecond);
+        return refreshToken;
+    }
 
+    /**
+     * 액세스 토큰과 리프레시 토큰을 새로 발급하는 메서드
+     * @param authentication
+     * @return
+     */
+    public TokenDto generateLoginToken(Authentication authentication) {
+        final String accessToken = generateToken(authentication, accessExpire);
+        final String refreshToken = generateRefreshToken(authentication.getName(), refreshExpire);
         return TokenDto.builder()
-                .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
