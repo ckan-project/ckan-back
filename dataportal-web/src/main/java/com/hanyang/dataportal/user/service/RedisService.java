@@ -25,10 +25,10 @@ public class RedisService {
      *
      * @param email redis key 값으로 넣을 유저 이메일
      * @param code redis value 값으로 넣을 값
-     * @param expire TTL (초 단위)
+     * @param expire TTL (밀리초 단위)
      */
     public void setCode(String email, String code, Long expire) {
-        valueOperations.set(email, code, expire, TimeUnit.SECONDS);
+        valueOperations.set(email, code, expire, TimeUnit.MILLISECONDS);
     }
 
     public String getCode(String email){
@@ -42,12 +42,13 @@ public class RedisService {
     /**
      * redis 칼럼을 삭제하는 메서드
      * @param email 삭제할 칼럼의 key 값
-     * @return 삭제된 칼럼의 value
      */
-    public Object deleteCode(String email) {
-        if (valueOperations.get(email) == null) {
-            throw new ResourceNotFoundException("유저의 refresh token 정보가 존재하지 않습니다.");
-        }
-        return valueOperations.getAndDelete(email);
+    public void deleteCode(String email) {
+        // 예외처리가 굳이 필요한가?
+        getCode(email);
+//        if (valueOperations.get(email) == null) {
+//            throw new ResourceNotFoundException("유저의 refresh token 정보가 존재하지 않습니다.");
+//        }
+        valueOperations.getAndDelete(email);
     }
 }
