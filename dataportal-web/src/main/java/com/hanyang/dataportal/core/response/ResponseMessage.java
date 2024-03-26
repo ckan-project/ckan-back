@@ -11,6 +11,9 @@ public class ResponseMessage {
     public static String WRONG_PASSWORD ="잘못된 비밀번호 입니다";
     public static String ACCESS_DENIED ="접근 권한이 없습니다";
     public static String UN_AUTHORIZED ="인증되지 않은 사용자 입니다";
+    public static String INVALID_ACCESS = "액세스 토큰이 유효하지 않습니다";
+    public static String ACCESS_EXPIRED = "ACCESS_EXPIRED"; // 프론트와 공유
+    public static String REFRESH_EXPIRED = "REFRESH_EXPIRED"; // 프론트와 공유
     public static String FILE_ERROR ="잘못된 형태의 파일입니다";
     public static String AUTHENTICATION_FAILED = "인증에 실패하였습니다";
     public static String NOT_EXIST_RESOURCE = "해당 리소스는 존재하지 않습니다";
