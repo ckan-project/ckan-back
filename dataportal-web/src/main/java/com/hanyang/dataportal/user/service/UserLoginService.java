@@ -11,6 +11,7 @@ import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.dto.req.ReqLoginDto;
 import com.hanyang.dataportal.user.dto.req.ReqPasswordDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -55,6 +56,16 @@ public class UserLoginService {
             return jwtTokenProvider.generateLoginToken(authentication);
         }
         throw new TokenExpiredException(ResponseMessage.REFRESH_EXPIRED);
+    }
+
+    /**
+     * refresh token 쿠키를 리턴하는 메서드
+     * @param refreshToken
+     * @param autoLogin
+     * @return
+     */
+    public ResponseCookie generateRefreshCookie(final String refreshToken, final Boolean autoLogin) {
+        return jwtTokenProvider.generateRefreshCookie(refreshToken, autoLogin);
     }
 
     public void passwordCheck(UserDetails userDetails, ReqPasswordDto reqPasswordDto){

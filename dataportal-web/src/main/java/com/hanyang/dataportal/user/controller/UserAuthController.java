@@ -27,7 +27,6 @@ public class UserAuthController {
     private final UserLoginService userLoginService;
     private final UserLogoutService userLogoutService;
     private final EmailService emailService;
-    private final RefreshTokenService refreshTokenService;
 
     @Operation(summary = "이메일로 인증 번호 받기")
     @PostMapping("/email")
@@ -52,7 +51,7 @@ public class UserAuthController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<ResLoginDto>> login(@RequestBody ReqLoginDto reqLoginDto){
         final TokenDto tokenDto = userLoginService.login(reqLoginDto);
-        final ResponseCookie responseCookie = refreshTokenService.generateRefreshCookie(tokenDto.getRefreshToken());
+        final ResponseCookie responseCookie = userLoginService.generateRefreshCookie(tokenDto.getRefreshToken(), reqLoginDto.getAutoLogin());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(ApiResponse.ok(new ResLoginDto(AuthorizationExtractor.AUTH_TYPE, tokenDto.getAccessToken())));
@@ -90,9 +89,11 @@ public class UserAuthController {
     @PostMapping("/token")
     public ResponseEntity<ApiResponse<ResLoginDto>> reissueAccessToken(
             @RequestHeader("Authorization") final String authorizationHeader,
-            @CookieValue("refreshToken") final String refreshToken) {
+            @CookieValue("refreshToken") final String refreshToken
+    ) {
         final TokenDto tokenDto = userLoginService.reissueToken(AuthorizationExtractor.extractAccessToken(authorizationHeader), refreshToken);
-        final ResponseCookie responseCookie = refreshTokenService.generateRefreshCookie(tokenDto.getRefreshToken());
+        //? request cookie의 만료시간은 읽어올 수 없음(-> RTR 적용시 자동로그인 여부에 따라 refresh token 만료시간을 다르게 해야하는데 할 수 없음)
+        final ResponseCookie responseCookie = userLoginService.generateRefreshCookie(tokenDto.getRefreshToken(), false);
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(ApiResponse.ok(new ResLoginDto(AuthorizationExtractor.AUTH_TYPE, tokenDto.getAccessToken())));
