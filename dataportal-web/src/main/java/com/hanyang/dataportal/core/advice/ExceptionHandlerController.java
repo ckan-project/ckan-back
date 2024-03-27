@@ -61,6 +61,7 @@ public class ExceptionHandlerController {
 //        if (e.getMessage().equals(EXPIRED_ACCESS_TOKEN.getMessage())) {
 //            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.fail(EXPIRED_ACCESS_TOKEN.getCode()));
 //        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
     }
   
     @ExceptionHandler(NullException.class)
