@@ -2,8 +2,8 @@ package com.hanyang.dataportal.dataset.dto.res;
 
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.domain.DatasetTheme;
-import com.hanyang.dataportal.dataset.domain.Organization;
-import com.hanyang.dataportal.dataset.domain.Theme;
+import com.hanyang.dataportal.dataset.domain.vo.Organization;
+import com.hanyang.dataportal.dataset.domain.vo.Theme;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -34,7 +34,9 @@ public class ResDatasetDetailDto {
         this.updateDate = dataset.getUpdateDate();
         this.view = dataset.getView();
         this.download = dataset.getDownload();
-        this.resourceName = dataset.getResource().getResourceName();
-        this.resourceUrl = dataset.getResource().getResourceUrl();
+        if(dataset.getResource() != null){
+            this.resourceName = dataset.getResource().getResourceName();
+            this.resourceUrl = dataset.getResource().getResourceUrl();
+        }
     }
 }

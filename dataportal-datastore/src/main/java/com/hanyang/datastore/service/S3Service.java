@@ -1,6 +1,5 @@
 package com.hanyang.datastore.service;
 
-import com.hanyang.datastore.core.component.ConvertFileType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,6 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     private final S3Client s3Client;
-    private final ConvertFileType convertFileType;
 
     public InputStream getFile(String datasetId) throws IOException {
 
@@ -45,13 +43,7 @@ public class S3Service {
         byte[] data = objectBytes.asByteArray();
 
         assert key != null;
-        String type = key.split("\\.")[1];
 
-        if(type.equals("xlsx")){
-            return convertFileType.convertXlsxToCsv(new ByteArrayInputStream(data));
-        }
-        else {
-            return new ByteArrayInputStream(data);
-        }
+        return new ByteArrayInputStream(data);
     }
 }

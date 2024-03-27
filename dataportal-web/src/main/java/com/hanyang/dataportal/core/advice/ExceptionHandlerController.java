@@ -26,7 +26,7 @@ public class ExceptionHandlerController {
     }
 
     @ExceptionHandler(FileException.class)
-    public ResponseEntity<ApiResponse<?>> handleFileException(ResourceExistException e) {
+    public ResponseEntity<ApiResponse<?>> handleFileException(FileException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
     }
 
@@ -61,6 +61,10 @@ public class ExceptionHandlerController {
 //        if (e.getMessage().equals(EXPIRED_ACCESS_TOKEN.getMessage())) {
 //            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.fail(EXPIRED_ACCESS_TOKEN.getCode()));
 //        }
+    }
+  
+    @ExceptionHandler(NullException.class)
+    public ResponseEntity<ApiResponse<?>> handleNullException(NullException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
     }
 }

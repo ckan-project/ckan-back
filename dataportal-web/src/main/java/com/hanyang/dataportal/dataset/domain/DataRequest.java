@@ -1,5 +1,6 @@
 package com.hanyang.dataportal.dataset.domain;
 
+import com.hanyang.dataportal.dataset.domain.vo.Organization;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -11,7 +12,7 @@ public class DataRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dataRequestId;
     private String title;
-    private String organization;
+    private Organization organization;
     @Lob
     private String content;
     private String purpose;

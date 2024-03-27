@@ -1,5 +1,6 @@
 package com.hanyang.dataportal.dataset.domain;
 
+import com.hanyang.dataportal.dataset.domain.vo.Theme;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ public class DatasetTheme {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="datasetId")
     private Dataset dataset;
-    @Enumerated(EnumType.STRING)
+
     private Theme theme;
 
     public DatasetTheme(Dataset dataset,Theme theme) {

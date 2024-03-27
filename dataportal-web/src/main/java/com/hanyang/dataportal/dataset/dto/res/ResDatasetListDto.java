@@ -2,8 +2,9 @@ package com.hanyang.dataportal.dataset.dto.res;
 
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.domain.DatasetTheme;
-import com.hanyang.dataportal.dataset.domain.Theme;
-import com.hanyang.dataportal.dataset.domain.Type;
+import com.hanyang.dataportal.dataset.domain.vo.Organization;
+import com.hanyang.dataportal.dataset.domain.vo.Theme;
+import com.hanyang.dataportal.dataset.domain.vo.Type;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 
@@ -27,6 +28,7 @@ public class ResDatasetListDto {
         private Long datasetId;
         private String title;
         private String description;
+        private Organization organization;
         private Integer view;
         private Type type;
         private List<Theme> themeList;
@@ -36,6 +38,7 @@ public class ResDatasetListDto {
             this.title = dataset.getTitle();
             this.description = dataset.getDescription();
             this.view = dataset.getView();
+            this.organization = dataset.getOrganization();
             if(dataset.getResource()!=null) {
                 this.type = dataset.getResource().getType();
             }

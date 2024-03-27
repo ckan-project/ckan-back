@@ -1,5 +1,6 @@
 package com.hanyang.dataportal.dataset.domain;
 
+import com.hanyang.dataportal.dataset.domain.vo.Type;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,7 @@ public class Resource {
     @Lob
     private String resourceUrl;
     @Enumerated(EnumType.STRING)
-    private  Type type;
+    private Type type;
     private String resourceName;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "datasetId")

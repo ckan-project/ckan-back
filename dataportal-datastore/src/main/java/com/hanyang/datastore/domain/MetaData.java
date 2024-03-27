@@ -1,7 +1,11 @@
 package com.hanyang.datastore.domain;
 
 import com.hanyang.datastore.dto.DatasetMetaDataDto;
+import jakarta.persistence.Embedded;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -9,19 +13,29 @@ import java.util.List;
 
 @Document
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class MetaData {
+    @Id
     private String datasetId;
     private String title;
     private String description;
-    private String labelName;
-    private List<String> label = new ArrayList<>();
-    public void setMetaData(DatasetMetaDataDto datasetMetaDataDto) {
+    private String content;
+    @Embedded
+    private List<TableData> dataList = new ArrayList<>();
+
+    public MetaData(DatasetMetaDataDto datasetMetaDataDto) {
         this.datasetId = datasetMetaDataDto.getDatasetId();
         this.title = datasetMetaDataDto.getTitle();
         this.description = datasetMetaDataDto.getDescription();
+        this.content = datasetMetaDataDto.getTitle()+" "+datasetMetaDataDto.getDescription();
     }
 
-    public void setLabelName(String labelName) {
-        this.labelName = labelName;
+    public void setDataListClean() {
+        this.dataList = new ArrayList<>();
+    }
+
+    public void setDataList(List<TableData> dataList) {
+        this.dataList = dataList;
     }
 }
