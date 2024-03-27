@@ -1,26 +1,17 @@
 package com.hanyang.datastore.domain;
 
-import lombok.AllArgsConstructor;
+import jakarta.persistence.Embeddable;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
-@Document
+@Embeddable
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@Setter
 public class TableData {
     @Id
     private String id;
-    private Map<String, String> attributes = new LinkedHashMap<>();
-
-    public void setAttributes(String col,String row) {
-        this.attributes.put(col,row);
-    }
-
-
+    private LinkedHashMap<String,Object> data;
 }

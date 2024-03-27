@@ -5,7 +5,6 @@ import com.hanyang.dataportal.notice.domain.Notice;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 public class ResNoticeDto {
@@ -14,50 +13,17 @@ public class ResNoticeDto {
     private String title;
     private String content;
     private LocalDate createDate;
-    private LocalDateTime updateTime;
+    private LocalDate updateTime;
     private Integer view;
     private String adminName;
 
-    public ResNoticeDto(Long noticeId, String title, String content, LocalDate createDate, LocalDateTime updateTime, Integer view, String adminName) {
-        this.noticeId = noticeId;
-        this.title = title;
-        this.content = content;
-        this.createDate = createDate;
-        this.updateTime = updateTime;
-        this.view = view;
-        this.adminName = adminName;
-    }
-
     public ResNoticeDto(Notice notice) {
-
-
+        this.noticeId = notice.getNoticeId();
+        this.title = notice.getTitle();
+        this.content = notice.getContent();
+        this.createDate = notice.getCreateDate();
+        this.updateTime = notice.getUpdateDate();
+        this.view = notice.getView();
+        this.adminName = notice.getAdmin().getName();
     }
-
-    public ResNoticeDto() {
-
-    }
-
-    public static ResNoticeDto toNoticeDto(Notice notice) {
-        ResNoticeDto resNoticeDto = new ResNoticeDto();
-        resNoticeDto.setNoticeId(notice.getNoticeId());
-        resNoticeDto.setTitle(notice.getTitle());
-        resNoticeDto.setContent(notice.getContent());
-        resNoticeDto.setCreateDate(notice.getCreateDate());
-        resNoticeDto.setView(notice.getView());
-        resNoticeDto.setAdminName(notice.getAdmin().getName());
-        return resNoticeDto;
-    }
-
-    public static ResNoticeDto toNoticeDetailDto(Notice notice) {
-        ResNoticeDto resNoticeDto = new ResNoticeDto();
-        resNoticeDto.setNoticeId(notice.getNoticeId());
-        resNoticeDto.setTitle(notice.getTitle());
-        resNoticeDto.setContent(notice.getContent());
-        resNoticeDto.setCreateDate(notice.getCreateDate());
-        resNoticeDto.setView(notice.getView());
-        resNoticeDto.setAdminName(notice.getAdmin().getName());
-        return resNoticeDto;
-    }
-
-
-    }
+}
