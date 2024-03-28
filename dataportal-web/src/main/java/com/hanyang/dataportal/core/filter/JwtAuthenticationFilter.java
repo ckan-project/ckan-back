@@ -19,7 +19,6 @@ import java.io.IOException;
 import static com.hanyang.dataportal.core.response.ResponseMessage.*;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
-@Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
