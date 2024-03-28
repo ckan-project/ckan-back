@@ -1,6 +1,7 @@
 package com.hanyang.dataportal.user.controller;
 
 import com.hanyang.dataportal.core.jwt.component.AuthorizationExtractor;
+import com.hanyang.dataportal.core.jwt.component.JwtTokenProvider;
 import com.hanyang.dataportal.core.jwt.dto.TokenDto;
 import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.user.dto.req.*;
@@ -59,9 +60,15 @@ public class UserAuthController {
 
     @Operation(summary = "유저 로그아웃")
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<?>> logout(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<ApiResponse<?>> logout(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @CookieValue(JwtTokenProvider.REFRESH_COOKIE_KEY) String refreshToken
+    ) {
         userLogoutService.logout(userDetails);
-        return ResponseEntity.ok(ApiResponse.ok(null));
+        final ResponseCookie responseCookie = userLogoutService.generateRefreshCookie(refreshToken);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(ApiResponse.ok(null));
     }
 
     @Operation(summary = "유저 기존 비밀번호 확인")
@@ -89,7 +96,7 @@ public class UserAuthController {
     @PostMapping("/token")
     public ResponseEntity<ApiResponse<ResLoginDto>> reissueAccessToken(
             @RequestHeader("Authorization") final String authorizationHeader,
-            @CookieValue("refreshToken") final String refreshToken
+            @CookieValue(JwtTokenProvider.REFRESH_COOKIE_KEY) final String refreshToken
     ) {
         final TokenDto tokenDto = userLoginService.reissueToken(AuthorizationExtractor.extractAccessToken(authorizationHeader), refreshToken);
         //? request cookie의 만료시간은 읽어올 수 없음(-> RTR 적용시 자동로그인 여부에 따라 refresh token 만료시간을 다르게 해야하는데 할 수 없음)
