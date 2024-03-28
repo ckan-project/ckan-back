@@ -2,6 +2,7 @@ package com.hanyang.dataportal.core.advice;
 
 import com.hanyang.dataportal.core.exception.*;
 import com.hanyang.dataportal.core.response.ApiResponse;
+import com.hanyang.dataportal.core.response.ResponseMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,19 @@ public class ExceptionHandlerController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(message));
     }
 
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<ApiResponse<?>> handleTokenExpiredException(TokenExpiredException e) {
+        log.warn(e.getMessage());
+        if (e.getMessage().equals(ResponseMessage.REFRESH_EXPIRED)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.fail(ResponseMessage.REFRESH_EXPIRED));
+        }
+        // access token 만료는 filter에서 처리
+//        if (e.getMessage().equals(EXPIRED_ACCESS_TOKEN.getMessage())) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.fail(EXPIRED_ACCESS_TOKEN.getCode()));
+//        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
+    }
+  
     @ExceptionHandler(NullException.class)
     public ResponseEntity<ApiResponse<?>> handleNullException(NullException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));

@@ -55,6 +55,8 @@ subprojects {
 		testImplementation 'com.h2database:h2'
 
 		implementation "com.googlecode.json-simple:json-simple:1.1.1"
+
+		implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	}
 }
 tasks.named('test').configure {
