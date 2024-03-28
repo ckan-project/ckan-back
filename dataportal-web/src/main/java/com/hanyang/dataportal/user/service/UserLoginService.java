@@ -64,7 +64,7 @@ public class UserLoginService {
      * @param autoLogin
      * @return
      */
-    public ResponseCookie generateRefreshCookie(final String refreshToken, final Boolean autoLogin) {
+    public ResponseCookie generateRefreshCookie(final String refreshToken, final boolean autoLogin) {
         return jwtTokenProvider.generateRefreshCookie(refreshToken, autoLogin);
     }
 

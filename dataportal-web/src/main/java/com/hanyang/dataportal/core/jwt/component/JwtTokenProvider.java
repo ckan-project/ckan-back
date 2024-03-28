@@ -4,6 +4,7 @@ import com.hanyang.dataportal.core.jwt.dto.TokenDto;
 import com.hanyang.dataportal.user.service.RedisService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
@@ -24,6 +25,7 @@ public class JwtTokenProvider {
     private final RedisService redisService;
 
     public static final Long SESSION_COOKIE_MAX_AGE = -1L;
+    public static final String REFRESH_COOKIE_KEY = "refreshToken";
 
     @Value("${jwt.expire.refresh}")
     private Long refreshExpire;
@@ -79,9 +81,19 @@ public class JwtTokenProvider {
      * @param autoLogin 자동로그인 여부
      * @return
      */
-    public ResponseCookie generateRefreshCookie(final String refreshToken, final boolean autoLogin) {
+    public ResponseCookie generateRefreshCookie(final String refreshToken, @Nullable final Boolean autoLogin) {
+        if (autoLogin == null) {
+            return ResponseCookie.from(REFRESH_COOKIE_KEY, refreshToken)
+                    .maxAge(0)
+                    .httpOnly(true)
+                    //TODO: https 배포 이후 true로 변경
+                    .secure(false)
+                    .sameSite("Lax")
+                    .path("/")
+                    .build();
+        }
         if (!autoLogin) {
-            return ResponseCookie.from("refreshToken", refreshToken)
+            return ResponseCookie.from(REFRESH_COOKIE_KEY, refreshToken)
                     .maxAge(SESSION_COOKIE_MAX_AGE) // 세션쿠키
                     .httpOnly(true)
                     //TODO: https 배포 이후 true로 변경
@@ -91,7 +103,7 @@ public class JwtTokenProvider {
                     .build();
         }
         final Duration duration = Duration.ofMillis(refreshExpire);
-        return ResponseCookie.from("refreshToken", refreshToken)
+        return ResponseCookie.from(REFRESH_COOKIE_KEY, refreshToken)
                 .maxAge(duration)
                 .httpOnly(true)
                 //TODO: https 배포 이후 true로 변경
