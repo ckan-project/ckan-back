@@ -29,7 +29,7 @@ public class NoticeController {
     // 2-1. 공지사항 조회 (단건조회)
     @GetMapping("/{noticeId}")
     public ResponseEntity<ApiResponse<ResNoticeDto>> findNotice(@PathVariable Long noticeId) {
-        Notice notice = noticeService.findByIdWithAdmin(noticeId);
+        Notice notice = noticeService.getNoticeDetail(noticeId);
         return ResponseEntity.ok(ApiResponse.ok(new ResNoticeDto(notice)));
     }
 
@@ -43,7 +43,7 @@ public class NoticeController {
     // 3. 공지사항 수정 (update)
     @PostMapping("/update/{noticeId}")
     public ResponseEntity<ApiResponse<ResNoticeDto>> updateNotice(@PathVariable Long noticeId, @RequestBody ReqNoticeDto reqNoticeDto) {
-        Notice notice = noticeService.modify(reqNoticeDto, noticeId);
+        Notice notice = noticeService.update(reqNoticeDto, noticeId);
         return ResponseEntity.ok(ApiResponse.ok(new ResNoticeDto(notice)));
     }
     // 4. 공지사항 삭제

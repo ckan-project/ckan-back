@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface NoticeRepository extends JpaRepository<Notice,Long> {
     Page<Notice> findAll(Pageable pageable);
 
-    @Query("select n from Notice n join fetch User u where n.noticeId = :noticeId")
+    @Query("select n from Notice n inner join fetch n.admin u where n.noticeId = :noticeId")
     Optional<Notice> findByIdWithAdmin(Long noticeId);
 
 }

@@ -27,7 +27,7 @@ public class NoticeService {
         return noticeRepository.save(notice);
     }
 
-    public Notice modify(ReqNoticeDto reqNoticeDto, Long noticeId) {
+    public Notice update(ReqNoticeDto reqNoticeDto, Long noticeId) {
         Notice notice =  noticeRepository.findByIdWithAdmin(noticeId).orElseThrow(() -> new ResourceNotFoundException("공지글이 없습니다"));
         notice.updateNotice(reqNoticeDto);
         return notice;
@@ -37,9 +37,11 @@ public class NoticeService {
         Pageable pageable = PageRequest.of(page,10);
         return noticeRepository.findAll(pageable);
     }
-    @Transactional(readOnly = true)
-    public Notice findByIdWithAdmin(Long noticeId) {
-        return noticeRepository.findByIdWithAdmin(noticeId).orElseThrow(() -> new ResourceNotFoundException("공지글이 없습니다"));
+    @Transactional
+    public Notice getNoticeDetail(Long noticeId) {
+        Notice notice = noticeRepository.findByIdWithAdmin(noticeId).orElseThrow(() -> new ResourceNotFoundException("공지글이 없습니다"));
+        notice.updateView(notice.getView()+1);
+        return notice;
     }
 
     public void delete(Long noticeId) {

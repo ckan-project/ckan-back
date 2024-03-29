@@ -38,8 +38,7 @@ public class ScrapService {
                 .dataset(dataset)
                 .build();
 
-        scrapRepository.save(scrap);
-        return scrap;
+        return scrapRepository.save(scrap);
     }
 
     /**
@@ -48,14 +47,12 @@ public class ScrapService {
      * @param datasetId
      * @return
      */
-    public Scrap delete(String email, Long datasetId) {
+    public void delete(String email, Long datasetId) {
         Dataset dataset = datasetRepository.findByIdWithTheme(datasetId).orElseThrow(() -> new ResourceNotFoundException("해당 데이터셋은 존재하지 않습니다"));
         User user = userService.findByEmail(email);
         Scrap scrap = findByDatasetAndUser(dataset, user);
 
-        scrapRepository.deleteById(scrap.getScrapId());
-
-        return scrap;
+        scrapRepository.delete(scrap);
     }
 
     /**
@@ -83,7 +80,7 @@ public class ScrapService {
      * @param user
      * @return
      */
-    public Scrap findByDatasetAndUser(Dataset dataset, User user) {
+    private Scrap findByDatasetAndUser(Dataset dataset, User user) {
         return scrapRepository.findByDatasetAndUser(dataset, user)
                 .orElseThrow(() -> new ResourceNotFoundException(ResponseMessage.NOT_EXIST_SCRAP));
     }
@@ -93,7 +90,7 @@ public class ScrapService {
      * @param dataset
      * @param user
      */
-    public void checkDuplicateByDatasetAndUser(Dataset dataset, User user) {
+    private void checkDuplicateByDatasetAndUser(Dataset dataset, User user) {
         scrapRepository.findByDatasetAndUser(dataset, user)
                 .ifPresent(scrap -> {
                     throw new ResourceExistException(ResponseMessage.DUPLICATE_SCRAP);

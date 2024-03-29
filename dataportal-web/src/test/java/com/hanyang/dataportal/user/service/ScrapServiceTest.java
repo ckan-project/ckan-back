@@ -1,69 +1,92 @@
 package com.hanyang.dataportal.user.service;
 
 import com.hanyang.dataportal.core.exception.ResourceExistException;
+import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.core.response.ResponseMessage;
 import com.hanyang.dataportal.dataset.domain.Dataset;
+import com.hanyang.dataportal.dataset.repository.DatasetRepository;
 import com.hanyang.dataportal.user.domain.Scrap;
 import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.repository.ScrapRepository;
+import com.hanyang.dataportal.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
-
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@ActiveProfiles("test")
+@Sql("/h2-truncate.sql")
 class ScrapServiceTest {
-    @InjectMocks
+    @Autowired
     private ScrapService scrapService;
+    @Autowired
+    private ScrapRepository scrapRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private DatasetRepository datasetRepository;
 
-    @Mock
-    ScrapRepository scrapRepository;
+    @Test
+    @DisplayName("스크랩할 수 있다.")
+    void create(){
+        //Given
+        User user = userRepository.save(User.builder().email("test@email.com").build());
+        Dataset dataset = datasetRepository.save(Dataset.builder().build());
 
-    private static Long datasetId;
-    private static String userEmail;
+        //When
+        Scrap scrap = scrapService.create(user.getEmail(), dataset.getDatasetId());
 
-    @BeforeAll
-    static void setup() {
-        datasetId = 1L;
-        userEmail = "test";
+        //Then
+        Assertions.assertThat(scrapRepository.findById(scrap.getScrapId())).isPresent();
+        Assertions.assertThat(user.getUserId()).isEqualTo(scrap.getUser().getUserId());
     }
 
-    @Nested
-    @DisplayName("예외 케이스")
-    class FailCase {
-        @Test
-        @DisplayName("중복 스크랩 존재 여부 확인하기")
-        void checkDuplicateByDatasetAndUser() {
-            // given
-            Dataset dataset = Dataset.builder()
-                    .datasetId(datasetId)
-                    .build();
-            User user = User.builder()
-                    .email(userEmail)
-                    .build();
-            Scrap scrap = Scrap.builder()
-                    .user(user)
-                    .dataset(dataset)
-                    .build();
+    @Test
+    @DisplayName("스크랩한 데이터셋을 또 스크랩할 수 없다")
+    void createDuplicateError(){
+        //Given
+        User user = userRepository.save(User.builder().email("test@email.com").build());
+        Dataset dataset = datasetRepository.save(Dataset.builder().build());
+        scrapRepository.save(Scrap.builder().user(user).dataset(dataset).build());
 
-            when(scrapRepository.findByDatasetAndUser(dataset, user))
-                    .thenReturn(Optional.of(scrap));
+        //When & Then
+        Assertions.assertThatThrownBy(()->{
+            scrapService.create(user.getEmail(),dataset.getDatasetId());})
+                .isExactlyInstanceOf(ResourceExistException.class).hasMessage(ResponseMessage.DUPLICATE_SCRAP);
 
-            // when
-            Exception exception = assertThrows(ResourceExistException.class, () -> {
-                scrapService.checkDuplicateByDatasetAndUser(dataset, user);
-            });
+    }
 
-            // then
-            Assertions.assertThat(exception.getMessage())
-                    .isEqualTo(ResponseMessage.DUPLICATE_SCRAP);
-        }
+    @Test
+    @DisplayName("스크랩을 취소할 수 있다.")
+    void delete(){
+        //Given
+        User user = userRepository.save(User.builder().email("test@email.com").build());
+        Dataset dataset = datasetRepository.save(Dataset.builder().build());
+        Scrap scrap = scrapRepository.save(Scrap.builder().user(user).dataset(dataset).build());
+
+        //When
+        scrapService.delete(user.getEmail(),dataset.getDatasetId());
+
+        //Then
+        Assertions.assertThat(scrapRepository.findById(scrap.getScrapId())).isEmpty();
+
+    }
+
+    @Test
+    @DisplayName("스크랩하지 않은 데이터셋을 스크랩 취소할 수 없다")
+    void deleteError(){
+        //Given
+        User user = userRepository.save(User.builder().email("test@email.com").build());
+        Dataset dataset = datasetRepository.save(Dataset.builder().build());
+
+        //When & Then
+        Assertions.assertThatThrownBy(()->{
+                    scrapService.delete(user.getEmail(),dataset.getDatasetId());})
+                .isExactlyInstanceOf(ResourceNotFoundException.class).hasMessage(ResponseMessage.NOT_EXIST_SCRAP);
+
     }
 }

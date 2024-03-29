@@ -71,7 +71,7 @@ public class ScrapController {
     @Operation(summary = "로그인 유저의 특정 스크랩 내역 삭제")
     @DeleteMapping("/api/dataset/{datasetId}/scrap")
     public ResponseEntity<ApiResponse<?>> deleteScrap(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long datasetId) {
-        Scrap scrap = scrapService.delete(userDetails.getUsername(), datasetId);
-        return ResponseEntity.ok(ApiResponse.ok(new ResScrapDto(scrap)));
+        scrapService.delete(userDetails.getUsername(), datasetId);
+        return ResponseEntity.ok(ApiResponse.ok(null));
     }
 }

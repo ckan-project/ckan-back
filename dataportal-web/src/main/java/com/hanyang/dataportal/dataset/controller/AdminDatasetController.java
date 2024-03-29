@@ -29,7 +29,7 @@ public class AdminDatasetController {
     @Operation(summary = "dataset 수정")
     @PutMapping("/dataset/{datasetId}")
     public ResponseEntity<ApiResponse<ResDatasetDetailDto>> updateDataset(@PathVariable Long datasetId,@Validated @RequestBody ReqDatasetDto reqDatasetDto){
-        Dataset dataset = datasetService.modify(datasetId, reqDatasetDto);
+        Dataset dataset = datasetService.update(datasetId, reqDatasetDto);
         return ResponseEntity.ok(ok(new ResDatasetDetailDto(dataset)));
     }
     @Operation(summary = "dataset 삭제")

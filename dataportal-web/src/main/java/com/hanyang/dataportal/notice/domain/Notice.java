@@ -48,4 +48,8 @@ public class Notice {
         this.content = reqNoticeDto.getContent();
         this.title = reqNoticeDto.getTitle();
     }
+
+    public void updateView(Integer view) {
+        this.view = view;
+    }
 }

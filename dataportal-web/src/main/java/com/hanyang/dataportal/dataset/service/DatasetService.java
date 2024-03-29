@@ -18,12 +18,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class DatasetService {
     private final DatasetRepository datasetRepository;
     private final DatasetSearchRepository datasetSearchRepository;
     private final DatasetThemeRepository datasetThemeRepository;
-
     public Dataset create(ReqDatasetDto reqDatasetDto){
         Dataset dataset = reqDatasetDto.toEntity();
 
@@ -33,7 +31,8 @@ public class DatasetService {
         }
         return datasetRepository.save(dataset);
     }
-    public Dataset modify(Long datasetId, ReqDatasetDto reqDatasetDto){
+
+    public Dataset update(Long datasetId, ReqDatasetDto reqDatasetDto){
         Dataset dataset = datasetRepository.findByIdWithTheme(datasetId).orElseThrow(() -> new ResourceNotFoundException("해당 데이터셋은 존재하지 않습니다"));
         dataset.updateDataset(reqDatasetDto);
         datasetThemeRepository.deleteAll(dataset.getDatasetThemeList());

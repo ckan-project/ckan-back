@@ -57,6 +57,7 @@ public class Dataset {
     public void updateDataset(ReqDatasetDto reqDatasetDto){
        this.title = reqDatasetDto.getTitle();
        this.description = reqDatasetDto.getDescription();
+       this.organization = reqDatasetDto.getOrganization();
     }
     public void addTheme(Theme theme){
         datasetThemeList.add(new DatasetTheme(this,theme));

@@ -46,7 +46,7 @@ create table if not exists hanyang.resource
         foreign key (dataset_id) references hanyang.dataset (dataset_id)
 );
 
-create table if not exists hanyang.user
+create table if not exists hanyang.users
 (
     is_active bit                              not null,
     user_id   bigint auto_increment

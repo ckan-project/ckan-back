@@ -2,24 +2,44 @@ spring:
   config:
     activate:
       on-profile: test
-  datasource:
-    url: jdbc:mysql://localhost:3306/test?useSSL=true&characterEncoding=UTF-8
-    username: root
-    password: 1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    database-platform: org.hibernate.dialect.MySQL57Dialect
-    properties:
-      hibernate:
-        format_sql: true
-        jdbc:
-          lob:
-            non_contextual_creation: true
-        connection:
-          CharSet: utf8dataset
-          useUnicode: true
-          characterEncoding: utf-8
-        default_batch_fetch_size: 100
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+  sql:
+    init:
+      mode: never
+  data:
+    redis:
+      host: test
+      port: 6379
+      repositories:
+        enabled: false
+
+jwt:
+  secret: 1111111111111111111111111111111111111111111111
+
+cloud:
+  aws:
+    s3:
+      bucket: test
+    credentials:
+      accessKey: 1234
+      secretKey: 1234
+
+email:
+  setFrom: test@test.com
+  password: test
+
+kakao:
+  rest_api_key: test
+  redirect_uri: http://localhost:8080/login/oauth2/kakao
+  token_url: https://kauth.kakao.com/oauth/token
+  userInfo_url: https://kapi.kakao.com/v2/user/me
+
+
 

@@ -79,11 +79,11 @@ public class DatasetSearchRepository {
     }
 
     private BooleanExpression organizationIn(List<Organization> organizationList) {
-        return organizationList.size() !=0  ? dataset.organization.in(organizationList) : null;
+        return organizationList !=null  ? dataset.organization.in(organizationList) : null;
     }
 
     private BooleanExpression themeIn(List<Theme> themeList){
-        return themeList.size() != 0 ? dataset.datasetThemeList.any().theme.in(themeList) : null;
+        return themeList != null ? dataset.datasetThemeList.any().theme.in(themeList) : null;
     }
 
     private BooleanExpression typeIn(List<Type> typeList) {
