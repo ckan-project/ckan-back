@@ -9,4 +9,6 @@ public class ReqLoginDto {
     private String email;
     @Schema(example = "1234")
     private String password;
+    @Schema(example = "false")
+    private Boolean autoLogin;
 }

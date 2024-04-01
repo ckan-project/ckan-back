@@ -1,14 +1,20 @@
 package com.hanyang.dataportal.core.jwt.component;
 
 import com.hanyang.dataportal.core.jwt.dto.TokenDto;
+import com.hanyang.dataportal.user.service.RedisService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.Date;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -16,29 +22,103 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     private final JwtSecretKey jwtSecretKey;
+    private final RedisService redisService;
 
-    // JWT 토큰 생성
-    public TokenDto generateToken(Authentication authentication) {
+    public static final Long SESSION_COOKIE_MAX_AGE = -1L;
+    public static final String REFRESH_COOKIE_KEY = "refreshToken";
+    public static final String AUTO_LOGIN_CLAIM_KEY = "auto";
+
+    @Value("${jwt.expire.refresh}")
+    private Long refreshExpire;
+    @Value("${jwt.expire.access}")
+    private Long accessExpire;
+
+    /**
+     * JWT 토큰 생성
+     * @param authentication
+     * @param isAutoLogin 자동로그인 여부
+     * @param expiredInMillisecond 토큰 만료시간(밀리초)
+     * @return
+     */
+    private String generateToken(final Authentication authentication, final boolean isAutoLogin, final Long expiredInMillisecond) {
         // role 가져오기
-        String authorities = authentication.getAuthorities().stream()
+        final String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        long now = (new Date()).getTime();
+        final long now = (new Date()).getTime();
+        final Date accessTokenExpiresIn = new Date(now + expiredInMillisecond);
 
         // Access Token 생성
-        long millisecondsInADay = 1000L * 60L * 60L * 24L;
-        Date accessTokenExpiresIn = new Date(now + millisecondsInADay);
-        String accessToken = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
+                .claim(AUTO_LOGIN_CLAIM_KEY, isAutoLogin)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(jwtSecretKey.getKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
 
+    /**
+     * refresh token 생성 메서드
+     * @param username
+     */
+     private String generateRefreshToken(final String username, final Long expiredInMillisecond) {
+        final String refreshToken = UUID.randomUUID().toString();
+        redisService.setCode(username, refreshToken, expiredInMillisecond);
+        return refreshToken;
+    }
+
+    /**
+     * 액세스 토큰과 리프레시 토큰을 새로 발급하는 메서드
+     * @param authentication
+     * @param isAutoLogin null 값 방지를 위해 boolean 타입으로 지정
+     * @return
+     */
+    public TokenDto generateLoginToken(final Authentication authentication, final boolean isAutoLogin) {
+        final String accessToken = generateToken(authentication, isAutoLogin, accessExpire);
+        final String refreshToken = generateRefreshToken(authentication.getName(), refreshExpire);
         return TokenDto.builder()
-                .grantType("Bearer")
                 .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    /**
+     * refresh token 쿠키를 생성하는 메서드
+     * @param refreshToken 쿠키로 발급할 리프레시 토큰 값
+     * @param autoLogin 자동로그인 여부. 리프레시 토큰 쿠키 삭제시 null로 입력된다.
+     * @return
+     */
+    public ResponseCookie generateRefreshCookie(final String refreshToken, @Nullable final Boolean autoLogin) {
+        if (autoLogin == null) {
+            return ResponseCookie.from(REFRESH_COOKIE_KEY, refreshToken)
+                    .maxAge(0) // 쿠키 삭제
+                    .httpOnly(true)
+                    //TODO: https 배포 이후 true로 변경
+                    .secure(false)
+                    .sameSite("Lax")
+                    .path("/")
+                    .build();
+        }
+        if (!autoLogin) {
+            return ResponseCookie.from(REFRESH_COOKIE_KEY, refreshToken)
+                    .maxAge(SESSION_COOKIE_MAX_AGE) // 세션쿠키
+                    .httpOnly(true)
+                    //TODO: https 배포 이후 true로 변경
+                    .secure(false)
+                    .sameSite("Lax")
+                    .path("/")
+                    .build();
+        }
+        final Duration duration = Duration.ofMillis(refreshExpire);
+        return ResponseCookie.from(REFRESH_COOKIE_KEY, refreshToken)
+                .maxAge(duration)
+                .httpOnly(true)
+                //TODO: https 배포 이후 true로 변경
+                .secure(false)
+                .sameSite("Lax")
+                .path("/")
                 .build();
     }
 }
