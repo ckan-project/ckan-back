@@ -1,16 +1,13 @@
 package com.hanyang.dataportal.core.config;
 
-import com.hanyang.dataportal.core.component.ApiResponseBuilder;
 import com.hanyang.dataportal.core.component.CustomAuthenticationEntryPoint;
 import com.hanyang.dataportal.core.filter.JwtAuthenticationFilter;
-import com.hanyang.dataportal.core.jwt.component.JwtTokenResolver;
-import com.hanyang.dataportal.core.jwt.component.JwtTokenValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,23 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig{
 
-    private final JwtTokenResolver jwtTokenResolver;
-    private final JwtTokenValidator jwtTokenValidator;
-    private final ApiResponseBuilder apiResponseBuilder;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-
-    @Bean
-    public WebSecurityCustomizer ignoringCustomizer() {
-        return (web -> web.ignoring()
-                .requestMatchers(
-                        "/api/user/login",
-                        "/api/user/token",
-                        "/api/dataset/**",
-                        "/api/datasets",
-                        "/api/notices/list",
-                        "/api/questions/list"
-                ));
-    }
 
     // security 6.1 최신버전으로 문법을 조금 다르게 사용해야함.
     @Bean
@@ -64,7 +46,7 @@ public class SecurityConfig{
 //                    authorizeRequests.requestMatchers(HttpMethod.DELETE,"/api/dataset/**").hasRole("ADMIN");
                     authorizeRequests.anyRequest().permitAll(); // 그 외의 요청은 다 허용
                 })
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenResolver, jwtTokenValidator, apiResponseBuilder), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

@@ -15,16 +15,33 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import static com.hanyang.dataportal.core.response.ResponseMessage.*;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
+@Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenResolver jwtTokenResolver;
     private final JwtTokenValidator jwtTokenValidator;
     private final ApiResponseBuilder apiResponseBuilder;
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        final String[] excludes = {
+                "/api/user/login",
+                "/api/user/signup",
+                "/api/user/token",
+                "/api/dataset",
+                "/api/datasets",
+                "/api/notices/list",
+                "/api/questions/list"
+        };
+        final String path = request.getRequestURI();
+        return Arrays.stream(excludes).anyMatch(path::startsWith);
+    }
 
     // 이 필터는 "로그인 유저만" 접근 가능한 리소스 요청시 적용되는 필터임 (로그인 해야할 때만 사용 가능한 api에 적용)
     // -> login, token api의 경우 이 필터를 적용하면 안됨 (= 액세스 토큰이 만료된 경우 요청하는 api기 때문)
