@@ -40,7 +40,7 @@ public class UserLoginService {
         final Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // JWT 토큰 생성
-        return jwtTokenProvider.generateLoginToken(authentication);
+        return jwtTokenProvider.generateLoginToken(authentication, reqLoginDto.getAutoLogin());
     }
 
     /**
@@ -52,8 +52,9 @@ public class UserLoginService {
      */
     public TokenDto reissueToken(final String accessToken, final String refreshToken) throws TokenExpiredException {
         final Authentication authentication = jwtTokenResolver.getAuthentication(accessToken);
+        final boolean autoLogin = jwtTokenResolver.getAutoLogin(accessToken);
         if (jwtTokenValidator.validateRefreshToken(authentication.getName(), refreshToken)) {
-            return jwtTokenProvider.generateLoginToken(authentication);
+            return jwtTokenProvider.generateLoginToken(authentication, autoLogin);
         }
         throw new TokenExpiredException(ResponseMessage.REFRESH_EXPIRED);
     }
@@ -61,11 +62,11 @@ public class UserLoginService {
     /**
      * refresh token 쿠키를 리턴하는 메서드
      * @param refreshToken
-     * @param autoLogin
+     * @param accessToken
      * @return
      */
-    public ResponseCookie generateRefreshCookie(final String refreshToken, final boolean autoLogin) {
-        return jwtTokenProvider.generateRefreshCookie(refreshToken, autoLogin);
+    public ResponseCookie generateRefreshCookie(final String refreshToken, final String accessToken) {
+        return jwtTokenProvider.generateRefreshCookie(refreshToken, jwtTokenResolver.getAutoLogin(accessToken));
     }
 
     public void passwordCheck(UserDetails userDetails, ReqPasswordDto reqPasswordDto){
