@@ -35,13 +35,6 @@ querydsl {
     jpa = true
     querydslSourcesDir = generated
 }
-sourceSets {
-    main.java.srcDir generated
-}
-
-compileQuerydsl{
-    options.annotationProcessorPath = configurations.querydsl
-}
 
 configurations {
     compileOnly {
@@ -50,20 +43,22 @@ configurations {
     querydsl.extendsFrom compileClasspath
 }
 
-tasks.compileQuerydsl.dependsOn(clean)
+def querydslTask = tasks.named('compileQuerydsl').getOrNull()
+def initQuerydslSourcesDir = tasks.named('initQuerydslSourcesDir').getOrNull()
+
+if (querydslTask && initQuerydslSourcesDir) {
+    querydslTask.enabled = false
+    initQuerydslSourcesDir.enabled = false
+}
 
 compileQuerydsl{
     options.annotationProcessorPath = configurations.querydsl
 }
 
-bootJar {
-    enabled = true
+tasks.compileQuerydsl.dependsOn(clean)
+tasks.compileJava.dependsOn(clean)
+
+clean {
+    delete file('src/main/generated')
 }
 
-jar {
-    enabled = false
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
-}

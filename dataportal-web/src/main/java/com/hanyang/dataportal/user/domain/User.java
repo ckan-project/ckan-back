@@ -31,14 +31,19 @@ public class User{
     private Role role;
     @Builder.Default
     private boolean isActive = true;
+    @Builder.Default
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Scrap> scrapList = new ArrayList<>();
+    @Builder.Default
     @OneToMany(mappedBy = "admin", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Notice> noticeList = new ArrayList<>();
+    @Builder.Default
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Download> downloadList = new ArrayList<>();
+    @Builder.Default
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Question> questionList = new ArrayList<>();
+    @Builder.Default
     @OneToMany(mappedBy = "admin", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Answer> answers = new ArrayList<>();
 
