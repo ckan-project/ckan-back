@@ -71,7 +71,7 @@ create table if not exists hanyang.download
     constraint FK988l42tyuuthysfys9mkh7g92
         foreign key (dataset_id) references hanyang.dataset (dataset_id),
     constraint FKo7cc91sofromqu0551ocgpn96
-        foreign key (user_id) references hanyang.user (user_id)
+        foreign key (user_id) references hanyang.users (user_id)
 );
 
 create table if not exists hanyang.notice
@@ -85,7 +85,7 @@ create table if not exists hanyang.notice
     content     varchar(255) null,
     title       varchar(255) null,
     constraint FKcvf4mh5se36inrxn7xlh2brfv
-        foreign key (user_id) references hanyang.user (user_id)
+        foreign key (user_id) references hanyang.users (user_id)
 );
 
 create table if not exists hanyang.question
@@ -99,7 +99,7 @@ create table if not exists hanyang.question
     title         varchar(255)                  null,
     content       tinytext                      null,
     constraint FK4ekrlbqiybwk8abhgclfjwnmc
-        foreign key (user_id) references hanyang.user (user_id)
+        foreign key (user_id) references hanyang.users (user_id)
 );
 
 create table if not exists hanyang.answer
@@ -113,7 +113,7 @@ create table if not exists hanyang.answer
     constraint UK_eix9du6u2r4wxwu415wq8yb99
         unique (question_id),
     constraint FK68tbcw6bunvfjaoscaj851xpb
-        foreign key (user_id) references hanyang.user (user_id),
+        foreign key (user_id) references hanyang.users (user_id),
     constraint FK8frr4bcabmmeyyu60qt7iiblo
         foreign key (question_id) references hanyang.question (question_id)
 );
@@ -127,6 +127,6 @@ create table if not exists hanyang.scrap
     constraint FK8bv7733l4pv76lu8xxkyqe5ix
         foreign key (dataset_id) references hanyang.dataset (dataset_id),
     constraint FKgt91kwgqa4f4oaoi9ljgy75mw
-        foreign key (user_id) references hanyang.user (user_id)
+        foreign key (user_id) references hanyang.users (user_id)
 );
 

@@ -21,7 +21,10 @@ spring:
         enabled: false
 
 jwt:
-  secret: 1111111111111111111111111111111111111111111111
+  secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
+  expire:
+    refresh: 123
+    access: 123
 
 cloud:
   aws:
