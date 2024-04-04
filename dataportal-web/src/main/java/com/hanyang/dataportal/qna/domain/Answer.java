@@ -20,7 +20,7 @@ public class Answer {
     private String answerContent;
     private String answerTitle;
     private LocalDate answerdate;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "questionId")
     private Question question;
     @ManyToOne(fetch = FetchType.LAZY)

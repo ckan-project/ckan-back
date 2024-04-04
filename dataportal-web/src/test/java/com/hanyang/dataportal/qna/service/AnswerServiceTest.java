@@ -1,2 +1,4 @@
-package com.hanyang.dataportal.qna.service;public class AnswerServiceTest {
+package com.hanyang.dataportal.qna.service;
+
+public class AnswerServiceTest {
 }

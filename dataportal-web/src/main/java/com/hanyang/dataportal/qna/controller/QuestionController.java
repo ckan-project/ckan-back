@@ -7,6 +7,7 @@ import com.hanyang.dataportal.qna.dto.res.ResQuestionDto;
 import com.hanyang.dataportal.qna.dto.res.ResQuestionListDto;
 import com.hanyang.dataportal.qna.service.QuestionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -49,10 +50,10 @@ public class QuestionController {
     // 페이징 조건 ~ 최신순, 인기순, 댓글순
     // 게시판 리스트 ~ 게시글번호, 작성일자, 제목, 작성자, 답변여부 , 조회수
     @GetMapping({"/list", "list?page={pageNum}&size={listSize}"})
-    public ResponseEntity<ApiResponse<List<?>>> getQuestionList(@RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
-                                                                            @RequestParam(value = "size", defaultValue = "10") int listSize) throws Exception {
+    public ResponseEntity<ApiResponse<Page<?>>> getQuestionList(@RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
+                                                                @RequestParam(value = "size", defaultValue = "10") int listSize) throws Exception {
 
-        List<ResQuestionListDto> resQuestionListDto = questionService.getQuestionList(pageNum,listSize);
+        Page<ResQuestionListDto> resQuestionListDto = questionService.getQuestionList(pageNum,listSize);
         return ResponseEntity.ok(ApiResponse.ok(resQuestionListDto));
    }
 

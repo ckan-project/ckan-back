@@ -1,2 +1,4 @@
-package com.hanyang.dataportal.qna.controller;public class QuestionControllerTest {
+package com.hanyang.dataportal.qna.controller;
+
+public class QuestionControllerTest {
 }
