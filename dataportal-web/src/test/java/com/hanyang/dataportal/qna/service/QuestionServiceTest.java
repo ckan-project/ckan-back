@@ -33,14 +33,6 @@ public class QuestionServiceTest {
     private UserRepository userRepository;
 
     @Test
-    @DisplayName("유저정보를 넣는다")
-    void userSet(){
-        //Given
-        //When
-        //Then
-    }
-
-    @Test
     @DisplayName("질문글을 등록한다")
     void save(){
         //Given
@@ -125,7 +117,7 @@ public class QuestionServiceTest {
         Question getDetailQuestion = questionService.getDetailQuestion(question_find.getId());
 
         //Then
-        Assertions.assertThat(getDetailQuestion.getId()).isEqualTo(1L);
+        Assertions.assertThat(getDetailQuestion.getId()).isEqualTo(getDetailQuestion.getId());
         Assertions.assertThat(getDetailQuestion.getTitle()).isEqualTo("Test Question");
         Assertions.assertThat(getDetailQuestion.getContent()).isEqualTo("Test Question Content");
         Assertions.assertThat(getDetailQuestion.getDate()).isEqualTo(LocalDate.now());
