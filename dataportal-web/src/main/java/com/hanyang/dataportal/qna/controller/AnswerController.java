@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/answer")
 public class AnswerController {
     private final AnswerService answerService;
-    // 6. 답변하기 (생성, 수정, 삭제)
+    // 6-1. 답변하기 (생성, 수정, 삭제)
     @PostMapping(value = "/" , name = "답변하기")
     public ResponseEntity<ApiResponse<?>> saveAnswer(@RequestBody ReqAnswerDto reqAnswerDto, Long questionId, @AuthenticationPrincipal UserDetails userDetails) {
         Answer answer = reqAnswerDto.toEntity();
@@ -25,6 +25,18 @@ public class AnswerController {
         answerService.save(answer, questionId, username);
      ResAnswerDto resAnswerDto = ResAnswerDto.toDto(answer);
      return ResponseEntity.ok(ApiResponse.ok(resAnswerDto));
+    }
+
+    //6-2. 답변하기 (수정)
+    @PostMapping(value = "/{answerId}", name = "답변수정")
+    public ResponseEntity<ApiResponse<?>> update(@RequestParam ReqAnswerDto reqAnswerDto, @PathVariable Long answerId, @AuthenticationPrincipal UserDetails userDetails) {
+
+        Answer answer = reqAnswerDto.toEntity();
+        String username = userDetails.getUsername();
+
+        Answer res_answer = answerService.update(answer, answerId, username);
+        ResAnswerDto resAnswerDto = ResAnswerDto.toDto(res_answer);
+        return ResponseEntity.ok(ApiResponse.ok(resAnswerDto));
     }
 
     // 7. 답변 상세보기

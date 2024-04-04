@@ -43,6 +43,19 @@ public class AnswerService {
     }
 
 
+    public Answer update(Answer answer, Long AnswerId, String username) {
+        User user = userService.findByEmail(username);
+        Optional<Answer> getAnswer = answerRepository.findById(AnswerId);
+
+        answer.setAnswerId(AnswerId);
+        if(getAnswer.isPresent()) {
+            return answerRepository.save(answer);
+
+        }else
+            throw new ResourceNotFoundException("AnswerId로 조회된 글이 없음");
+
+    }
+
     public Answer getDetailAnswer(Long answerId) {
         return answerRepository.findById(answerId)
                 .orElseThrow(()-> new ResourceNotFoundException("답변글이 없음"));
