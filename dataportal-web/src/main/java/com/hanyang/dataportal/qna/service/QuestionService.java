@@ -38,7 +38,7 @@ public class QuestionService {
         return questionRepository.save(question);
     }
 
-    public void updateQuestion(Question reqUpdateQuestionDto, long questionId) {
+    public Question updateQuestion(Question reqUpdateQuestionDto, long questionId) {
         // 1. userservice에서 유저를 찾아
         Optional<Question> updateQuestion = questionRepository.findById(questionId);
         if (updateQuestion.isPresent()) {
@@ -46,6 +46,7 @@ public class QuestionService {
         } else {
             throw new ResourceNotFoundException("수정할 질문글이 없습니다.");
         }
+        return reqUpdateQuestionDto;
     }
 
     public Question getDetailQuestion(Long questionId) {
@@ -77,20 +78,20 @@ public class QuestionService {
     getSort() 정렬정보, next() 다음 페이지 정보, previous()이전 페이지 번호
     getContent() */
 
-    public List<ResQuestionListDto> getQuestionList(int pageNum, int listSize) {
+    public Page<ResQuestionListDto> getQuestionList(int pageNum, int listSize) {
         Pageable pageable = PageRequest.of(pageNum-1, listSize, Sort.by("date").descending());
         Page<Question> questions = questionRepository.findAll(pageable);
 
-        List<ResQuestionListDto> resQuestionDtoList = new ArrayList<>();
+        Page<ResQuestionListDto> resQuestionDtoList = questions.map(ResQuestionListDto::toDto);
             /*
         each-for 문 사용법
         for (type 변수명: iterate) {
             body-of-loop }
        */
-        for (Question question : questions) {
-            ResQuestionListDto resQuestionListDto = ResQuestionListDto.toDto(question);
-            resQuestionDtoList.add(resQuestionListDto);
-        }
+//        for (Question question : questions) {
+//            ResQuestionListDto resQuestionListDto = ResQuestionListDto.toDto(question);
+//            resQuestionDtoList.add(resQuestionListDto);
+//        }
         return resQuestionDtoList;
     }
 
