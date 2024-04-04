@@ -42,6 +42,7 @@ public class AnswerService {
                 throw new ResourceNotFoundException("답변할 질문글이 없음");
     }
 
+
     public Answer getDetailAnswer(Long answerId) {
         return answerRepository.findById(answerId)
                 .orElseThrow(()-> new ResourceNotFoundException("답변글이 없음"));
