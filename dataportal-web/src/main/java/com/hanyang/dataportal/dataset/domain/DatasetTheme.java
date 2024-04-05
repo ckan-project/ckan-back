@@ -15,7 +15,7 @@ public class DatasetTheme {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="datasetId")
     private Dataset dataset;
-
+    @Enumerated(EnumType.STRING)
     private Theme theme;
 
     public DatasetTheme(Dataset dataset,Theme theme) {
