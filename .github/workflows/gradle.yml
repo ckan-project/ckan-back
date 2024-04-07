@@ -34,7 +34,6 @@ jobs:
       run : |
         touch dataportal-web/src/main/resources/application-prod.yml
         echo "${{secrets.WEB_APPLICATION}}" > dataportal-web/src/main/resources/application-prod.yml
-      shell: bash
 
     - name: Docker set up
       uses: docker/setup-buildx-action@v1
