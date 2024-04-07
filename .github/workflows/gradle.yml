@@ -35,9 +35,8 @@ jobs:
 
     - name: application.yml 생성
       run : |
-        cd ./dataportal-web/src/main/resources
-        touch application-prod.yml
-        echo "${{secrets.WEB_APPLICATION}}" | base64 --decode > application-prod.yml
+        touch dataportal-web/src/main/resources/application-prod.yml
+        echo "${{secrets.WEB_APPLICATION}}" | base64 --decode > dataportal-web/src/main/resources/application-prod.yml/application-prod.yml
       shell: bash
 
     - name: Docker set up
