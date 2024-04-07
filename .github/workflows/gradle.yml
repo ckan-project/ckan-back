@@ -10,9 +10,6 @@ jobs:
   build:
     #빌드 환경은 ubuntu 최신 버전으로
     runs-on: ubuntu-latest
-    #read만 허용
-    permissions:
-      contents: read
 
     steps:
     #CI 서버에 체크아웃
