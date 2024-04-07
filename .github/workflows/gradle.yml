@@ -61,7 +61,6 @@ jobs:
           docker stop $(docker ps -a -q)
           docker rm $(docker ps -a -q)
           docker rmi ${{ secrets.DOCKER_USERNAME }}/web:latest
-          docker pull ${{ secrets.DOCKER_USERNAME }}/web:latest
           docker-compose up -d
 
 
