@@ -21,5 +21,15 @@ services:
     networks:
       - my_network
 
+#  dataportal_datastore:
+#    container_name: dataportal-dateStore
+#    image: choco22/datastore
+#    ports:
+#      - "8081:8081"
+#    depends_on:
+#      - redis
+#    networks:
+#      - my_network
+
 networks:
   my_network:
