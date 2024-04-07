@@ -31,9 +31,11 @@ jobs:
       run: ./gradlew build
 
     - name: application.yml 생성
-      run : |
-        touch dataportal-web/src/main/resources/application-prod.yml
-        echo "${{secrets.WEB_APPLICATION}}" > dataportal-web/src/main/resources/application-prod.yml
+      run: |
+        cd ./dataportal-web/src/main/resources
+        touch ./application-prod.yml
+        echo "${{ secrets.APPLICATION }}" > ./application-prod.yml
+      shell: bash
 
     - name: Docker set up
       uses: docker/setup-buildx-action@v1
