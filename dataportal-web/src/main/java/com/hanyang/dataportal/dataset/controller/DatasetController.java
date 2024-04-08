@@ -36,8 +36,7 @@ public class DatasetController {
     @Operation(summary = "dataset 상세 보기")
     @GetMapping("/dataset/{datasetId}")
     public ResponseEntity<ApiResponse<ResDatasetDetailDto>> getDataset(@PathVariable Long datasetId){
-        Dataset dataset = datasetService.getDatasetDetail(datasetId);
-        return ResponseEntity.ok(ok(new ResDatasetDetailDto(dataset)));
+        return ResponseEntity.ok(ok(datasetService.getDatasetDetail(datasetId)));
     }
 
 }

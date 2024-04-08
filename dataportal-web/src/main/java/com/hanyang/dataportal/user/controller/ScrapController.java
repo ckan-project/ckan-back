@@ -2,6 +2,7 @@ package com.hanyang.dataportal.user.controller;
 
 import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.user.domain.Scrap;
+import com.hanyang.dataportal.user.dto.res.ResIsScrapDto;
 import com.hanyang.dataportal.user.dto.res.ResScrapDto;
 import com.hanyang.dataportal.user.service.ScrapService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -73,5 +74,11 @@ public class ScrapController {
     public ResponseEntity<ApiResponse<?>> deleteScrap(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long datasetId) {
         scrapService.delete(userDetails.getUsername(), datasetId);
         return ResponseEntity.ok(ApiResponse.ok(null));
+    }
+
+    @Operation(summary = "특정 데이터셋에 대한 유저 스크랩 여부")
+    @GetMapping("/api/dataset/{datasetId}/scrap")
+    public ResponseEntity<ApiResponse<?>> isScrap(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long datasetId) {
+        return ResponseEntity.ok(ApiResponse.ok(new ResIsScrapDto(scrapService.isUserScrap(userDetails.getUsername(),datasetId))));
     }
 }

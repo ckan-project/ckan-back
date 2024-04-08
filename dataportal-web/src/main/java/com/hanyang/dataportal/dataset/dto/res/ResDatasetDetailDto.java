@@ -4,6 +4,7 @@ import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.domain.DatasetTheme;
 import com.hanyang.dataportal.dataset.domain.vo.Organization;
 import com.hanyang.dataportal.dataset.domain.vo.Theme;
+import com.hanyang.dataportal.dataset.domain.vo.Type;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -20,11 +21,13 @@ public class ResDatasetDetailDto {
     private LocalDate createdDate;
     private LocalDate updateDate;
     private Integer view;
+    private Integer scrap;
     private Integer download;
     private String resourceName;
     private String resourceUrl;
+    private Type type;
 
-    public ResDatasetDetailDto(Dataset dataset) {
+    public ResDatasetDetailDto(Dataset dataset,Integer scrapCount) {
         this.datasetId = dataset.getDatasetId();
         this.title = dataset.getTitle();
         this.description = dataset.getDescription();
@@ -37,6 +40,8 @@ public class ResDatasetDetailDto {
         if(dataset.getResource() != null){
             this.resourceName = dataset.getResource().getResourceName();
             this.resourceUrl = dataset.getResource().getResourceUrl();
+            this.type = dataset.getResource().getType();
         }
+        this.scrap = scrapCount;
     }
 }

@@ -6,6 +6,7 @@ import com.hanyang.dataportal.dataset.domain.DatasetTheme;
 import com.hanyang.dataportal.dataset.domain.vo.Organization;
 import com.hanyang.dataportal.dataset.domain.vo.Theme;
 import com.hanyang.dataportal.dataset.dto.req.ReqDatasetDto;
+import com.hanyang.dataportal.dataset.dto.res.ResDatasetDetailDto;
 import com.hanyang.dataportal.dataset.repository.DatasetRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -73,7 +74,7 @@ class DatasetServiceTest {
         Dataset dataset = datasetRepository.save(Dataset.builder().view(0).build());
 
         //When
-        Dataset findDataset = datasetService.getDatasetDetail(dataset.getDatasetId());
+        ResDatasetDetailDto findDataset = datasetService.getDatasetDetail(dataset.getDatasetId());
 
         //Then
         Assertions.assertThat(findDataset.getView()).isEqualTo(1);
