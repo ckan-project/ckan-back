@@ -96,8 +96,8 @@ public class JwtTokenProvider {
                     .maxAge(0) // 쿠키 삭제
                     .httpOnly(true)
                     //TODO: https 배포 이후 true로 변경
-                    .secure(false)
-                    .sameSite("Lax")
+                    .secure(true)
+                    .sameSite("None")
                     .path("/")
                     .build();
         }
@@ -106,8 +106,8 @@ public class JwtTokenProvider {
                     .maxAge(SESSION_COOKIE_MAX_AGE) // 세션쿠키
                     .httpOnly(true)
                     //TODO: https 배포 이후 true로 변경
-                    .secure(false)
-                    .sameSite("Lax")
+                    .secure(true)
+                    .sameSite("None")
                     .path("/")
                     .build();
         }
@@ -116,8 +116,8 @@ public class JwtTokenProvider {
                 .maxAge(duration)
                 .httpOnly(true)
                 //TODO: https 배포 이후 true로 변경
-                .secure(false)
-                .sameSite("Lax")
+                .secure(true)
+                .sameSite("None")
                 .path("/")
                 .build();
     }
