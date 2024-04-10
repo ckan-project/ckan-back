@@ -16,8 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -68,20 +66,20 @@ public class AnswerService {
 //        }
 
 
-    public List<ResAnswerListDto> getAnswerList(int pageNum, int listSize) {
+    public Page<ResAnswerListDto> getAnswerList(int pageNum, int listSize) {
         Pageable pageable = PageRequest.of(pageNum-1, listSize, Sort.by("date").descending());
         Page<Answer> answers = answerRepository.findAll(pageable);
 
-        List<ResAnswerListDto> resAnswerListDtos = new ArrayList<>();
+        Page<ResAnswerListDto> resAnswerListDtos = answers.map(ResAnswerListDto::toDto);
             /*
         each-for 문 사용법
         for (type 변수명: iterate) {
             body-of-loop }
        */
-        for (Answer answer : answers) {
-            ResAnswerListDto resQuestionListDto = ResAnswerListDto.toDto(answer);
-            resAnswerListDtos.add(resQuestionListDto);
-        }
+//        for (Answer answer : answers) {
+//            ResAnswerListDto resQuestionListDto = ResAnswerListDto.toDto(answer);
+//            resAnswerListDtos.add(resQuestionListDto);
+//        }
         return resAnswerListDtos;
     }
 

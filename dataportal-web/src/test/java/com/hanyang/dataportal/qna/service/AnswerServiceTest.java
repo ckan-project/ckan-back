@@ -70,7 +70,7 @@ public class AnswerServiceTest {
         Assertions.assertThat(getAnswer.getAnswerContent()).isEqualTo("Answer Test Content");
         /* 이런식으로 작성하는게 맞는것 같지는 않음. 그냥 확인 객체와 객체를 맞냐고 확인하는 것이어서..
         * 그러나 여기 어떻게 해야할지 아이디어가 떠오르지 않음.
-        * 전체실행을 하면 @BeforeEach 어노테이션이 3번을 만들어서 수행하여서 1L이 아닌
+        * 전체실행을 하면 @BeforeEach 어노테이션이 3번을 만들어서 수행하여서 그런것인지 기대값 1L이 아닌
         * 3L의 값이 나옴.*/
         Assertions.assertThat(getAnswer.getQuestion().getId()).isEqualTo(getAnswer.getQuestion().getId());
         Assertions.assertThat(getAnswer.getQuestion().getTitle()).isEqualTo("Question Test Title");
@@ -83,8 +83,11 @@ public class AnswerServiceTest {
         Answer answer_update = Answer.builder().answerTitle("Update Answer Title").build();
 
         //when
+        Answer get_answer = answerService.update(answer_update, answer_update.getAnswerId(), user.getEmail());
 
         //then
+        Assertions.assertThat(get_answer.getAnswerId()).isEqualTo(1L);
+        Assertions.assertThat(get_answer.getAnswerTitle()).isEqualTo("Update Answer Title");
     }
 
     @Test
