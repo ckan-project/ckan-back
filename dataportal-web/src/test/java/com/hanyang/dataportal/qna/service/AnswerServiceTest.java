@@ -2,6 +2,7 @@ package com.hanyang.dataportal.qna.service;
 
 import com.hanyang.dataportal.qna.domain.Answer;
 import com.hanyang.dataportal.qna.domain.Question;
+import com.hanyang.dataportal.qna.dto.res.ResAnswerListDto;
 import com.hanyang.dataportal.qna.repository.AnswerRepository;
 import com.hanyang.dataportal.qna.repository.QuestionRepository;
 import com.hanyang.dataportal.user.domain.User;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
@@ -118,10 +120,60 @@ public class AnswerServiceTest {
     @DisplayName("답변을 조회(리스트)한다")
     void find_list(int pageNum, int listSize){
         //given
+        User user_1 = User.builder().email("1@test.com").build();
+        User user_2 = User.builder().email("2@test.com").build();
+        User user_3 = User.builder().email("3@test.com").build();
+        User user_4 = User.builder().email("4@test.com").build();
+        User user_5 = User.builder().email("5@test.com").build();
+        userRepository.save(user_1);
+        userRepository.save(user_2);
+        userRepository.save(user_3);
+        userRepository.save(user_4);
+        userRepository.save(user_5);
+
+        User user_6 = User.builder().email("1@test.com").build();
+        User user_7 = User.builder().email("2@test.com").build();
+        User user_8 = User.builder().email("3@test.com").build();
+        User user_9 = User.builder().email("4@test.com").build();
+        User user_10 = User.builder().email("5@test.com").build();
+        userRepository.save(user_6);
+        userRepository.save(user_7);
+        userRepository.save(user_8);
+        userRepository.save(user_9);
+        userRepository.save(user_10);
+
+
+        Question question_1 = Question.builder().title("1").content("1 번째글 ").build();
+        Question question_2 = Question.builder().title("2").content("2 번째글 ").build();
+        Question question_3 = Question.builder().title("3").content("3 번째글 ").build();
+        Question question_4 = Question.builder().title("4").content("4 번째글 ").build();
+        Question question_5 = Question.builder().title("5").content("5 번째글 ").build();
+        Question getquestion_1 = questionService.save(question_1,user_1.getEmail());
+        Question getquestion_2 = questionService.save(question_2,user_2.getEmail());
+        Question getquestion_3 = questionService.save(question_3,user_3.getEmail());
+        Question getquestion_4 = questionService.save(question_4,user_1.getEmail());
+        Question getquestion_5 = questionService.save(question_5,user_1.getEmail());
+
+
+
+        Answer answer_1 = Answer.builder().answerTitle("1").answerContent("1 번째글 ").build();
+        Answer answer_2 = Answer.builder().answerTitle("2").answerContent("2 번째글 ").build();
+        Answer answer_3 = Answer.builder().answerTitle("3").answerContent("3 번째글 ").build();
+        Answer answer_4 = Answer.builder().answerTitle("4").answerContent("4 번째글 ").build();
+        Answer answer_5 = Answer.builder().answerTitle("5").answerContent("5 번째글 ").build();
+
+        answerService.save(answer_1, getquestion_1.getId(), user_1.getEmail());
+        answerService.save(answer_2, getquestion_2.getId(), user_2.getEmail());
+        answerService.save(answer_3, getquestion_3.getId(), user_3.getEmail());
+        answerService.save(answer_4, getquestion_4.getId(), user_1.getEmail());
+        answerService.save(answer_5, getquestion_5.getId(), user_1.getEmail());
 
         //when
+        Page<ResAnswerListDto> getAnswerPage =  answerService.getAnswerList(2,3);
 
         //then
+        Assertions.assertThat(getAnswerPage.getTotalPages()).isEqualTo(2);
+
     }
 
     @Test
@@ -130,10 +182,9 @@ public class AnswerServiceTest {
         //given
 
         //when
-        answerService.
-
+        answerService.delete(1L, "admin@test.com");
         //then
+        Assertions.assertThat(answerRepository.findById(1L)).isEmpty();
 
     }
-
 }

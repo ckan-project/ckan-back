@@ -31,7 +31,7 @@ public class AnswerService {
     @Autowired
     private final UserRepository userRepository;
 
-    public Answer save(Answer answer, Long questionId, String username) {
+    public  Answer save(Answer answer, Long questionId, String username) {
         User user = userService.findByEmail(username);
         Optional<Question> getQuestion = questionRepository.findById(questionId);
         answer.setAdmin(user);
@@ -61,7 +61,7 @@ public class AnswerService {
     }
 
     public void delete(Long answerId, String username) {
-        if(userRepository.findByEmailAndActiveTrue(username)){
+        if(userRepository.findByEmailAndActiveTrue(username).isPresent()){
             if(answerRepository.existsById(answerId)){
                 answerRepository.deleteById(answerId);
             } else { throw new ResourceNotFoundException("삭제할 질문글이 없음."); }
