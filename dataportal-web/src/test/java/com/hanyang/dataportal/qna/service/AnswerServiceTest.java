@@ -42,20 +42,22 @@ public class AnswerServiceTest {
         user = User.builder().email("admin@test.com").build();
         userRepository.save(user);
 
-        question = Question.builder()
+        Question question = Question.builder()
                 .id(1L)
                 .title("Question Test Title")
                 .content("Question Test Content")
                 .build();
         Question getQuestion = questionRepository.save(question);
 
-        answer = Answer.builder()
+        Answer answer = Answer.builder()
                 .answerId(1L)
                 .answerTitle("Answer Test Title")
                 .answerContent("Answer Test Content")
                 .question(getQuestion)
                 .build();
+        Answer getAnswer = answerRepository.save(answer);
     }
+
 
     @Test
     @DisplayName("질문글을 등록한다")
@@ -83,7 +85,7 @@ public class AnswerServiceTest {
         Answer answer_update = Answer.builder().answerTitle("Update Answer Title").build();
 
         //when
-        Answer get_answer = answerService.update(answer_update, answer_update.getAnswerId(), user.getEmail());
+        Answer get_answer = answerService.update(answer_update, 1L, user.getEmail());
 
         //then
         Assertions.assertThat(get_answer.getAnswerId()).isEqualTo(1L);
