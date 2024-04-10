@@ -62,14 +62,15 @@ public class QuestionService {
 //        return questionRepository.findByUser(user);
 //    }
 
-    public boolean deleteQuestion(Long questionId) {
+    public void deleteQuestion(Long questionId) {
         // 1. userservice에서 유저를 찾아
         // 2. questionId로 question을 찾아
         // 3. question의 작성자가 위에 파라미터로 들어온 username인지 확인 -> 다르면 예외 발생
      if(questionRepository.existsById(questionId)){ // throw 로 확실히 예외처리를 하겠습니다.
          questionRepository.deleteById(questionId);
-         return true;
-        } else return false;
+     } else {
+         throw new ResourceNotFoundException("삭제할 글이 없음.");
+     }
     }
 
     /* Completed 된 Question의 글 중에서 페이징 수를 가져오는 부분 ...  */

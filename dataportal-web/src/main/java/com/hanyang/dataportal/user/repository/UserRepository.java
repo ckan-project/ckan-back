@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
     @Query("SELECT u FROM User u WHERE u.email = :email and u.isActive = true")
-    Optional<User> findByEmailAndActiveTrue(String email);
+    boolean findByEmailAndActiveTrue(String email);
     @Query("SELECT u FROM User u WHERE u.name = :name and u.isActive = true")
     Optional<User> findByNameAndActiveTrue(String name);
     boolean existsByEmail(String email);

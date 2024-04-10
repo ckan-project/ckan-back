@@ -41,6 +41,13 @@ public class AnswerController {
         return ResponseEntity.ok(ApiResponse.ok(resAnswerDto));
     }
 
+    @GetMapping(value = "/{answerId}" , name= "답변수정")
+    public ResponseEntity<ApiResponse<?>> delete(@PathVariable long answerId, @AuthenticationPrincipal UserDetails userDetails) {
+        answerService.delete(answerId,userDetails);
+        return null;
+
+    }
+
     // 7. 답변 상세보기
     @GetMapping(value = "/{answerId}", name ="답변 상세보기")
     public ResponseEntity<ApiResponse<?>> getDetailAnswer(@PathVariable Long answerId) {

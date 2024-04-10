@@ -127,6 +127,13 @@ public class AnswerServiceTest {
     @Test
     @DisplayName("답변글을 삭제한다")
     void delete(){
+        //given
+
+        //when
+        answerService.
+
+        //then
+
     }
 
 }

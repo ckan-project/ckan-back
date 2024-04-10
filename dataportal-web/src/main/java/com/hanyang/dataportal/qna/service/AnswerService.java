@@ -7,6 +7,7 @@ import com.hanyang.dataportal.qna.dto.res.ResAnswerListDto;
 import com.hanyang.dataportal.qna.repository.AnswerRepository;
 import com.hanyang.dataportal.qna.repository.QuestionRepository;
 import com.hanyang.dataportal.user.domain.User;
+import com.hanyang.dataportal.user.repository.UserRepository;
 import com.hanyang.dataportal.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     @Autowired
     private final UserService userService;
+    @Autowired
+    private final UserRepository userRepository;
 
     public Answer save(Answer answer, Long questionId, String username) {
         User user = userService.findByEmail(username);
@@ -46,12 +49,23 @@ public class AnswerService {
         Optional<Answer> getAnswer = answerRepository.findById(AnswerId);
 
         answer.setAnswerId(AnswerId);
+
+        if(!user.isActive()) {
+            throw new ResourceNotFoundException("조회된 회원정보가 없습니다");
+        }
+
         if(getAnswer.isPresent()) {
             return answerRepository.save(answer);
+        } else
+            throw new ResourceNotFoundException("AnswerId로 조회된 글이 없음.");
+    }
 
-        }else
-            throw new ResourceNotFoundException("AnswerId로 조회된 글이 없음");
-
+    public void delete(Long answerId, String username) {
+        if(userRepository.findByEmailAndActiveTrue(username)){
+            if(answerRepository.existsById(answerId)){
+                answerRepository.deleteById(answerId);
+            } else { throw new ResourceNotFoundException("삭제할 질문글이 없음."); }
+        } else { throw new ResourceNotFoundException("해당유저가 없음"); }
     }
 
     public Answer getDetailAnswer(Long answerId) {
