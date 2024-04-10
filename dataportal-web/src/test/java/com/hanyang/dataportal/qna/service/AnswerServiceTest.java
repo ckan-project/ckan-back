@@ -36,26 +36,31 @@ public class AnswerServiceTest {
     Answer answer;
     Question question;
     User user;
-    @BeforeEach
+
     @DisplayName("Answer Test 초기화")
+    @BeforeEach
     public void init(){
         user = User.builder().email("admin@test.com").build();
         userRepository.save(user);
 
-        Question question = Question.builder()
+
+        //기존 코드 형태
+//        Question question = Question.builder()() ... 에서 변경
+        //class 다른 테스스케이스에서 단위로 접근이 안됨
+        question = Question.builder()
                 .id(1L)
                 .title("Question Test Title")
                 .content("Question Test Content")
                 .build();
-        Question getQuestion = questionRepository.save(question);
+        question = questionRepository.save(question);
 
-        Answer answer = Answer.builder()
+        answer = Answer.builder()
                 .answerId(1L)
                 .answerTitle("Answer Test Title")
                 .answerContent("Answer Test Content")
-                .question(getQuestion)
+                .question(question)
                 .build();
-        Answer getAnswer = answerRepository.save(answer);
+        answer = answerRepository.save(answer);
     }
 
 
@@ -65,17 +70,18 @@ public class AnswerServiceTest {
         //given
 
         //when
-        Answer getAnswer = answerService.save(answer, question.getId(),user.getEmail());
+        Answer saveAnswer = answerService.save(answer, question.getId(),user.getEmail());
         //then
-        System.out.print(getAnswer);
-        Assertions.assertThat(getAnswer.getAnswerTitle()).isEqualTo("Answer Test Title");
-        Assertions.assertThat(getAnswer.getAnswerContent()).isEqualTo("Answer Test Content");
+        // System.out.print(getAnswer);
+        Assertions.assertThat(saveAnswer.getAnswerTitle()).isEqualTo("Answer Test Title");
+        Assertions.assertThat(saveAnswer.getAnswerContent()).isEqualTo("Answer Test Content");
         /* 이런식으로 작성하는게 맞는것 같지는 않음. 그냥 확인 객체와 객체를 맞냐고 확인하는 것이어서..
         * 그러나 여기 어떻게 해야할지 아이디어가 떠오르지 않음.
         * 전체실행을 하면 @BeforeEach 어노테이션이 3번을 만들어서 수행하여서 그런것인지 기대값 1L이 아닌
         * 3L의 값이 나옴.*/
-        Assertions.assertThat(getAnswer.getQuestion().getId()).isEqualTo(getAnswer.getQuestion().getId());
-        Assertions.assertThat(getAnswer.getQuestion().getTitle()).isEqualTo("Question Test Title");
+        // Assertions.assertThat(getAnswer.getQuestion().getId()).isEqualTo(getAnswer.getQuestion().getId());
+        Assertions.assertThat(answer.getQuestion().getId()).isEqualTo(saveAnswer.getAnswerId());
+        Assertions.assertThat(saveAnswer.getQuestion().getTitle()).isEqualTo("Question Test Title");
     }
 
     @Test
@@ -88,18 +94,34 @@ public class AnswerServiceTest {
         Answer get_answer = answerService.update(answer_update, 1L, user.getEmail());
 
         //then
-        Assertions.assertThat(get_answer.getAnswerId()).isEqualTo(1L);
+        Assertions.assertThat(answer.getAnswerId()).isEqualTo(1L);
         Assertions.assertThat(get_answer.getAnswerTitle()).isEqualTo("Update Answer Title");
     }
 
     @Test
     @DisplayName("답변을 조회(단건/상세)한다")
     void find_detail(){
+        //given
+
+        //when
+        Answer getDetailAnswer = answerService.getDetailAnswer((answer.getAnswerId()));
+
+        //then
+        Assertions.assertThat(answer.getAnswerId()).isEqualTo(getDetailAnswer.getAnswerId());
+        Assertions.assertThat(getDetailAnswer.getAnswerTitle()).isEqualTo("Answer Test Title");
+        Assertions.assertThat(getDetailAnswer.getAnswerContent()).isEqualTo("Answer Test Content");
+        Assertions.assertThat(getDetailAnswer.getQuestion()).isEqualTo(question);
+
     }
 
     @Test
     @DisplayName("답변을 조회(리스트)한다")
-    void find_list(){
+    void find_list(int pageNum, int listSize){
+        //given
+
+        //when
+
+        //then
     }
 
     @Test
