@@ -117,14 +117,14 @@ public class AnswerServiceTest {
         userRepository.save(user_update);
 
         question = Question.builder()
-                .id(1L)
+                .id(2L)
                 .title("Question Test Title")
                 .content("Question Test Content")
                 .build();
         question = questionRepository.save(question);
 
         answer = Answer.builder()
-                .answerId(1L)
+                .answerId(2L)
                 .answerTitle("Answer Test Title")
                 .answerContent("Answer Test Content")
                 .question(question)
@@ -134,10 +134,10 @@ public class AnswerServiceTest {
         answer = answerRepository.save(answer);
 
         //when
-        Answer get_answer = answerService.update(answer_update, 1L, user_update.getEmail());
+        Answer get_answer = answerService.update(answer_update, 2L, user_update.getEmail());
 
         //then
-        Assertions.assertThat(get_answer.getAnswerId()).isEqualTo(1L);
+        Assertions.assertThat(get_answer.getAnswerId()).isEqualTo(2L);
         Assertions.assertThat(get_answer.getAnswerTitle()).isEqualTo("Update Answer Title");
     }
 
