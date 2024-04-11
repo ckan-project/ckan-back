@@ -113,12 +113,31 @@ public class AnswerServiceTest {
     void update(){
         //given
         Answer answer_update = Answer.builder().answerTitle("Update Answer Title").build();
+        User user_update = User.builder().email("test@test.com").build();
+        userRepository.save(user_update);
+
+        question = Question.builder()
+                .id(1L)
+                .title("Question Test Title")
+                .content("Question Test Content")
+                .build();
+        question = questionRepository.save(question);
+
+        answer = Answer.builder()
+                .answerId(1L)
+                .answerTitle("Answer Test Title")
+                .answerContent("Answer Test Content")
+                .question(question)
+                .admin(user_update)
+                .build();
+
+        answer = answerRepository.save(answer);
 
         //when
-        Answer get_answer = answerService.update(answer_update, 1L, user.getEmail());
+        Answer get_answer = answerService.update(answer_update, 1L, user_update.getEmail());
 
         //then
-        Assertions.assertThat(answer.getAnswerId()).isEqualTo(1L);
+        Assertions.assertThat(get_answer.getAnswerId()).isEqualTo(1L);
         Assertions.assertThat(get_answer.getAnswerTitle()).isEqualTo("Update Answer Title");
     }
 
@@ -216,6 +235,7 @@ public class AnswerServiceTest {
         builder.answerId(1L);
         builder.admin(userDelete);
         Answer answer_delete = builder.build();
+        answerService.save(answer_delete,1L, userDelete.getEmail());
 
         //when
         answerService.delete(1L, "admin_delete@test.com");
