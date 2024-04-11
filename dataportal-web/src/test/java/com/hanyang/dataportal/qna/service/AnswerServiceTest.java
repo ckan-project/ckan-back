@@ -43,7 +43,7 @@ public class AnswerServiceTest {
     @BeforeEach
     public void init(){
         user = User.builder().email("admin@test.com").build();
-        userRepository.save(user);
+       User get_user = userRepository.save(user);
 
 
         //기존 코드 형태
@@ -61,6 +61,7 @@ public class AnswerServiceTest {
                 .answerTitle("Answer Test Title")
                 .answerContent("Answer Test Content")
                 .question(question)
+                .admin(get_user)
                 .build();
         answer = answerRepository.save(answer);
     }
@@ -70,20 +71,41 @@ public class AnswerServiceTest {
     @DisplayName("질문글을 등록한다")
     void save(){
         //given
+        User user_save;
+        user_save = User.builder().email("admin_save@test.com").build();
+        User user_get = userRepository.save(user_save);
+
+        Question question_save;
+        question_save = Question.builder()
+                .id(10L)
+                .title("Question Test Title")
+                .content("Question Test Content")
+                .build();
+        question = questionRepository.save(question_save);
+
+        Answer answer_save;
+        answer_save = Answer.builder()
+                .answerId(10L)
+                .answerTitle("Answer Test Title")
+                .answerContent("Answer Test Content")
+                .question(question)
+                .build();
+        Answer answer_save_get = answerRepository.save(answer_save);
+
 
         //when
-        Answer saveAnswer = answerService.save(answer, question.getId(),user.getEmail());
+        Answer saveAnswer = answerService.save(answer_save, question_save.getId(),user_get.getEmail());
         //then
         // System.out.print(getAnswer);
-        Assertions.assertThat(saveAnswer.getAnswerTitle()).isEqualTo("Answer Test Title");
-        Assertions.assertThat(saveAnswer.getAnswerContent()).isEqualTo("Answer Test Content");
+        Assertions.assertThat(answer_save_get.getAnswerTitle()).isEqualTo("Answer Test Title");
+        Assertions.assertThat(answer_save_get.getAnswerContent()).isEqualTo("Answer Test Content");
         /* 이런식으로 작성하는게 맞는것 같지는 않음. 그냥 확인 객체와 객체를 맞냐고 확인하는 것이어서..
         * 그러나 여기 어떻게 해야할지 아이디어가 떠오르지 않음.
         * 전체실행을 하면 @BeforeEach 어노테이션이 3번을 만들어서 수행하여서 그런것인지 기대값 1L이 아닌
         * 3L의 값이 나옴.*/
         // Assertions.assertThat(getAnswer.getQuestion().getId()).isEqualTo(getAnswer.getQuestion().getId());
-        Assertions.assertThat(answer.getQuestion().getId()).isEqualTo(saveAnswer.getAnswerId());
-        Assertions.assertThat(saveAnswer.getQuestion().getTitle()).isEqualTo("Question Test Title");
+        Assertions.assertThat(answer_save_get.getQuestion().getId()).isEqualTo(answer_save.getAnswerId());
+        Assertions.assertThat(answer_save_get.getQuestion().getTitle()).isEqualTo("Question Test Title");
     }
 
     @Test
@@ -116,10 +138,15 @@ public class AnswerServiceTest {
 
     }
 
+
     @Test
     @DisplayName("답변을 조회(리스트)한다")
-    void find_list(int pageNum, int listSize){
+    void find_list(){
+
         //given
+        int pageNum =1;
+        int listSize=3;
+
         User user_1 = User.builder().email("1@test.com").build();
         User user_2 = User.builder().email("2@test.com").build();
         User user_3 = User.builder().email("3@test.com").build();
@@ -180,9 +207,18 @@ public class AnswerServiceTest {
     @DisplayName("답변글을 삭제한다")
     void delete(){
         //given
+        User userDelete = User.builder().email("admin_delete@test.com").build();
+        userRepository.save(userDelete);
+
+        Answer.AnswerBuilder builder = Answer.builder();
+        builder.answerTitle("Delete");
+        builder.answerContent("Delete Content");
+        builder.answerId(1L);
+        builder.admin(userDelete);
+        Answer answer_delete = builder.build();
 
         //when
-        answerService.delete(1L, "admin@test.com");
+        answerService.delete(1L, "admin_delete@test.com");
         //then
         Assertions.assertThat(answerRepository.findById(1L)).isEmpty();
 
