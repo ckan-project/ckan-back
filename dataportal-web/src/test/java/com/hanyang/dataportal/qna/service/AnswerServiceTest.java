@@ -159,6 +159,7 @@ public class AnswerServiceTest {
 
 
     @Test
+    @Transactional
     @DisplayName("답변을 조회(리스트)한다")
     void find_list(){
 
@@ -177,11 +178,11 @@ public class AnswerServiceTest {
         userRepository.save(user_4);
         userRepository.save(user_5);
 
-        User user_6 = User.builder().email("1@test.com").build();
-        User user_7 = User.builder().email("2@test.com").build();
-        User user_8 = User.builder().email("3@test.com").build();
-        User user_9 = User.builder().email("4@test.com").build();
-        User user_10 = User.builder().email("5@test.com").build();
+        User user_6 = User.builder().email("6@test.com").build();
+        User user_7 = User.builder().email("7@test.com").build();
+        User user_8 = User.builder().email("8@test.com").build();
+        User user_9 = User.builder().email("9@test.com").build();
+        User user_10 = User.builder().email("10@test.com").build();
         userRepository.save(user_6);
         userRepository.save(user_7);
         userRepository.save(user_8);

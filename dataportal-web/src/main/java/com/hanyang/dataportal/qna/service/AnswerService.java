@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -81,7 +80,7 @@ public class AnswerService {
 
 
     public Page<ResAnswerListDto> getAnswerList(int pageNum, int listSize) {
-        Pageable pageable = PageRequest.of(pageNum-1, listSize, Sort.by("date").descending());
+        Pageable pageable = PageRequest.of(pageNum-1, listSize);
         Page<Answer> answers = answerRepository.findAll(pageable);
 
         Page<ResAnswerListDto> resAnswerListDtos = answers.map(ResAnswerListDto::toDto);
