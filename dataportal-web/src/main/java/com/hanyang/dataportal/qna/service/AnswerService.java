@@ -83,6 +83,8 @@ public class AnswerService {
         Pageable pageable = PageRequest.of(pageNum-1, listSize);
         Page<Answer> answers = answerRepository.findAll(pageable);
 
+        // 이렇게 리턴하면 response가 지저분 하다...?  다시 list 형태로 돌려..?
+        // resDto 형태로 받아서 리턴하는 것이 간결함. resDataselistDto 참고하여서 수정할것.
         Page<ResAnswerListDto> resAnswerListDtos = answers.map(ResAnswerListDto::toDto);
             /*
         each-for 문 사용법
@@ -95,6 +97,4 @@ public class AnswerService {
 //        }
         return resAnswerListDtos;
     }
-
-
 }

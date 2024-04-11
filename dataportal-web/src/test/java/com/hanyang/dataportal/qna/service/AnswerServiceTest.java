@@ -68,7 +68,7 @@ public class AnswerServiceTest {
 
 
     @Test
-    @DisplayName("질문글을 등록한다")
+    @DisplayName("답변글을 등록한다")
     void save(){
         //given
         User user_save;
@@ -83,9 +83,12 @@ public class AnswerServiceTest {
                 .build();
         question = questionRepository.save(question_save);
 
+
+        //when  ~ 바로 answerRepository로 넣어서 이건 테스트를 하는 것이 아님.
+        // given에서 있을 코드가 아니다.
         Answer answer_save;
         answer_save = Answer.builder()
-                .answerId(10L)
+                .answerId(1L)
                 .answerTitle("Answer Test Title")
                 .answerContent("Answer Test Content")
                 .question(question)
@@ -93,7 +96,6 @@ public class AnswerServiceTest {
         Answer answer_save_get = answerRepository.save(answer_save);
 
 
-        //when
         Answer saveAnswer = answerService.save(answer_save, question_save.getId(),user_get.getEmail());
         //then
         // System.out.print(getAnswer);
@@ -162,6 +164,8 @@ public class AnswerServiceTest {
     @Transactional
     @DisplayName("답변을 조회(리스트)한다")
     void find_list(){
+
+        // 유저가 너무 많아서 DB 셋팅에 시간이 많이 걸리니까 답변유저를 1user로 바꾼다.
 
         //given
         int pageNum =1;
@@ -244,4 +248,6 @@ public class AnswerServiceTest {
         Assertions.assertThat(answerRepository.findById(1L)).isEmpty();
 
     }
+
+    // 노션에 적혀있는 예외적인 케이스에 대하여 테스트 코드를 작성하기.
 }

@@ -41,7 +41,7 @@ public class AnswerController {
         return ResponseEntity.ok(ApiResponse.ok(resAnswerDto));
     }
 
-    @GetMapping(value = "/{answerId}" , name= "답변삭제")
+    @GetMapping(value = "/delete/{answerId}" , name= "답변삭제")
     public ResponseEntity<ApiResponse<?>> delete(@PathVariable long answerId, @AuthenticationPrincipal UserDetails userDetails) {
         String userName = userDetails.getUsername();
         answerService.delete(answerId, userName);
