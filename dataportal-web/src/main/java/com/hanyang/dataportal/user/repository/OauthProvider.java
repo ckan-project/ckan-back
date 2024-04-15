@@ -1,6 +1,6 @@
 package com.hanyang.dataportal.user.repository;
 
-import com.hanyang.dataportal.user.dto.res.OauthUserDto;
+import com.hanyang.dataportal.user.dto.OauthUserDto;
 import org.springframework.stereotype.Component;
 
 @Component
