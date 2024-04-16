@@ -48,9 +48,9 @@ public class SecurityConfig{
 //                    authorizeRequests.requestMatchers(HttpMethod.POST,"/api/dataset/**").hasRole("ADMIN");;
 //                    authorizeRequests.requestMatchers(HttpMethod.PUT,"/api/dataset/**").hasRole("ADMIN");
 //                    authorizeRequests.requestMatchers(HttpMethod.DELETE,"/api/dataset/**").hasRole("ADMIN");
-                    authorizeRequests.requestMatchers(HttpMethod.GET, "api/scrap/**").hasRole("ADMIN");
-                    authorizeRequests.requestMatchers(HttpMethod.POST, "/api/scrap/dataset/**").hasRole("ADMIN");
-                    authorizeRequests.requestMatchers(HttpMethod.DELETE, "/api/scrap/dataset/**").hasRole("ADMIN");
+                    authorizeRequests.requestMatchers(HttpMethod.GET, "api/scrap/**").hasRole("USER");
+                    authorizeRequests.requestMatchers(HttpMethod.POST, "/api/scrap/dataset/**").hasRole("USER");
+                    authorizeRequests.requestMatchers(HttpMethod.DELETE, "/api/scrap/dataset/**").hasRole("USER");
                     authorizeRequests.anyRequest().permitAll(); // 그 외의 요청은 다 허용
                 })
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
