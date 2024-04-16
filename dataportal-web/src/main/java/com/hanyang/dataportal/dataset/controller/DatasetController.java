@@ -13,10 +13,7 @@ import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -44,8 +41,8 @@ public class DatasetController {
     }
 
     @Operation(summary = "일치하는 키워드 별 데이터셋 제목 리스트 보기")
-    @GetMapping("/datasets/{keyword}")
-    public ResponseEntity<ApiResponse<ResDatasetTitleDto>> getDatasetListByKeyword(@PathVariable String keyword){
+    @GetMapping("/dataset")
+    public ResponseEntity<ApiResponse<ResDatasetTitleDto>> getDatasetListByKeyword(@RequestParam String keyword){
         List<String> titleList = datasetService.getByKeyword(keyword);
         return ResponseEntity.ok(ok(new ResDatasetTitleDto(titleList)));
     }

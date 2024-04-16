@@ -20,8 +20,8 @@ public class OrganizationController {
     private final OrganizationService organizationService;
 
     @Operation(summary = "일치하는 키워드 별 조직 리스트 보기")
-    @GetMapping("/organization/{keyword}")
-    public ResponseEntity<ApiResponse<ResOrganizationDto>> findOrganization(@PathVariable String keyword){
+    @GetMapping("/organization")
+    public ResponseEntity<ApiResponse<ResOrganizationDto>> findOrganization(@RequestParam String keyword){
         return ResponseEntity.ok(ok(new ResOrganizationDto(organizationService.findByKeyword(keyword))));
     }
 }
