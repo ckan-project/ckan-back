@@ -56,7 +56,7 @@ public class ScrapController {
      * @return
      */
     @Operation(summary = "로그인 유저의 새로운 스크랩 생성")
-    @PostMapping("/api/dataset/{datasetId}/scrap")
+    @PostMapping("/api/scrap/dataset/{datasetId}")
     public ResponseEntity<ApiResponse<?>> createScrap(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long datasetId) {
         Scrap scrap = scrapService.create(userDetails.getUsername(), datasetId);
         ResScrapDto resScrapDto = new ResScrapDto(scrap);
@@ -70,14 +70,14 @@ public class ScrapController {
      * @return
      */
     @Operation(summary = "로그인 유저의 특정 스크랩 내역 삭제")
-    @DeleteMapping("/api/dataset/{datasetId}/scrap")
+    @DeleteMapping("/api/scrap/dataset/{datasetId}")
     public ResponseEntity<ApiResponse<?>> deleteScrap(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long datasetId) {
         scrapService.delete(userDetails.getUsername(), datasetId);
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
     @Operation(summary = "특정 데이터셋에 대한 유저 스크랩 여부")
-    @GetMapping("/api/dataset/{datasetId}/scrap")
+    @GetMapping("/api/scrap/dataset/{datasetId}")
     public ResponseEntity<ApiResponse<?>> isScrap(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long datasetId) {
         return ResponseEntity.ok(ApiResponse.ok(new ResIsScrapDto(scrapService.isUserScrap(userDetails.getUsername(),datasetId))));
     }
