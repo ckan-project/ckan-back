@@ -105,4 +105,24 @@ class DatasetServiceTest {
                     datasetService.delete(datasetId);})
                 .isExactlyInstanceOf(ResourceNotFoundException.class).hasMessage("해당 데이터셋은 존재하지 않습니다");
     }
+
+    @Test
+    @DisplayName("키워드에 따라 데이터셋 제목을 찾을 수 있다.")
+    void getByKeywordTitle() {
+        //Given
+        String keyword = "입학";
+        String title = "2023년도 입학생 수";
+        Dataset dataset = Dataset.builder().title("2023년도 입학생 수").build();
+        Dataset dataset2 = Dataset.builder().title("2023년도 취업률").build();
+        datasetRepository.save(dataset);
+        datasetRepository.save(dataset2);
+
+        //When
+        List<String> titleList = datasetService.getByKeyword(keyword);
+
+        //Then
+        Assertions.assertThat(titleList.size()).isEqualTo(1);
+        Assertions.assertThat(titleList.get(0)).isEqualTo(title);
+
+    }
 }

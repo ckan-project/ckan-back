@@ -25,11 +25,18 @@ jobs:
       - name: gradlew 권한 설정
         run: chmod +x gradlew
 
-      - name: application.yml 생성
+      - name: dataportal application.yml 생성
         run: |
           cd ./dataportal-web/src/main/resources
           touch ./application-prod.yml
-          echo "${{ secrets.APPLICATION }}" > ./application-prod.yml
+          echo "${{ secrets.APPLICATION_WEB }}" > ./application-prod.yml
+        shell: bash
+
+      - name: datastore application.yml 생성
+        run: |
+          cd ./dataportal-store/src/main/resources
+          touch ./application-prod.yml
+          echo "${{ secrets.APPLICATION_DATASTORE }}" > ./application-prod.yml
         shell: bash
 
       - name: 빌드 확인
@@ -38,11 +45,16 @@ jobs:
       - name: Docker set up
         uses: docker/setup-buildx-action@v1
 
-      - name: Docker 이미지 빌드
+      - name: Docker dataPortal 이미지 빌드
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t ${{ secrets.DOCKER_USERNAME }}/web:latest ./dataportal-web 
           docker push ${{ secrets.DOCKER_USERNAME }}/web:latest
+
+      - name: Docker dataStore 이미지 빌드
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/datastore:latest ./dataportal-datastore 
+          docker push ${{ secrets.DOCKER_USERNAME }}/datastore:latest
 
       - name: 배포
         uses: appleboy/ssh-action@v0.1.8
@@ -56,6 +68,7 @@ jobs:
             docker stop $(docker ps -a -q)
             docker rm $(docker ps -a -q)
             docker rmi ${{ secrets.DOCKER_USERNAME }}/web:latest
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/datastore:latest
             docker-compose up -d
 
 
