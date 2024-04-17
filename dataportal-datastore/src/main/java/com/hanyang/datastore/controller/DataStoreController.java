@@ -31,21 +31,8 @@ public class DataStoreController {
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
-    /**
-     * 테이블 데이터에 대한 반환 API
-     */
-//    @Operation(summary = "테이블 데이터 가져오기")
-//    @GetMapping("/dataset/{resourceId}/resource/table")
-//    public ResponseEntity<ApiResponse<ResTableDto>> getTable(@PathVariable String resourceId){
-//        return ResponseEntity.ok(ApiResponse.ok(tableService.getTable(resourceId)));
-//    }
 
-    /**
-     *
-     * @param resourceId
-     * @param colName colName은 독립변수
-     * @return
-     */
+
     @Operation(summary = "파일 데이터 시각화 차트 데이터")
     @GetMapping("/dataset/{resourceId}/table/group/label")
     public ResponseEntity<ApiResponse<ResTableLabelDto>> groupLabel(@PathVariable String resourceId, @RequestParam String colName) throws JsonProcessingException {
