@@ -34,6 +34,7 @@ jobs:
 
       - name: datastore application.yml 생성
         run: |
+          mkdir ./dataportal-store/src/main/resources
           cd ./dataportal-store/src/main/resources
           touch ./application-prod.yml
           echo "${{ secrets.APPLICATION_DATASTORE }}" > ./application-prod.yml
