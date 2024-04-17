@@ -20,7 +20,7 @@ public class DataPortalService {
 
     public DatasetMetaDataDto findDataset(String datasetId){
         try {
-            WebClient webClient = WebClient.create("https://"+host+":8080");
+            WebClient webClient = WebClient.create(host+":8080");
             return webClient.get()
                     .uri("/dataset?resourceId=" + datasetId)
                     .retrieve()
