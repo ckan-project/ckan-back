@@ -61,8 +61,11 @@ public class UserAuthController {
 
     @Operation(summary = "소셜 로그인")
     @PostMapping("/login/{provider}")
-    public ResponseEntity<ApiResponse<ResLoginDto>> oauthLogin(@PathVariable final String provider, @RequestParam final String code) {
-        final TokenDto tokenDto = oauthLoginService.login(provider, code);
+    public ResponseEntity<ApiResponse<ResLoginDto>> oauthLogin(
+            @PathVariable final String provider,
+            @RequestBody ReqOauthDto reqOauthDto
+    ) {
+        final TokenDto tokenDto = oauthLoginService.login(provider, reqOauthDto.getCode());
         final ResponseCookie responseCookie = userLoginService.generateRefreshCookie(tokenDto.getRefreshToken(), tokenDto.getAccessToken());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
