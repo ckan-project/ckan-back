@@ -61,12 +61,13 @@ public class UserLoginService {
 
     /**
      * refresh token 쿠키를 리턴하는 메서드
-     * @param refreshToken
-     * @param accessToken
+     * @param tokenDto
      * @return
      */
-    public ResponseCookie generateRefreshCookie(final String refreshToken, final String accessToken) {
-        return jwtTokenProvider.generateRefreshCookie(refreshToken, jwtTokenResolver.getAutoLogin(accessToken));
+    public ResponseCookie generateRefreshCookie(final TokenDto tokenDto) {
+        return jwtTokenProvider.generateRefreshCookie(
+                tokenDto.getRefreshToken(),
+                jwtTokenResolver.getAutoLogin(tokenDto.getAccessToken()));
     }
 
     public void passwordCheck(UserDetails userDetails, ReqPasswordDto reqPasswordDto){

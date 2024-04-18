@@ -28,7 +28,6 @@ public class UserAuthController {
     private final UserLoginService userLoginService;
     private final UserLogoutService userLogoutService;
     private final EmailService emailService;
-    private final OauthLoginService oauthLoginService;
 
     @Operation(summary = "이메일로 인증 번호 받기")
     @PostMapping("/email")
@@ -47,26 +46,6 @@ public class UserAuthController {
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<ResUserDto>> signup(@RequestBody ReqSignupDto reqSignupDto){
         return ResponseEntity.ok(ApiResponse.ok(new ResUserDto(userSignupService.signUp(reqSignupDto))));
-    }
-    // TODO: 코드 리팩토링 필요
-    @Operation(summary = "유저 로그인")
-    @PostMapping("/login")
-    public ResponseEntity<ApiResponse<ResLoginDto>> login(@RequestBody ReqLoginDto reqLoginDto){
-        final TokenDto tokenDto = userLoginService.login(reqLoginDto);
-        final ResponseCookie responseCookie = userLoginService.generateRefreshCookie(tokenDto.getRefreshToken(), tokenDto.getAccessToken());
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                .body(ApiResponse.ok(new ResLoginDto(AuthorizationExtractor.AUTH_TYPE, tokenDto.getAccessToken())));
-    }
-
-    @Operation(summary = "소셜 로그인")
-    @PostMapping("/login/{provider}")
-    public ResponseEntity<ApiResponse<ResLoginDto>> oauthLogin(@PathVariable final String provider, @RequestParam final String code) {
-        final TokenDto tokenDto = oauthLoginService.login(provider, code);
-        final ResponseCookie responseCookie = userLoginService.generateRefreshCookie(tokenDto.getRefreshToken(), tokenDto.getAccessToken());
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                .body(ApiResponse.ok(new ResLoginDto(AuthorizationExtractor.AUTH_TYPE, tokenDto.getAccessToken())));
     }
 
     @Operation(summary = "유저 로그아웃")
@@ -111,7 +90,7 @@ public class UserAuthController {
     ) {
         final TokenDto tokenDto = userLoginService.reissueToken(AuthorizationExtractor.extractAccessToken(authorizationHeader), refreshToken);
         //? request cookie의 만료시간은 읽어올 수 없음(-> RTR 적용시 자동로그인 여부에 따라 refresh token 만료시간을 다르게 해야하는데 할 수 없음)
-        final ResponseCookie responseCookie = userLoginService.generateRefreshCookie(tokenDto.getRefreshToken(), tokenDto.getAccessToken());
+        final ResponseCookie responseCookie = userLoginService.generateRefreshCookie(tokenDto);
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(ApiResponse.ok(new ResLoginDto(AuthorizationExtractor.AUTH_TYPE, tokenDto.getAccessToken())));

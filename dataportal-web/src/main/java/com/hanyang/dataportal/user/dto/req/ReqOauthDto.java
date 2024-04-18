@@ -1,2 +1,10 @@
-package com.hanyang.dataportal.user.dto.req;public class ReqOauthDto {
+package com.hanyang.dataportal.user.dto.req;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class ReqOauthDto {
+    private String code;
 }
