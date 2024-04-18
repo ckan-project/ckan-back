@@ -18,7 +18,7 @@ public class CorsConfig {
 
         config.setAllowCredentials(true);
         config.addAllowedOriginPattern("*");
-        config.addAllowedOriginPattern("https://hy-data.site/");
+        config.addAllowedOriginPattern("https://hy-data.site");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
@@ -31,7 +31,7 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:3000/");
-        config.addAllowedOriginPattern("https://hy-data.site/");
+        config.addAllowedOriginPattern("https://hy-data.site");
         config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT"));
         config.setAllowedHeaders(List.of("*"));
 
