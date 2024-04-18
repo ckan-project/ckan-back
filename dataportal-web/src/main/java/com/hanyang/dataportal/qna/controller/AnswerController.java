@@ -7,6 +7,7 @@ import com.hanyang.dataportal.qna.dto.res.ResAnswerDetailDto;
 import com.hanyang.dataportal.qna.dto.res.ResAnswerDto;
 import com.hanyang.dataportal.qna.dto.res.ResAnswerListDto;
 import com.hanyang.dataportal.qna.service.AnswerService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "답변(Answer) API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/answer")

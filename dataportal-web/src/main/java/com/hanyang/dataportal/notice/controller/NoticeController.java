@@ -6,6 +6,7 @@ import com.hanyang.dataportal.notice.dto.req.ReqNoticeDto;
 import com.hanyang.dataportal.notice.dto.res.ResNoticeDto;
 import com.hanyang.dataportal.notice.dto.res.ResNoticeListDto;
 import com.hanyang.dataportal.notice.service.NoticeService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "공지사항 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/notices")
