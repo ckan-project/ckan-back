@@ -17,7 +17,8 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("*"); // addAllowedOriginPattern("*") 대신 사용
+        config.addAllowedOriginPattern("*");
+        config.addAllowedOriginPattern("https://hy-data.site/");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
