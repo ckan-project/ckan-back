@@ -25,7 +25,7 @@ public class UserLoginController {
     private final OauthLoginService oauthLoginService;
 
     @Operation(summary = "유저 로그인")
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<ApiResponse<ResLoginDto>> login(@RequestBody ReqLoginDto reqLoginDto){
         final TokenDto tokenDto = userLoginService.login(reqLoginDto);
         final ResponseCookie responseCookie = userLoginService.generateRefreshCookie(tokenDto);
