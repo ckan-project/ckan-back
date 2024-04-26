@@ -85,10 +85,9 @@ public class UserAuthController {
     @Operation(summary = "유저의 액세스 토큰 재발급")
     @PostMapping("/token")
     public ResponseEntity<ApiResponse<ResLoginDto>> reissueAccessToken(
-            @RequestHeader("Authorization") final String authorizationHeader,
             @CookieValue(JwtTokenProvider.REFRESH_COOKIE_KEY) final String refreshToken
     ) {
-        final TokenDto tokenDto = userLoginService.reissueToken(AuthorizationExtractor.extractAccessToken(authorizationHeader), refreshToken);
+        final TokenDto tokenDto = userLoginService.reissueToken(refreshToken);
         //? request cookie의 만료시간은 읽어올 수 없음(-> RTR 적용시 자동로그인 여부에 따라 refresh token 만료시간을 다르게 해야하는데 할 수 없음)
         final ResponseCookie responseCookie = userLoginService.generateRefreshCookie(tokenDto);
         return ResponseEntity.ok()
