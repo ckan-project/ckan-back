@@ -17,6 +17,8 @@ public class UserService {
     public boolean isExistByEmail(String email){
         return userRepository.findByEmailAndActiveTrue(email).isPresent();
     }
+
+
     public boolean isExistByName(String name){
         return userRepository.findByNameAndActiveTrue(name).isPresent();
     }

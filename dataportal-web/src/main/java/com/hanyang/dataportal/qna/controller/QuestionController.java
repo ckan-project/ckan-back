@@ -24,9 +24,9 @@ public class QuestionController {
     //    1. 질문하기 (생성, 수정, 삭제)
     @PostMapping(value = "/", name = "질문하기 API (생성) ")
     public ResponseEntity<ApiResponse<ResQuestionDto>> createQuestion(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ReqQuestionDto reqQuestionDto) {
-        Question question = reqQuestionDto.toEntity(); // 여기도 불편사항 접수하겠습니다.
+        Question question = reqQuestionDto.toEntity();
         String username = userDetails.getUsername();
-        questionService.save(question, username); // 여기 불편사항 이신거죠? 시정하겠습니다.
+        questionService.save(question, username);
         ResQuestionDto resQuestionDto = ResQuestionDto.toQuestionDto((question));
         return ResponseEntity.ok(ApiResponse.ok(resQuestionDto));
     }

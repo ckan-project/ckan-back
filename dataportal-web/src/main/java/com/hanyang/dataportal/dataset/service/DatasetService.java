@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -75,6 +76,11 @@ public class DatasetService {
     public void delete(Long id){
         Dataset dataset = findById(id);
         datasetRepository.delete(dataset);
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getByKeyword(String keyword){
+        return datasetRepository.findByTitleContaining(keyword).stream().map(Dataset::getTitle).toList();
     }
 
 }

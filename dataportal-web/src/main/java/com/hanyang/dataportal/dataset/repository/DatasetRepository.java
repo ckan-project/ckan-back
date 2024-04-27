@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,5 +16,7 @@ public interface DatasetRepository extends JpaRepository<Dataset,Long>{
 
     @Query("select d from Dataset d left join fetch d.datasetThemeList where d.datasetId = :datasetId")
     Optional<Dataset> findByIdWithTheme(Long datasetId);
+
+    List<Dataset> findByTitleContaining(String keyword);
 
 }
