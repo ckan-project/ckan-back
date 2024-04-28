@@ -68,4 +68,9 @@ public class ExceptionHandlerController {
     public ResponseEntity<ApiResponse<?>> handleNullException(NullException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
     }
+
+    @ExceptionHandler(IllegalProviderException.class)
+    public ResponseEntity<ApiResponse<?>> handleIllegalProviderException(IllegalProviderException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
+    }
 }

@@ -28,6 +28,7 @@ public class UserAuthController {
     private final UserLoginService userLoginService;
     private final UserLogoutService userLogoutService;
     private final EmailService emailService;
+    private final OauthLoginService oauthLoginService;
 
     @Operation(summary = "이메일로 인증 번호 받기")
     @PostMapping("/email")
@@ -52,6 +53,19 @@ public class UserAuthController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<ResLoginDto>> login(@RequestBody ReqLoginDto reqLoginDto){
         final TokenDto tokenDto = userLoginService.login(reqLoginDto);
+        final ResponseCookie responseCookie = userLoginService.generateRefreshCookie(tokenDto.getRefreshToken(), tokenDto.getAccessToken());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(ApiResponse.ok(new ResLoginDto(AuthorizationExtractor.AUTH_TYPE, tokenDto.getAccessToken())));
+    }
+
+    @Operation(summary = "소셜 로그인")
+    @PostMapping("/login/{provider}")
+    public ResponseEntity<ApiResponse<ResLoginDto>> oauthLogin(
+            @PathVariable final String provider,
+            @RequestBody ReqOauthDto reqOauthDto
+    ) {
+        final TokenDto tokenDto = oauthLoginService.login(provider, reqOauthDto.getCode());
         final ResponseCookie responseCookie = userLoginService.generateRefreshCookie(tokenDto.getRefreshToken(), tokenDto.getAccessToken());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
