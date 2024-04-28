@@ -1,6 +1,6 @@
 package com.hanyang.dataportal.user.service;
 
-import com.hanyang.dataportal.core.exception.ResourceExistException;
+import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.core.jwt.dto.TokenDto;
 import com.hanyang.dataportal.user.dto.req.ReqLoginDto;
 import com.hanyang.dataportal.user.dto.req.ReqSignupDto;
@@ -27,6 +27,6 @@ public class OauthLoginService {
     private void findOrSignup(OauthUserDto userDto) {
         try {
             userSignupService.signUp((new ReqSignupDto().convertFrom(userDto)));
-        } catch (ResourceExistException e) { }
+        } catch (ResourceNotFoundException e) { }
     }
 }

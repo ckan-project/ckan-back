@@ -31,6 +31,7 @@ public class JwtTokenValidator {
      * @return
      */
     public boolean validateRefreshToken(final String email, final String refreshToken) {
+        if (!validateToken(refreshToken)) return false;
         try {
             return redisService.getCode(email).equals(refreshToken);
         } catch (UnAuthenticationException e) {

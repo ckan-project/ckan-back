@@ -59,13 +59,23 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    /**
-     * refresh token 생성 메서드
-     * @param username
-     */
-     private String generateRefreshToken(final String username, final Long expiredInMillisecond) {
-        final String refreshToken = UUID.randomUUID().toString();
-        redisService.setCode(username, refreshToken, expiredInMillisecond);
+//    /**
+//     * refresh token 생성 메서드
+//     * @param username
+//     */
+//     private String generateRefreshToken(final String username, final Long expiredInMillisecond) {
+//        final String refreshToken = UUID.randomUUID().toString();
+//        redisService.setCode(username, refreshToken, expiredInMillisecond);
+//        return refreshToken;
+//    }
+
+    private String generateRefreshToken(
+            final Authentication authentication,
+            final boolean isAutoLogin,
+            final Long expiredInMillisecond
+    ) {
+        final String refreshToken = generateToken(authentication, isAutoLogin, expiredInMillisecond);
+        redisService.setCode(authentication.getName(), refreshToken, expiredInMillisecond);
         return refreshToken;
     }
 
@@ -77,7 +87,7 @@ public class JwtTokenProvider {
      */
     public TokenDto generateLoginToken(final Authentication authentication, final boolean isAutoLogin) {
         final String accessToken = generateToken(authentication, isAutoLogin, accessExpire);
-        final String refreshToken = generateRefreshToken(authentication.getName(), refreshExpire);
+        final String refreshToken = generateRefreshToken(authentication, isAutoLogin, refreshExpire);
         return TokenDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
