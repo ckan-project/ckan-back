@@ -1,6 +1,6 @@
 package com.hanyang.dataportal.user.service;
 
-import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
+import com.hanyang.dataportal.core.exception.ResourceExistException;
 import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.dto.req.ReqSignupDto;
 import com.hanyang.dataportal.user.repository.UserRepository;
@@ -31,6 +31,6 @@ public class UserSignupService {
             return userRepository.save(user);
         }
 
-        throw new ResourceNotFoundException(DUPLICATE_EMAIL);
+        throw new ResourceExistException(DUPLICATE_EMAIL);
     }
 }
