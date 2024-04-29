@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.Date;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -59,16 +58,6 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-//    /**
-//     * refresh token 생성 메서드
-//     * @param username
-//     */
-//     private String generateRefreshToken(final String username, final Long expiredInMillisecond) {
-//        final String refreshToken = UUID.randomUUID().toString();
-//        redisService.setCode(username, refreshToken, expiredInMillisecond);
-//        return refreshToken;
-//    }
-
     private String generateRefreshToken(
             final Authentication authentication,
             final boolean isAutoLogin,
@@ -105,9 +94,8 @@ public class JwtTokenProvider {
             return ResponseCookie.from(REFRESH_COOKIE_KEY, refreshToken)
                     .maxAge(0) // 쿠키 삭제
                     .httpOnly(true)
-                    //TODO: https 배포 이후 true로 변경
-                    .secure(false)
-                    .sameSite("Lax")
+                    .secure(true)
+                    .sameSite("None")
                     .path("/")
                     .build();
         }
@@ -115,9 +103,8 @@ public class JwtTokenProvider {
             return ResponseCookie.from(REFRESH_COOKIE_KEY, refreshToken)
                     .maxAge(SESSION_COOKIE_MAX_AGE) // 세션쿠키
                     .httpOnly(true)
-                    //TODO: https 배포 이후 true로 변경
-                    .secure(false)
-                    .sameSite("Lax")
+                    .secure(true)
+                    .sameSite("None")
                     .path("/")
                     .build();
         }
@@ -125,9 +112,8 @@ public class JwtTokenProvider {
         return ResponseCookie.from(REFRESH_COOKIE_KEY, refreshToken)
                 .maxAge(duration)
                 .httpOnly(true)
-                //TODO: https 배포 이후 true로 변경
-                .secure(false)
-                .sameSite("Lax")
+                .secure(true)
+                .sameSite("None")
                 .path("/")
                 .build();
     }
