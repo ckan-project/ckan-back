@@ -2,7 +2,6 @@ package com.hanyang.dataportal.core.config;
 
 import com.hanyang.dataportal.core.component.CustomAuthenticationEntryPoint;
 import com.hanyang.dataportal.core.filter.JwtAuthenticationFilter;
-import com.hanyang.dataportal.user.domain.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

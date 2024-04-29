@@ -1,9 +1,7 @@
 package com.hanyang.dataportal.core.jwt.component;
 
 import com.hanyang.dataportal.core.exception.JwtTokenException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,7 +28,7 @@ public class JwtTokenResolver {
      * @param accessToken
      * @return
      */
-    private Claims parseToken(final String accessToken) {
+    private Claims parseToken(final String accessToken) throws ExpiredJwtException, MalformedJwtException {
         return Jwts.parserBuilder()
                 .setSigningKey(jwtSecretKey.getKey())
                 .build()
@@ -76,7 +74,10 @@ public class JwtTokenResolver {
         } catch (ExpiredJwtException e) {
             final Collection<? extends GrantedAuthority> authorities = getAuthorities(e.getClaims());
             UserDetails principal = new User(e.getClaims().getSubject(), "", authorities);
-            return new UsernamePasswordAuthenticationToken(principal, "", authorities);        }
+            return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        } catch (MalformedJwtException e) {
+            throw new JwtTokenException("토큰 형식이 올바르지 않습니다.");
+        }
     }
 
     /**

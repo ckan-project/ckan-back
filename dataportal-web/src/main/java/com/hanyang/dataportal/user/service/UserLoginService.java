@@ -45,14 +45,13 @@ public class UserLoginService {
 
     /**
      * 액세스 토큰(+ 리프레시 토큰)을 재발급하는 메서드
-     * @param accessToken
      * @param refreshToken
      * @return
      * @throws TokenExpiredException
      */
-    public TokenDto reissueToken(final String accessToken, final String refreshToken) throws TokenExpiredException {
-        final Authentication authentication = jwtTokenResolver.getAuthentication(accessToken);
-        final boolean autoLogin = jwtTokenResolver.getAutoLogin(accessToken);
+    public TokenDto reissueToken(final String refreshToken) throws TokenExpiredException {
+        final Authentication authentication = jwtTokenResolver.getAuthentication(refreshToken);
+        final boolean autoLogin = jwtTokenResolver.getAutoLogin(refreshToken);
         if (jwtTokenValidator.validateRefreshToken(authentication.getName(), refreshToken)) {
             return jwtTokenProvider.generateLoginToken(authentication, autoLogin);
         }
@@ -61,12 +60,14 @@ public class UserLoginService {
 
     /**
      * refresh token 쿠키를 리턴하는 메서드
-     * @param refreshToken
-     * @param accessToken
+     * @param tokenDto
      * @return
      */
-    public ResponseCookie generateRefreshCookie(final String refreshToken, final String accessToken) {
-        return jwtTokenProvider.generateRefreshCookie(refreshToken, jwtTokenResolver.getAutoLogin(accessToken));
+    public ResponseCookie generateRefreshCookie(final TokenDto tokenDto) {
+        return jwtTokenProvider.generateRefreshCookie(
+                tokenDto.getRefreshToken(),
+                jwtTokenResolver.getAutoLogin(tokenDto.getAccessToken())
+        );
     }
 
     public void passwordCheck(UserDetails userDetails, ReqPasswordDto reqPasswordDto){

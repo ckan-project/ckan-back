@@ -63,6 +63,12 @@ public class ExceptionHandlerController {
 //        }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
     }
+
+    @ExceptionHandler(JwtTokenException.class)
+    public ResponseEntity<ApiResponse<?>> handleJwtTokenException(JwtTokenException e) {
+        log.warn(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
+    }
   
     @ExceptionHandler(NullException.class)
     public ResponseEntity<ApiResponse<?>> handleNullException(NullException e) {
