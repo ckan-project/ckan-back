@@ -74,6 +74,12 @@ public class ScrapService {
                 .orElseThrow(() -> new ResourceNotFoundException(ResponseMessage.NOT_EXIST_SCRAP));
     }
 
+    public boolean isUserScrap(String email,Long datasetId) {
+        Dataset dataset = datasetRepository.findByIdWithTheme(datasetId).orElseThrow(() -> new ResourceNotFoundException("해당 데이터셋은 존재하지 않습니다"));
+        User user = userService.findByEmail(email);
+        return scrapRepository.findByDatasetAndUser(dataset, user).isPresent();
+    }
+
     /**
      * dataset과 user로 스크랩 객체를 찾는 메서드
      * @param dataset

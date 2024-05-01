@@ -45,4 +45,4 @@ kakao:
   userInfo_url: https://kapi.kakao.com/v2/user/me
 
 
-
+host: http://localhost

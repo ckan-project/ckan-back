@@ -6,6 +6,7 @@ import com.hanyang.dataportal.dataset.domain.DatasetTheme;
 import com.hanyang.dataportal.dataset.domain.vo.Organization;
 import com.hanyang.dataportal.dataset.domain.vo.Theme;
 import com.hanyang.dataportal.dataset.dto.req.ReqDatasetDto;
+import com.hanyang.dataportal.dataset.dto.res.ResDatasetDetailDto;
 import com.hanyang.dataportal.dataset.repository.DatasetRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -73,7 +74,7 @@ class DatasetServiceTest {
         Dataset dataset = datasetRepository.save(Dataset.builder().view(0).build());
 
         //When
-        Dataset findDataset = datasetService.getDatasetDetail(dataset.getDatasetId());
+        ResDatasetDetailDto findDataset = datasetService.getDatasetDetail(dataset.getDatasetId());
 
         //Then
         Assertions.assertThat(findDataset.getView()).isEqualTo(1);
@@ -103,5 +104,25 @@ class DatasetServiceTest {
         Assertions.assertThatThrownBy(()->{
                     datasetService.delete(datasetId);})
                 .isExactlyInstanceOf(ResourceNotFoundException.class).hasMessage("해당 데이터셋은 존재하지 않습니다");
+    }
+
+    @Test
+    @DisplayName("키워드에 따라 데이터셋 제목을 찾을 수 있다.")
+    void getByKeywordTitle() {
+        //Given
+        String keyword = "입학";
+        String title = "2023년도 입학생 수";
+        Dataset dataset = Dataset.builder().title("2023년도 입학생 수").build();
+        Dataset dataset2 = Dataset.builder().title("2023년도 취업률").build();
+        datasetRepository.save(dataset);
+        datasetRepository.save(dataset2);
+
+        //When
+        List<String> titleList = datasetService.getByKeyword(keyword);
+
+        //Then
+        Assertions.assertThat(titleList.size()).isEqualTo(1);
+        Assertions.assertThat(titleList.get(0)).isEqualTo(title);
+
     }
 }

@@ -1,18 +1,15 @@
 name: CI
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "dev" ]
+  push:
+    branches: [ "dev" ]
     
 jobs:
   build:
     #빌드 환경은 ubuntu 최신 버전으로
     runs-on: ubuntu-latest
-    #read만 허용
-    permissions:
-      contents: read
 
     steps:
     #CI 서버에 체크아웃
@@ -24,7 +21,7 @@ jobs:
         #temurin 배포본 Oracle JDK랑 동일
         distribution: 'temurin'
     
-    - name: gradle 셋업
+    - name: gradle set up
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
 
     - name: gradlew 권한 설정
@@ -32,3 +29,8 @@ jobs:
 
     - name: 빌드 확인
       run: ./gradlew build
+
+
+
+
+

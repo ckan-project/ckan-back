@@ -3,6 +3,7 @@ package com.hanyang.datastore.service;
 import com.hanyang.datastore.core.exception.ResourceNotFoundException;
 import com.hanyang.datastore.core.response.ResponseMessage;
 import com.hanyang.datastore.dto.DatasetMetaDataDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -14,12 +15,12 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 @Service
 public class DataPortalService {
 
-    /**
-     *   dataset 제목,설명,데이터셋 id 가져오기
-     */
+    @Value("${host}")
+    private String host;
+
     public DatasetMetaDataDto findDataset(String datasetId){
         try {
-            WebClient webClient = WebClient.create("http://localhost:8080");
+            WebClient webClient = WebClient.create(host+":8080");
             return webClient.get()
                     .uri("/dataset?resourceId=" + datasetId)
                     .retrieve()
