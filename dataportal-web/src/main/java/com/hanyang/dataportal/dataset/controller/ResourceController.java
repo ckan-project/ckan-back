@@ -20,9 +20,7 @@
     @RequestMapping("/api/dataset")
     @RequiredArgsConstructor
     public class ResourceController {
-
         private final ResourceService resourceService;
-
         @Operation(summary = "파일 데이터 저장 및 수정")
         @PutMapping(value = "/{datasetId}/resource", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
         public ResponseEntity<?> saveResource(@PathVariable Long datasetId, @RequestPart(value = "file") MultipartFile multipartFile) {
@@ -37,8 +35,6 @@
             return ResponseEntity.ok(ApiResponse.ok(null));
         }
 
-
-
         /* 인기데이터를 리스트 가져오기 현재 UI구성이 6개 이므로 6개만 반환됨 */
         @Operation(summary = "인기 데이터 리스트가져오기")
         @GetMapping(value = "/resource/popular-data")
@@ -48,7 +44,6 @@
             return ResponseEntity.ok(ApiResponse.ok(new ResDatasetListDto(datasets)));
         }
 
-
         /* 신규데이터를 리스트 가져오기 현재 UI구성이 6개 이므로 6개만 반환됨 */
         @Operation(summary = "신규 데이터 리스트가져오기")
         @GetMapping(value = "/resource/new-data")
@@ -56,7 +51,6 @@
             Page<Dataset> datasets = resourceService.newData();
             return ResponseEntity.ok(ApiResponse.ok(new ResDatasetListDto(datasets)));
         }
-
     }
 
 

@@ -16,8 +16,5 @@ public interface DatasetRepository extends JpaRepository<Dataset,Long>{
     @Query("select d from Dataset d left join fetch d.datasetThemeList where d.datasetId = :datasetId")
     Optional<Dataset> findByIdWithTheme(Long datasetId);
 
-//    @Query(value = "SELECT * FROM dataset ORDER BY (0.5 * views + 0.5 * scraps) DESC", nativeQuery = true)
-
-
 
 }
