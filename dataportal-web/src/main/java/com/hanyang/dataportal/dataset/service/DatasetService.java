@@ -6,15 +6,18 @@ import com.hanyang.dataportal.dataset.domain.vo.Theme;
 import com.hanyang.dataportal.dataset.dto.DataSearch;
 import com.hanyang.dataportal.dataset.dto.req.ReqDataSearchDto;
 import com.hanyang.dataportal.dataset.dto.req.ReqDatasetDto;
+import com.hanyang.dataportal.dataset.dto.res.ResDatasetDetailDto;
 import com.hanyang.dataportal.dataset.repository.DatasetRepository;
 import com.hanyang.dataportal.dataset.repository.DatasetSearchRepository;
 import com.hanyang.dataportal.dataset.repository.DatasetThemeRepository;
+import com.hanyang.dataportal.user.repository.ScrapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ public class DatasetService {
     private final DatasetRepository datasetRepository;
     private final DatasetSearchRepository datasetSearchRepository;
     private final DatasetThemeRepository datasetThemeRepository;
+    private final ScrapRepository scrapRepository;
     public Dataset create(ReqDatasetDto reqDatasetDto){
         Dataset dataset = reqDatasetDto.toEntity();
 
@@ -59,10 +63,11 @@ public class DatasetService {
         return datasetSearchRepository.searchDatasetList(dataSearch);
 
     }
-    public Dataset getDatasetDetail(Long datasetId){
+    public ResDatasetDetailDto getDatasetDetail(Long datasetId){
         Dataset dataset = datasetRepository.findByIdWithResourceAndTheme(datasetId).orElseThrow(() -> new ResourceNotFoundException("해당 데이터셋은 존재하지 않습니다"));
+        Long scrapCount = scrapRepository.countByDataset(dataset);
         dataset.updateView(dataset.getView()+1);
-        return dataset;
+        return new ResDatasetDetailDto(dataset,scrapCount.intValue());
     }
 
     public Dataset findById(Long id){
@@ -71,6 +76,11 @@ public class DatasetService {
     public void delete(Long id){
         Dataset dataset = findById(id);
         datasetRepository.delete(dataset);
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getByKeyword(String keyword){
+        return datasetRepository.findByTitleContaining(keyword).stream().map(Dataset::getTitle).toList();
     }
 
 }

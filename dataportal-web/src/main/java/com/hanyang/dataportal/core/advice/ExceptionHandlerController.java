@@ -63,9 +63,20 @@ public class ExceptionHandlerController {
 //        }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
     }
+
+    @ExceptionHandler(JwtTokenException.class)
+    public ResponseEntity<ApiResponse<?>> handleJwtTokenException(JwtTokenException e) {
+        log.warn(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
+    }
   
     @ExceptionHandler(NullException.class)
     public ResponseEntity<ApiResponse<?>> handleNullException(NullException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
+    }
+
+    @ExceptionHandler(IllegalProviderException.class)
+    public ResponseEntity<ApiResponse<?>> handleIllegalProviderException(IllegalProviderException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
     }
 }

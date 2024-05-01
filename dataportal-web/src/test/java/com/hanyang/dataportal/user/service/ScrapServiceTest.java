@@ -89,4 +89,22 @@ class ScrapServiceTest {
                 .isExactlyInstanceOf(ResourceNotFoundException.class).hasMessage(ResponseMessage.NOT_EXIST_SCRAP);
 
     }
+
+    @Test
+    @DisplayName("특정 데이터셋을 스크랩했는지 확인할 수 있다.")
+    void isUserScrap(){
+        //Given
+        final String email = "test@email.com";
+        User user = userRepository.save(User.builder().email(email).build());
+        Dataset dataset = datasetRepository.save(Dataset.builder().build());
+        Scrap scrap = Scrap.builder().user(user).dataset(dataset).build();
+        scrapRepository.save(scrap);
+
+        //When
+        boolean userScrap = scrapService.isUserScrap(email, dataset.getDatasetId());
+
+        //Then
+        Assertions.assertThat(userScrap).isTrue();
+
+    }
 }

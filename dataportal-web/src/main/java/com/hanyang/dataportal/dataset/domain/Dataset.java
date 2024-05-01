@@ -27,6 +27,7 @@ public class Dataset {
     private String title;
     @Lob
     private String description;
+    @Enumerated(EnumType.STRING)
     private Organization organization;
     private LocalDate createdDate;
     private LocalDate updateDate;

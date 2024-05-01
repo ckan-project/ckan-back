@@ -20,6 +20,28 @@ services:
       - redis
     networks:
       - my_network
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: "dataportal"
+        awslogs-region: "ap-northeast-2"
+        awslogs-stream: "web"
+
+  dataportal_datastore:
+    container_name: dataportal-datastore
+    image: choco22/datastore
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - my_network
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: "dataportal"
+        awslogs-region: "ap-northeast-2"
+        awslogs-stream: "datastore"
 
 networks:
   my_network:

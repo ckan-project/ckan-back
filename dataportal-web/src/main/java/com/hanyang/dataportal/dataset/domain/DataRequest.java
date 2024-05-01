@@ -12,6 +12,7 @@ public class DataRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dataRequestId;
     private String title;
+    @Enumerated(EnumType.STRING)
     private Organization organization;
     @Lob
     private String content;

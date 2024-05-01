@@ -29,11 +29,9 @@ dependencies {
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 }
 
-def generated = 'src/main/generated'
 
 querydsl {
     jpa = true
-    querydslSourcesDir = generated
 }
 
 configurations {
@@ -55,10 +53,6 @@ compileQuerydsl{
     options.annotationProcessorPath = configurations.querydsl
 }
 
-tasks.compileQuerydsl.dependsOn(clean)
-tasks.compileJava.dependsOn(clean)
-
-clean {
-    delete file('src/main/generated')
+jar {
+    enabled = false
 }
-
