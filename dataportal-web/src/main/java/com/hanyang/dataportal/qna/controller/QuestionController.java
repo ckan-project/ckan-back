@@ -6,6 +6,7 @@ import com.hanyang.dataportal.qna.dto.req.ReqQuestionDto;
 import com.hanyang.dataportal.qna.dto.res.ResQuestionDto;
 import com.hanyang.dataportal.qna.dto.res.ResQuestionListDto;
 import com.hanyang.dataportal.qna.service.QuestionService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,7 @@ public class QuestionController {
     private final QuestionService questionService;
 
     //    1. 질문하기 (생성, 수정, 삭제)
+    @Operation(summary = "질문글 작성")
     @PostMapping(value = "/", name = "질문하기 API (생성) ")
     public ResponseEntity<ApiResponse<ResQuestionDto>> createQuestion(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ReqQuestionDto reqQuestionDto) {
         Question question = reqQuestionDto.toEntity();
@@ -33,7 +35,8 @@ public class QuestionController {
         return ResponseEntity.ok(ApiResponse.ok(resQuestionDto));
     }
 
-    @PostMapping(value = "/{questionId}", name = "질문하기 API (수정)")
+    @Operation(summary = "질문글 수정")
+    @PutMapping(value = "/{questionId}", name = "질문하기 API (수정)")
     public ResponseEntity<ApiResponse<ResQuestionDto>> updateQuestion(@RequestBody ReqQuestionDto reqQuestionDto, @PathVariable long questionId) {
         Question question = reqQuestionDto.toUpdateEntity();
         questionService.updateQuestion(question, questionId);
@@ -41,6 +44,7 @@ public class QuestionController {
         return ResponseEntity.ok(ApiResponse.ok(resQuestionDto));
     }
 
+    @Operation(summary = "질문글 삭제")
     @DeleteMapping(value = "/{questionId}", name = "질문하기 API (삭제)")
     public ResponseEntity<ApiResponse<?>> deleteQuestion(@PathVariable long questionId, @AuthenticationPrincipal UserDetails userDetails) {
         questionService.deleteQuestion(questionId);
@@ -51,7 +55,9 @@ public class QuestionController {
     //restful? ~ 클라이언트로부터 요청을 받는데, (몇페이지에 있는 게시글을볼 것인지?)
     // 페이징 조건 ~ 최신순, 인기순, 댓글순
     // 게시판 리스트 ~ 게시글번호, 작성일자, 제목, 작성자, 답변여부 , 조회수
-    @GetMapping({"/list", "list?page={pageNum}&size={listSize}"})
+    @Operation(summary = "질문글 조회 (페이징)")
+    //@GetMapping({"/list", "list?page={pageNum}&size={listSize}"})
+    @GetMapping({"/list", "list"})
     public ResponseEntity<ApiResponse<Page<?>>> getQuestionList(@RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
                                                                 @RequestParam(value = "size", defaultValue = "10") int listSize) throws Exception {
 
@@ -63,6 +69,8 @@ public class QuestionController {
 
 
     //전체페이지 수와 total element 수?
+    //
+    @Operation(summary = "나의 질문글 내역리스트 (페이징)")
    @GetMapping({ "/list/my", "list/my"})
     public ResponseEntity<ApiResponse<List<ResQuestionListDto>>> getMyQuestionList(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(value ="page", required = false, defaultValue = "1") int pageNum,
                                                                                @RequestParam(value = "size", defaultValue = "10") int listSize)
@@ -72,6 +80,7 @@ public class QuestionController {
    }
 
     // 4. 질문 내역 상세보기
+    @Operation(summary = "질문글 조회 (상세)")
     @GetMapping(value = "{questionId}", name = "질문 내역 상세보기 ")
     public ResponseEntity<ApiResponse<ResQuestionDto>> getQuestion(@PathVariable Long questionId) {
         Question question = questionService.getDetailQuestion(questionId);
@@ -80,7 +89,8 @@ public class QuestionController {
     }
 
     // 5. 나의 질문 내역 상세보기
-    @GetMapping(value = "myQuestionList/{questionId}", name = "나의 질문 내역 상세보기 ")
+    @Operation(summary = "나의 질문글 조회 (상세)")
+    @GetMapping(value = "list/my/{questionId}", name = "나의 질문 내역 상세보기 ")
     public ResponseEntity<ApiResponse<ResQuestionDto>> getQuestion(@PathVariable long questionId) {
         Question question = questionService.getDetailQuestion(questionId);
         ResQuestionDto resQuestionDto = ResQuestionDto.toQuestionDto(question);
