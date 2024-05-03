@@ -3,6 +3,7 @@ package com.hanyang.datastore.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hanyang.datastore.core.response.ApiResponse;
 import com.hanyang.datastore.core.response.ResponseMessage;
+import com.hanyang.datastore.dto.ResAxisDto;
 import com.hanyang.datastore.dto.ResTableLabelDto;
 import com.hanyang.datastore.service.TableService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,20 +26,25 @@ public class DataStoreController {
 
     //s3에서 꺼내와서 data->table화 시킴
     @Operation(summary = "파일 데이터 테이블화")
-    @PostMapping("/dataset/{resourceId}/resource/table")
-    public ResponseEntity<ApiResponse<?>> datastore(@PathVariable String resourceId) throws IOException {
-        tableService.createDataTable(resourceId);
+    @PostMapping("/dataset/{datasetId}/resource/table")
+    public ResponseEntity<ApiResponse<?>> datastore(@PathVariable String datasetId) throws IOException {
+        tableService.createDataTable(datasetId);
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
 
 
     @Operation(summary = "파일 데이터 시각화 차트 데이터")
-    @GetMapping("/dataset/{resourceId}/table/group/label")
-    public ResponseEntity<ApiResponse<ResTableLabelDto>> groupLabel(@PathVariable String resourceId, @RequestParam String colName) throws JsonProcessingException {
-        return ResponseEntity.ok(ApiResponse.ok(tableService.getAggregationLabel(resourceId,colName)));
+    @GetMapping("/dataset/{datasetId}/chart")
+    public ResponseEntity<ApiResponse<ResTableLabelDto>> chart(@PathVariable String datasetId, @RequestParam String colName) throws JsonProcessingException {
+        return ResponseEntity.ok(ApiResponse.ok(tableService.getAggregationLabel(datasetId,colName)));
     }
 
+    @Operation(summary = "축 리스트 가져오기")
+    @GetMapping("/dataset/{datasetId}/axis")
+    public ResponseEntity<ApiResponse<ResAxisDto>> chartAxis(@PathVariable String datasetId) {
+        return ResponseEntity.ok(ApiResponse.ok(new ResAxisDto(tableService.getAxis(datasetId))));
+    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ApiResponse<?>> handleResourceNotFoundException(EntityNotFoundException ex) {

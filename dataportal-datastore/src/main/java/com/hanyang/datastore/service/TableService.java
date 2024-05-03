@@ -3,6 +3,7 @@ package com.hanyang.datastore.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hanyang.datastore.core.exception.LabelNotFoundException;
 import com.hanyang.datastore.domain.MetaData;
 import com.hanyang.datastore.domain.TableData;
 import com.hanyang.datastore.dto.DatasetMetaDataDto;
@@ -91,39 +92,7 @@ public class TableService {
         metaData.setDataList(tableDataList);
         metaDataRepository.save(metaData);
     }
-    //TODO 테이블 데이터에 대한 반환
-//    public ResTableDto getTable(String datasetId){
-//        ResTableDto resTableDto = new ResTableDto();
-//        MetaData metaData = tableDataRepository.findById(datasetId).orElseThrow(() -> new ResourceNotFoundException(NOT_EXIST_DATASET));
-//
-//        resTableDto.setLabelName(metaData.getLabelName());
-//        resTableDto.setLabelList(metaData.getLabel());
-//
-//        //컬럼개수
-//        int colCnt = metaData.getDataList().get(0).size();
-//        //총 데이터 개수
-//        int dataCnt = metaData.getDataList().size();
-//        List<String> dataNameList = metaData.getDataList().get(0).keySet().stream().toList();
-//        resTableDto.setDataName(dataNameList);
-//
-//        String[][] dataList = new String[colCnt-1][dataCnt];
-//        for (int i = 0; i < dataCnt; i++) {
-//            for (int j = 0; j < colCnt-1; j++) {
-//                String colName = dataNameList.get(j);
-//                dataList[j][i] = metaData.getDataList().get(i).get(colName);
-//            }
-//        }
-//        resTableDto.setDataList(dataList);
-//
-//        return resTableDto;
-//
-//    }
 
-    /**
-     * labeling된 col과 다른 col을 통해 합계(값),평균으로 그룹핑
-     * mongoDB에 Agrregation을 이용하여 파이프라인 구축
-     */
-    //TODO Xlabel이 없으면 기준값을 잘못 잡은것이기에 에러처리 해줘야함
     public ResTableLabelDto getAggregationLabel(String datasetId, String colName) throws JsonProcessingException {
 
         //Meta data만 조회
@@ -145,12 +114,20 @@ public class TableService {
         //동적으로 groupOperation할 col을 지정해줌
         List<List<Double>> dataList = new ArrayList<>();
         List<String> dataName = new ArrayList<>();
+        boolean isAxisExists = false;
         for (Map.Entry<String, Object> map :entries) {
+            if(Objects.equals(map.getKey(), colName)){
+                isAxisExists = true;
+            }
             if(!Objects.equals(map.getKey(), colName) && map.getValue() instanceof Double){
                 groupOperation = groupOperation.sum("data."+map.getKey()).as(map.getKey());
                 dataList.add(new ArrayList<>());
                 dataName.add(map.getKey());
             }
+        }
+
+        if(!isAxisExists){
+            throw new LabelNotFoundException("해당 축은 존재하지 않습니다");
         }
 
         //pipeLine 생성
@@ -193,6 +170,30 @@ public class TableService {
         resTableLabelDto.setDataList(dataList);
         return resTableLabelDto;
     }
+
+    public List<String> getAxis(String datasetId){
+
+        //Meta data만 조회
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(datasetId));
+        query.fields().slice("dataList", 1);;
+
+        MetaData meta = mongoTemplate.find(query, MetaData.class, "metaData").get(0);
+
+        //순서보장을 위해 LinkedHashSet으로
+        Set<Map.Entry<String, Object>> entries = new LinkedHashSet<>(meta.getDataList().get(0).getData().entrySet());
+
+        //dataList의 크기 지정 및 dataName 설정
+        //동적으로 groupOperation할 col을 지정해줌
+        List<String> dataName = new ArrayList<>();
+        for (Map.Entry<String, Object> map :entries) {
+            dataName.add(map.getKey());
+        }
+
+        return dataName;
+
+    }
+
 
 }
 
