@@ -23,17 +23,16 @@ import java.util.List;
 @RequestMapping("/api/questions")
 public class QuestionController {
     private final QuestionService questionService;
-
     @Operation(summary = "질문글 작성")
     @PostMapping(value = "/")
-    public ResponseEntity<ApiResponse<ResQuestionDto>> createQuestion(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ReqQuestionDto reqQuestionDto) {
+    public ResponseEntity<ApiResponse<ResQuestionDto>> createQuestion(@AuthenticationPrincipal UserDetails userDetails,
+                                                                      @RequestBody ReqQuestionDto reqQuestionDto) {
         Question question = reqQuestionDto.toEntity();
         String username = userDetails.getUsername();
         questionService.save(question, username);
         ResQuestionDto resQuestionDto = ResQuestionDto.toQuestionDto((question));
         return ResponseEntity.ok(ApiResponse.ok(resQuestionDto));
     }
-
     @Operation(summary = "질문글 수정")
     @PutMapping(value = "/{questionId}")
     public ResponseEntity<ApiResponse<ResQuestionDto>> updateQuestion(@RequestBody ReqQuestionDto reqQuestionDto,
@@ -43,7 +42,6 @@ public class QuestionController {
         ResQuestionDto resQuestionDto = ResQuestionDto.toQuestionDto(question);
         return ResponseEntity.ok(ApiResponse.ok(resQuestionDto));
     }
-
     @Operation(summary = "질문글 삭제")
     @DeleteMapping(value = "/{questionId}")
     public ResponseEntity<ApiResponse<?>> deleteQuestion(@PathVariable long questionId, @AuthenticationPrincipal UserDetails userDetails) {
@@ -58,18 +56,15 @@ public class QuestionController {
         Page<ResQuestionListDto> resQuestionListDto = questionService.getQuestionList(pageNum,listSize);
         return ResponseEntity.ok(ApiResponse.ok(resQuestionListDto));
    }
-
-
-
     @Operation(summary = "나의 질문글 내역리스트 (페이징)")
     @GetMapping("/list/my")
-    public ResponseEntity<ApiResponse<List<ResQuestionListDto>>> getMyQuestionList(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(value ="page", required = false, defaultValue = "1") int pageNum,
-                                                                                   @RequestParam(value = "size", defaultValue = "10") int listSize)
-   { String userName = userDetails.getUsername();
-    List<ResQuestionListDto> resQuestionListDtos = questionService.getMyQuestionList(userName,pageNum,listSize);
-    return ResponseEntity.ok(ApiResponse.ok(resQuestionListDtos));
+    public ResponseEntity<ApiResponse<List<ResQuestionListDto>>> getMyQuestionList(@AuthenticationPrincipal UserDetails userDetails,
+                                                                                   @RequestParam(value ="page", required = false, defaultValue = "1") int pageNum,
+                                                                                   @RequestParam(value = "size", defaultValue = "10") int listSize) {
+        String userName = userDetails.getUsername();
+        List<ResQuestionListDto> resQuestionListDtos = questionService.getMyQuestionList(userName,pageNum,listSize);
+        return ResponseEntity.ok(ApiResponse.ok(resQuestionListDtos));
    }
-
     @Operation(summary = "질문글 조회 (상세)")
     @GetMapping(value = "{questionId}")
     public ResponseEntity<ApiResponse<ResQuestionDto>> getQuestion(@PathVariable Long questionId) {
@@ -77,7 +72,6 @@ public class QuestionController {
         ResQuestionDto resQuestionDto = ResQuestionDto.toQuestionDto(question);
         return ResponseEntity.ok(ApiResponse.ok(resQuestionDto));
     }
-
     @Operation(summary = "나의 질문글 조회 (상세)")
     @GetMapping(value = "list/my/{questionId}")
     public ResponseEntity<ApiResponse<ResQuestionDto>> getQuestion(@PathVariable long questionId) {
@@ -85,5 +79,4 @@ public class QuestionController {
         ResQuestionDto resQuestionDto = ResQuestionDto.toQuestionDto(question);
         return ResponseEntity.ok(ApiResponse.ok(resQuestionDto));
     }
-
 }

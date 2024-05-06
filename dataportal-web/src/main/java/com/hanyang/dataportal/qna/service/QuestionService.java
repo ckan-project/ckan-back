@@ -38,6 +38,7 @@ public class QuestionService {
     public Question updateQuestion(Question reqUpdateQuestionDto, long questionId) {
         Optional<Question> updateQuestion = questionRepository.findById(questionId);
         if (updateQuestion.isPresent()) {
+            reqUpdateQuestionDto.setId(questionId);
             questionRepository.save(reqUpdateQuestionDto);
         } else {
             throw new ResourceNotFoundException("수정할 질문글이 없습니다.");
