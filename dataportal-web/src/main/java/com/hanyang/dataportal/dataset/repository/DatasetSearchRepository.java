@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.hanyang.dataportal.dataset.domain.QDataset.dataset;
-import static com.hanyang.dataportal.dataset.domain.QResource.resource;
+import static com.hanyang.dataportal.resource.domain.QResource.resource;
 import static com.hanyang.dataportal.user.domain.QScrap.scrap;
 
 

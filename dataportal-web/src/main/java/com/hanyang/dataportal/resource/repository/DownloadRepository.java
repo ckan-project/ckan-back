@@ -1,4 +1,4 @@
-package com.hanyang.dataportal.dataset.repository;
+package com.hanyang.dataportal.resource.repository;
 
 import com.hanyang.dataportal.user.domain.Download;
 import org.springframework.data.jpa.repository.JpaRepository;

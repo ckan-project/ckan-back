@@ -1,10 +1,8 @@
 package com.hanyang.dataportal.api;
 
 import com.hanyang.dataportal.api.dto.ResTitleDescDto;
-import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.service.DatasetService;
-import com.hanyang.dataportal.dataset.service.ResourceService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

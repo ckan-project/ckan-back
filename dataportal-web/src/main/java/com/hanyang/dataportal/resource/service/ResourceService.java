@@ -1,21 +1,18 @@
-package com.hanyang.dataportal.dataset.service;
+package com.hanyang.dataportal.resource.service;
 
 import com.hanyang.dataportal.core.exception.FileException;
 import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.dataset.domain.Dataset;
-import com.hanyang.dataportal.dataset.domain.Resource;
-import com.hanyang.dataportal.dataset.infrastructure.S3StorageManager;
-import com.hanyang.dataportal.dataset.infrastructure.dto.FileInfoDto;
 import com.hanyang.dataportal.dataset.repository.DatasetRepository;
-import com.hanyang.dataportal.dataset.repository.DownloadRepository;
-import com.hanyang.dataportal.dataset.repository.ResourceRepository;
+import com.hanyang.dataportal.resource.domain.Resource;
+import com.hanyang.dataportal.resource.infrastructure.S3StorageManager;
+import com.hanyang.dataportal.resource.infrastructure.dto.FileInfoDto;
+import com.hanyang.dataportal.resource.repository.DownloadRepository;
+import com.hanyang.dataportal.resource.repository.ResourceRepository;
 import com.hanyang.dataportal.user.domain.Download;
 import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -72,37 +69,5 @@ public class ResourceService {
         Dataset dataset = datasetRepository.findByIdWithTheme(datasetId).orElseThrow(() -> new ResourceNotFoundException("해당 데이터셋은 존재하지 않습니다"));
         Download download = Download.builder().dataset(dataset).user(user).build();
         downloadRepository.save(download);
-    }
-
-
-    public Page<Dataset> popularData() {
-        /* 조회수만 기준으로 인기순을 생각하였을 때*/
-        // return  datasetRepository.findAll(PageRequest.of(0, 6, Sort.by("views").descending()));
-
-
-        /* 조회수와, 스크랩수 를 반영하여 인기순을 생각하였을 때
-         * 상위 10개 정도 조회수 정렬하여 불러오고
-         * 상위 10개 정도 스크랩수 정렬하여 불러와서 비교... 를 하면 안됨. -> 각각 동일한 데이터 셋이라는 보장이 없음.
-         * 그렇다면 모두 가져와서 비교...하고, 가중치값을 먹이고 재정렬 -> 자료를 가져오는데 부하가 많지 않을까...?  */
-        Page<Dataset> view = datasetRepository.findAll(PageRequest.of(0, 6, Sort.by("view").descending()));
-
-        return view;
-
-//        // Collections.sort(datasets, new Comparator<Dataset>()
-//        datasets.sort((d1, d2) -> {
-//            double score1 = 0.5 * d1.getView() + 0.5 * d1.getDownload();
-//            double score2 = 0.5 * d2.getView() + 0.5 * d2.getDownload();
-//            return Double.compare(score2, score1); // 내림차순 정렬
-//        });
-//
-//        int start = 0;
-//        int end = Math.min(6, datasets.size());
-//        return (Page<Dataset>) datasets.subList(start, end);
-    }
-
-
-
-    public Page<Dataset> newData(){
-        return datasetRepository.findAll(PageRequest.of(0, 6, Sort.by("datasetId").descending()));
     }
 }

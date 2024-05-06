@@ -23,9 +23,6 @@ public class ResDatasetListDto {
         this.data = datasets.getContent().stream().map(SimpleDataset::new).toList();
     }
 
-    public ResDatasetListDto(List<Dataset> datasets){
-
-    }
     @Data
     public static class SimpleDataset{
         private Long datasetId;

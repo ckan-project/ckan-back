@@ -1,6 +1,5 @@
 package com.hanyang.dataportal.dataset.dto.res;
 
-import com.hanyang.dataportal.dataset.domain.vo.Organization;
 import lombok.Data;
 
 import java.util.List;

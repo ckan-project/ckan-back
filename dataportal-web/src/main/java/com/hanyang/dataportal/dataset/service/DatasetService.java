@@ -13,11 +13,12 @@ import com.hanyang.dataportal.dataset.repository.DatasetThemeRepository;
 import com.hanyang.dataportal.user.repository.ScrapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -81,6 +82,16 @@ public class DatasetService {
     @Transactional(readOnly = true)
     public List<String> getByKeyword(String keyword){
         return datasetRepository.findByTitleContaining(keyword).stream().map(Dataset::getTitle).toList();
+    }
+
+    public List<Dataset> getPopular(){
+        Pageable pageable = PageRequest.of(0,6);
+        return datasetRepository.findOrderByPopular(pageable);
+    }
+
+    public List<Dataset> getNew(){
+        Pageable pageable = PageRequest.of(0,6);
+        return datasetRepository.findOrderByDateDesc(pageable);
     }
 
 }
