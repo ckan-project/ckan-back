@@ -25,7 +25,7 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @Operation(summary = "질문글 작성")
-    @PostMapping(value = "/", name = "질문하기 API (생성) ")
+    @PostMapping(value = "/")
     public ResponseEntity<ApiResponse<ResQuestionDto>> createQuestion(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ReqQuestionDto reqQuestionDto) {
         Question question = reqQuestionDto.toEntity();
         String username = userDetails.getUsername();
@@ -35,7 +35,7 @@ public class QuestionController {
     }
 
     @Operation(summary = "질문글 수정")
-    @PutMapping(value = "/{questionId}", name = "질문하기 API (수정)")
+    @PutMapping(value = "/{questionId}")
     public ResponseEntity<ApiResponse<ResQuestionDto>> updateQuestion(@RequestBody ReqQuestionDto reqQuestionDto, @PathVariable long questionId) {
         Question question = reqQuestionDto.toUpdateEntity();
         questionService.updateQuestion(question, questionId);
@@ -44,7 +44,7 @@ public class QuestionController {
     }
 
     @Operation(summary = "질문글 삭제")
-    @DeleteMapping(value = "/{questionId}", name = "질문하기 API (삭제)")
+    @DeleteMapping(value = "/{questionId}")
     public ResponseEntity<ApiResponse<?>> deleteQuestion(@PathVariable long questionId, @AuthenticationPrincipal UserDetails userDetails) {
         questionService.deleteQuestion(questionId);
         return null;
@@ -70,7 +70,7 @@ public class QuestionController {
    }
 
     @Operation(summary = "질문글 조회 (상세)")
-    @GetMapping(value = "{questionId}", name = "질문 내역 상세보기 ")
+    @GetMapping(value = "{questionId}")
     public ResponseEntity<ApiResponse<ResQuestionDto>> getQuestion(@PathVariable Long questionId) {
         Question question = questionService.getDetailQuestion(questionId);
         ResQuestionDto resQuestionDto = ResQuestionDto.toQuestionDto(question);
@@ -78,7 +78,7 @@ public class QuestionController {
     }
 
     @Operation(summary = "나의 질문글 조회 (상세)")
-    @GetMapping(value = "list/my/{questionId}", name = "나의 질문 내역 상세보기 ")
+    @GetMapping(value = "list/my/{questionId}")
     public ResponseEntity<ApiResponse<ResQuestionDto>> getQuestion(@PathVariable long questionId) {
         Question question = questionService.getDetailQuestion(questionId);
         ResQuestionDto resQuestionDto = ResQuestionDto.toQuestionDto(question);
