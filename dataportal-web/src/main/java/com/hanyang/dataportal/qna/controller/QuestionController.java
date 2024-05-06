@@ -36,7 +36,8 @@ public class QuestionController {
 
     @Operation(summary = "질문글 수정")
     @PutMapping(value = "/{questionId}")
-    public ResponseEntity<ApiResponse<ResQuestionDto>> updateQuestion(@RequestBody ReqQuestionDto reqQuestionDto, @PathVariable long questionId) {
+    public ResponseEntity<ApiResponse<ResQuestionDto>> updateQuestion(@RequestBody ReqQuestionDto reqQuestionDto,
+                                                                      @PathVariable long questionId) {
         Question question = reqQuestionDto.toUpdateEntity();
         questionService.updateQuestion(question, questionId);
         ResQuestionDto resQuestionDto = ResQuestionDto.toQuestionDto(question);
