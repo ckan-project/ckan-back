@@ -37,7 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 "/api/dataset",
                 "/api/datasets",
                 "/api/notices/list",
-                "/api/questions/list"
         };
         final String path = request.getRequestURI();
         return Arrays.stream(excludes).anyMatch(path::startsWith);
