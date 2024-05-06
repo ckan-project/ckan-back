@@ -16,4 +16,15 @@ public class ResFaqDto {
         this.faqContent = faq.getFaqContent();
     }
 
+    public ResFaqDto() {
+
+    }
+
+    public static ResFaqDto toFaqDto(Faq faq) {
+        ResFaqDto resFaqDto = new ResFaqDto();
+        resFaqDto.setFaqId(faq.getFaqId());
+        resFaqDto.setFaqTitle(faq.getFaqTitle());
+        resFaqDto.setFaqContent(faq.getFaqContent());
+        return resFaqDto;
+    }
 }

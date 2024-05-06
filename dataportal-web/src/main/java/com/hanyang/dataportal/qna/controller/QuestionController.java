@@ -24,7 +24,6 @@ import java.util.List;
 public class QuestionController {
     private final QuestionService questionService;
 
-    //    1. 질문하기 (생성, 수정, 삭제)
     @Operation(summary = "질문글 작성")
     @PostMapping(value = "/", name = "질문하기 API (생성) ")
     public ResponseEntity<ApiResponse<ResQuestionDto>> createQuestion(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ReqQuestionDto reqQuestionDto) {
@@ -50,36 +49,25 @@ public class QuestionController {
         questionService.deleteQuestion(questionId);
         return null;
     }
-
-    //    2. 질문 내역 리스트보기 (페이징, size는 10으로 고정~ 총 페이지:총데이터 갯수:질문리스트(QuestionId,title,date,view,username)) 응답
-    //restful? ~ 클라이언트로부터 요청을 받는데, (몇페이지에 있는 게시글을볼 것인지?)
-    // 페이징 조건 ~ 최신순, 인기순, 댓글순
-    // 게시판 리스트 ~ 게시글번호, 작성일자, 제목, 작성자, 답변여부 , 조회수
     @Operation(summary = "질문글 조회 (페이징)")
     //@GetMapping({"/list", "list?page={pageNum}&size={listSize}"})
     @GetMapping({"/list", "list"})
     public ResponseEntity<ApiResponse<Page<?>>> getQuestionList(@RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
                                                                 @RequestParam(value = "size", defaultValue = "10") int listSize) throws Exception {
-
         Page<ResQuestionListDto> resQuestionListDto = questionService.getQuestionList(pageNum,listSize);
         return ResponseEntity.ok(ApiResponse.ok(resQuestionListDto));
    }
 
-    //    3. 나의 질문 내역 리스트보기 _로그인 value를 전달하여 findbyuser...로 긁어오기?
 
-
-    //전체페이지 수와 total element 수?
-    //
     @Operation(summary = "나의 질문글 내역리스트 (페이징)")
-   @GetMapping({ "/list/my", "list/my"})
+    @GetMapping("/list/my")
     public ResponseEntity<ApiResponse<List<ResQuestionListDto>>> getMyQuestionList(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(value ="page", required = false, defaultValue = "1") int pageNum,
-                                                                               @RequestParam(value = "size", defaultValue = "10") int listSize)
+                                                                                   @RequestParam(value = "size", defaultValue = "10") int listSize)
    { String userName = userDetails.getUsername();
     List<ResQuestionListDto> resQuestionListDtos = questionService.getMyQuestionList(userName,pageNum,listSize);
     return ResponseEntity.ok(ApiResponse.ok(resQuestionListDtos));
    }
 
-    // 4. 질문 내역 상세보기
     @Operation(summary = "질문글 조회 (상세)")
     @GetMapping(value = "{questionId}", name = "질문 내역 상세보기 ")
     public ResponseEntity<ApiResponse<ResQuestionDto>> getQuestion(@PathVariable Long questionId) {
@@ -88,7 +76,6 @@ public class QuestionController {
         return ResponseEntity.ok(ApiResponse.ok(resQuestionDto));
     }
 
-    // 5. 나의 질문 내역 상세보기
     @Operation(summary = "나의 질문글 조회 (상세)")
     @GetMapping(value = "list/my/{questionId}", name = "나의 질문 내역 상세보기 ")
     public ResponseEntity<ApiResponse<ResQuestionDto>> getQuestion(@PathVariable long questionId) {
@@ -96,13 +83,5 @@ public class QuestionController {
         ResQuestionDto resQuestionDto = ResQuestionDto.toQuestionDto(question);
         return ResponseEntity.ok(ApiResponse.ok(resQuestionDto));
     }
-
-
-    // 6. 답변하기 -> AnswerController
-
-    // 7. 답변 상세보기 -> AnswerController
-
-    // 8. 답변할 질문 리스트 보기 -> AnswerController
-
 
 }
