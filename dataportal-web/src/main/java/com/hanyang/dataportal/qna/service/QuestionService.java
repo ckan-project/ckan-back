@@ -37,6 +37,12 @@ public class QuestionService {
 
     public Question updateQuestion(Question reqUpdateQuestionDto, long questionId) {
         Optional<Question> updateQuestion = questionRepository.findById(questionId);
+
+        reqUpdateQuestionDto.setDate(updateQuestion.get().getDate());
+        reqUpdateQuestionDto.setView(updateQuestion.get().getView());
+        reqUpdateQuestionDto.setAnswerStatus(updateQuestion.get().getAnswerStatus());
+        reqUpdateQuestionDto.setUser(updateQuestion.get().getUser());
+
         if (updateQuestion.isPresent()) {
             reqUpdateQuestionDto.setId(questionId);
             questionRepository.save(reqUpdateQuestionDto);
