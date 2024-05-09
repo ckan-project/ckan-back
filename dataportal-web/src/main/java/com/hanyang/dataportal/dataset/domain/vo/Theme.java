@@ -9,7 +9,7 @@ public enum Theme {
     입학, 학생, 학사, 국제, 복지, 재정, 취창업, 학술, 장학;
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static Theme findByOrganization(String theme) {
+    public static Theme findByTheme(String theme) {
         return Stream.of(Theme.values())
                 .filter(o -> o.toString().equals(theme))
                 .findFirst()

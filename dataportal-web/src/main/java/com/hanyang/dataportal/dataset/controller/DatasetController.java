@@ -5,11 +5,11 @@ import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.dto.req.ReqDataSearchDto;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetDetailDto;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetListDto;
+import com.hanyang.dataportal.dataset.dto.res.ResDatasetMainDto;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetTitleDto;
 import com.hanyang.dataportal.dataset.service.DatasetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -40,11 +40,16 @@ public class DatasetController {
         return ResponseEntity.ok(ok(datasetService.getDatasetDetail(datasetId)));
     }
 
-    @Operation(summary = "일치하는 키워드 별 데이터셋 제목 리스트 보기")
-    @GetMapping("/dataset")
-    public ResponseEntity<ApiResponse<ResDatasetTitleDto>> getDatasetListByKeyword(@RequestParam String keyword){
-        List<String> titleList = datasetService.getByKeyword(keyword);
-        return ResponseEntity.ok(ok(new ResDatasetTitleDto(titleList)));
+    @Operation(summary = "인기 데이터 리스트가져오기")
+    @GetMapping(value = "/dataset/popular")
+    public ResponseEntity<ApiResponse<ResDatasetMainDto>> popularData() {
+        return ResponseEntity.ok(ApiResponse.ok(new ResDatasetMainDto(datasetService.getPopular())));
+    }
+
+    @Operation(summary = "신규 데이터 리스트가져오기")
+    @GetMapping(value = "/dataset/new")
+    public ResponseEntity<ApiResponse<ResDatasetMainDto>> newData() {
+        return ResponseEntity.ok(ApiResponse.ok(new ResDatasetMainDto(datasetService.getNew())));
     }
 
 }

@@ -1,14 +1,14 @@
-package com.hanyang.dataportal.dataset.service;
+package com.hanyang.dataportal.resource.service;
 
 import com.hanyang.dataportal.core.exception.FileException;
 import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.dataset.domain.Dataset;
-import com.hanyang.dataportal.dataset.domain.Resource;
-import com.hanyang.dataportal.dataset.infrastructure.S3StorageManager;
-import com.hanyang.dataportal.dataset.infrastructure.dto.FileInfoDto;
 import com.hanyang.dataportal.dataset.repository.DatasetRepository;
-import com.hanyang.dataportal.dataset.repository.DownloadRepository;
-import com.hanyang.dataportal.dataset.repository.ResourceRepository;
+import com.hanyang.dataportal.resource.domain.Resource;
+import com.hanyang.dataportal.resource.infrastructure.S3StorageManager;
+import com.hanyang.dataportal.resource.infrastructure.dto.FileInfoDto;
+import com.hanyang.dataportal.resource.repository.DownloadRepository;
+import com.hanyang.dataportal.resource.repository.ResourceRepository;
 import com.hanyang.dataportal.user.domain.Download;
 import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.service.UserService;
@@ -70,5 +70,4 @@ public class ResourceService {
         Download download = Download.builder().dataset(dataset).user(user).build();
         downloadRepository.save(download);
     }
-
 }

@@ -17,7 +17,7 @@ public class ExceptionHandlerController {
 
     @ExceptionHandler(LabelNotFoundException.class)
     public ResponseEntity<ApiResponse<?>> handleLabelNotFoundException(LabelNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.fail(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)

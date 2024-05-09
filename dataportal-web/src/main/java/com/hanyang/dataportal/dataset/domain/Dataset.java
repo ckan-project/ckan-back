@@ -3,6 +3,7 @@ package com.hanyang.dataportal.dataset.domain;
 import com.hanyang.dataportal.dataset.domain.vo.Organization;
 import com.hanyang.dataportal.dataset.domain.vo.Theme;
 import com.hanyang.dataportal.dataset.dto.req.ReqDatasetDto;
+import com.hanyang.dataportal.resource.domain.Resource;
 import com.hanyang.dataportal.user.domain.Download;
 import com.hanyang.dataportal.user.domain.Scrap;
 import jakarta.persistence.*;
@@ -66,5 +67,6 @@ public class Dataset {
     public void removeTheme(){
         datasetThemeList.clear();
     }
+
 
 }

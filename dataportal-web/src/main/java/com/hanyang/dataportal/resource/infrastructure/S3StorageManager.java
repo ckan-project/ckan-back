@@ -1,7 +1,8 @@
-package com.hanyang.dataportal.dataset.infrastructure;
+package com.hanyang.dataportal.resource.infrastructure;
 
 import com.hanyang.dataportal.core.exception.FileException;
-import com.hanyang.dataportal.dataset.infrastructure.dto.FileInfoDto;
+import com.hanyang.dataportal.dataset.domain.vo.Type;
+import com.hanyang.dataportal.resource.infrastructure.dto.FileInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -25,9 +26,9 @@ public class S3StorageManager {
 
         String fileName = multipartFile.getOriginalFilename();
 
-        //파일 형식 구하기
         assert fileName != null;
         String s3ObjectPath = datasetId + "/" + fileName;
+        String type = fileName.split("\\.")[1];
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucket)
@@ -46,6 +47,7 @@ public class S3StorageManager {
 
         FileInfoDto fileInfoDto = new FileInfoDto();
         fileInfoDto.setUrl(String.valueOf(s3Client.utilities().getUrl(getUrlRequest)));
+        fileInfoDto.setType(Type.findByType(type));
 
         return fileInfoDto;
     }
