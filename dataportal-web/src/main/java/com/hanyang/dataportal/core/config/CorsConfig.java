@@ -15,8 +15,9 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://hy-data.site");
+        config.addAllowedOrigin("http://hy-data.site/");
         config.addAllowedOrigin("http://localhost:3000/");
+        config.addAllowedOrigin("http://api.hy-data.site:8080/");
         config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT"));
         config.setAllowedHeaders(List.of("*"));
 
