@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class NoticeService {
     }
 
     public Notice update(ReqNoticeDto reqNoticeDto, Long noticeId) {
-        Notice notice =  noticeRepository.findByIdWithAdmin(noticeId).orElseThrow(() -> new ResourceNotFoundException("공지글이 없습니다"));
+        Notice notice = findById(noticeId);
         notice.updateNotice(reqNoticeDto);
         return notice;
     }
@@ -37,15 +39,18 @@ public class NoticeService {
         Pageable pageable = PageRequest.of(page,10);
         return noticeRepository.findAll(pageable);
     }
-    @Transactional
+
     public Notice getNoticeDetail(Long noticeId) {
-        Notice notice = noticeRepository.findByIdWithAdmin(noticeId).orElseThrow(() -> new ResourceNotFoundException("공지글이 없습니다"));
+        Notice notice = findById(noticeId);
         notice.updateView(notice.getView()+1);
         return notice;
     }
 
     public void delete(Long noticeId) {
-        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new ResourceNotFoundException("공지글이 없습니다"));
-        noticeRepository.delete(notice);
+        noticeRepository.delete(findById(noticeId));
+    }
+
+    private Notice findById(Long noticeId){
+        return noticeRepository.findByIdWithAdmin(noticeId).orElseThrow(() -> new ResourceNotFoundException("공지글이 없습니다"));
     }
 }

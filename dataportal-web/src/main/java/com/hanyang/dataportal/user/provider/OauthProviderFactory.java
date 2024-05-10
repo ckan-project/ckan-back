@@ -1,4 +1,4 @@
-package com.hanyang.dataportal.user.util;
+package com.hanyang.dataportal.user.provider;
 
 import com.hanyang.dataportal.core.exception.IllegalProviderException;
 import com.hanyang.dataportal.core.response.ResponseMessage;

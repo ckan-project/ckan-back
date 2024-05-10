@@ -8,6 +8,7 @@ import com.hanyang.dataportal.user.dto.req.*;
 import com.hanyang.dataportal.user.dto.res.ResCodeDto;
 import com.hanyang.dataportal.user.dto.res.ResLoginDto;
 import com.hanyang.dataportal.user.dto.res.ResUserDto;
+import com.hanyang.dataportal.user.infrastructure.EmailManager;
 import com.hanyang.dataportal.user.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,28 +25,28 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 public class UserAuthController {
-    private final UserSignupService userSignupService;
+    private final UserService userService;
     private final UserLoginService userLoginService;
     private final UserLogoutService userLogoutService;
-    private final EmailService emailService;
+    private final EmailManager emailManager;
 
     @Operation(summary = "이메일로 인증 번호 받기")
     @PostMapping("/email")
     public ResponseEntity<ApiResponse<?>> email(@RequestBody ReqEmailDto reqSignupDto){
-        return ResponseEntity.ok(ApiResponse.ok(new ResCodeDto(emailService.joinEmail(reqSignupDto.getEmail()))));
+        return ResponseEntity.ok(ApiResponse.ok(new ResCodeDto(emailManager.joinEmail(reqSignupDto.getEmail()))));
     }
 
     @Operation(summary = "인증 번호 인증")
     @PostMapping("/code")
     public ResponseEntity<ApiResponse<?>> codeCheck(@RequestBody ReqCodeDto reqCodeDto){
-        emailService.checkCode(reqCodeDto);
+        emailManager.checkCode(reqCodeDto);
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
     @Operation(summary = "유저 회원가입")
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<ResUserDto>> signup(@RequestBody ReqSignupDto reqSignupDto){
-        return ResponseEntity.ok(ApiResponse.ok(new ResUserDto(userSignupService.signUp(reqSignupDto))));
+        return ResponseEntity.ok(ApiResponse.ok(new ResUserDto(userService.signUp(reqSignupDto))));
     }
 
     @Operation(summary = "유저 로그아웃")

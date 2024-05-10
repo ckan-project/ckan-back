@@ -4,36 +4,38 @@ package com.hanyang.dataportal.qna.dto.res;
 import com.hanyang.dataportal.qna.domain.AnswerStatus;
 import com.hanyang.dataportal.qna.domain.Question;
 import lombok.Data;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
-
 public class ResQuestionListDto {
-    /* 게시글 번호, 타이틀, 상태, 작성자, 작성일, 조회수 */
-    private  Long id;
-    private  String title;
-    private  AnswerStatus status;
-    private  String user;
-    private  LocalDate date;
-    private  Integer view;
+    private Integer totalPage;
+    private Long totalElement;
+    private List<SimpleQuestion> data;
 
-    //기본 생성자
-    public ResQuestionListDto() {
-
+    public ResQuestionListDto(Page<Question> question) {
+        this.totalPage = question.getTotalPages();
+        this.totalElement = question.getTotalElements();
+        this.data = question.getContent().stream().map(SimpleQuestion::new).toList();
     }
 
-    // setter 방식은 @Data를 사용하면 이미 생성되므로, 직접 호출을 할 필요는 없다...
-    public static ResQuestionListDto toDto(Question question) {
-    ResQuestionListDto resQuestionListDto = new ResQuestionListDto();
-    resQuestionListDto.setId(question.getId());
-    resQuestionListDto.setTitle(question.getTitle());
-    resQuestionListDto.setUser(question.getUser().getName());
-    resQuestionListDto.setDate(question.getDate());
-    resQuestionListDto.setStatus(question.getAnswerStatus());
-    resQuestionListDto.setView(question.getView());
-        return resQuestionListDto;
+    @Data
+    public static class SimpleQuestion {
+        private Long questionId;
+        private String title;
+        private LocalDate createDate;
+        private Integer view;
+        private AnswerStatus answerStatus;
+        private String userName;
+
+        public SimpleQuestion(Question question) {
+            this.questionId = question.getQuestionId();
+            this.title = question.getTitle();
+            this.createDate = question.getCreateDate();
+            this.view = question.getView();
+            this.userName = question.getUser().getName();
+        }
     }
-
-
 }

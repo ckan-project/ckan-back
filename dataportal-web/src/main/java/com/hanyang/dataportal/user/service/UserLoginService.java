@@ -10,6 +10,7 @@ import com.hanyang.dataportal.core.response.ResponseMessage;
 import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.dto.req.ReqLoginDto;
 import com.hanyang.dataportal.user.dto.req.ReqPasswordDto;
+import com.hanyang.dataportal.user.infrastructure.EmailManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,7 +28,7 @@ public class UserLoginService {
     private final JwtTokenValidator jwtTokenValidator;
     private final JwtTokenResolver jwtTokenResolver;
     private final UserService userService;
-    private final EmailService emailService;
+    private final EmailManager emailManager;
     private final PasswordEncoder passwordEncoder;
 
     public TokenDto login(ReqLoginDto reqLoginDto) {
@@ -85,7 +86,7 @@ public class UserLoginService {
 
     public void findPassword(UserDetails userDetails){
         User user = userService.findByEmail(userDetails.getUsername());
-        String temporaryPassword = emailService.temporaryPasswordEmail(user.getPassword());
+        String temporaryPassword = emailManager.temporaryPasswordEmail(user.getPassword());
         changePassword(userDetails,temporaryPassword);
     }
 }

@@ -1,6 +1,5 @@
-package com.hanyang.dataportal.user.service;
+package com.hanyang.dataportal.user.infrastructure;
 
-import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.core.exception.UnAuthenticationException;
 import com.hanyang.dataportal.core.response.ResponseMessage;
 import jakarta.annotation.Resource;
@@ -12,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
-public class RedisService {
+public class RedisManager {
     @Resource(name = "redisTemplate")
     private ValueOperations<String, Object> valueOperations;
 

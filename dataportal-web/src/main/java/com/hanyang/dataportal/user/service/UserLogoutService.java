@@ -2,6 +2,7 @@ package com.hanyang.dataportal.user.service;
 
 import com.hanyang.dataportal.core.exception.UnAuthenticationException;
 import com.hanyang.dataportal.core.jwt.component.JwtTokenProvider;
+import com.hanyang.dataportal.user.infrastructure.RedisManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserLogoutService {
-    private final RedisService redisService;
+    private final RedisManager redisManager;
     private final JwtTokenProvider jwtTokenProvider;
 
     /**
@@ -21,7 +22,7 @@ public class UserLogoutService {
         if (userDetails == null) {
            throw new UnAuthenticationException("로그인 상태가 아닙니다.");
         }
-        redisService.deleteCode(userDetails.getUsername());
+        redisManager.deleteCode(userDetails.getUsername());
     }
 
     /**

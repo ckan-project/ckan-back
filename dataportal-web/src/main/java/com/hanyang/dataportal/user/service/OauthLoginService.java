@@ -6,7 +6,7 @@ import com.hanyang.dataportal.user.dto.req.ReqLoginDto;
 import com.hanyang.dataportal.user.dto.req.ReqSignupDto;
 import com.hanyang.dataportal.user.dto.OauthUserDto;
 import com.hanyang.dataportal.user.repository.OauthProvider;
-import com.hanyang.dataportal.user.util.OauthProviderFactory;
+import com.hanyang.dataportal.user.provider.OauthProviderFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class OauthLoginService {
     private final OauthProviderFactory oauthProviderFactory;
     private final UserLoginService userLoginService;
-    private final UserSignupService userSignupService;
+    private final UserService userService;
 
     public TokenDto login(final String provider, final String code) {
         OauthProvider oauthProvider = oauthProviderFactory.getProvider(provider);
@@ -26,7 +26,7 @@ public class OauthLoginService {
 
     private void findOrSignup(OauthUserDto userDto) {
         try {
-            userSignupService.signUp((new ReqSignupDto().convertFrom(userDto)));
+            userService.signUp((new ReqSignupDto().convertFrom(userDto)));
         } catch (ResourceExistException e) { }
     }
 }
