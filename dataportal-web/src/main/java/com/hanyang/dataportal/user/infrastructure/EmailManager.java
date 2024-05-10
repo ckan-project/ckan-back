@@ -1,4 +1,4 @@
-package com.hanyang.dataportal.user.service;
+package com.hanyang.dataportal.user.infrastructure;
 
 import com.hanyang.dataportal.core.exception.UnAuthenticationException;
 import com.hanyang.dataportal.core.response.ResponseMessage;
@@ -16,9 +16,9 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-public class EmailService {
+public class EmailManager {
     private final JavaMailSender mailSender;
-    private final RedisService redisService;
+    private final RedisManager redisManager;
     @Value("${email.setFrom}")
     private String setFrom;
     private static final String EMAIL_TITLE = "한양대 에리카 DATA 포털 - 회원 가입을 위한 인증 이메일";
@@ -37,17 +37,25 @@ public class EmailService {
         String code = Integer.toString(makeRandomNumber());
         String content = String.format(EMAIL_CONTENT_TEMPLATE, code);
         mailSend(setFrom, email, EMAIL_TITLE,content);
-        redisService.setCode(email,code);
+        redisManager.setCode(email,code);
         return code;
     }
     public String temporaryPasswordEmail(String email) {
         String temporaryPassword = generateRandomString();
         String content = String.format(EMAIL_TITLE_TEMPORARY_PASSWORD, temporaryPassword);
         mailSend(setFrom, email, EMAIL_CONTENT_TEMPLATE_TEMPORARY_PASSWORD,content);
-        redisService.setCode(email,temporaryPassword);
+        redisManager.setCode(email,temporaryPassword);
         return temporaryPassword;
     }
-    public void mailSend(String setFrom, String toMail, String title, String content) {
+
+    public void checkCode(ReqCodeDto reqCodeDto) {
+        String code = redisManager.getCode(reqCodeDto.getEmail());
+        if(!Objects.equals(code, reqCodeDto.getCode())){
+            throw new UnAuthenticationException(ResponseMessage.AUTHENTICATION_FAILED);
+        }
+    }
+
+    private void mailSend(String setFrom, String toMail, String title, String content) {
         MimeMessage message = mailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message,true,"utf-8");
@@ -60,13 +68,8 @@ public class EmailService {
             e.printStackTrace();
         }
     }
-    public void checkCode(ReqCodeDto reqCodeDto) {
-        String code = redisService.getCode(reqCodeDto.getEmail());
-        if(!Objects.equals(code, reqCodeDto.getCode())){
-            throw new UnAuthenticationException(ResponseMessage.AUTHENTICATION_FAILED);
-        }
-    }
-    public int makeRandomNumber() {
+
+    private int makeRandomNumber() {
         Random r = new Random();
         StringBuilder randomNumber = new StringBuilder();
         for(int i = 0; i < 6; i++) {
@@ -75,7 +78,7 @@ public class EmailService {
         return Integer.parseInt(randomNumber.toString());
     }
 
-    public String generateRandomString() {
+    private String generateRandomString() {
         Random r = new Random();
         StringBuilder stringBuilder = new StringBuilder(10);
         for (int i = 0; i < 10; i++) {

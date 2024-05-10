@@ -1,4 +1,4 @@
-package com.hanyang.dataportal.user.domain;
+package com.hanyang.dataportal.user.provider;
 
 public enum Provider {
     KAKAO("kakao");

@@ -15,6 +15,7 @@ public class OrganizationService {
             if(organization.toString().contains(keyword)){
                 matchOrganization.add(organization);
             }
+
         }
         return matchOrganization;
     }

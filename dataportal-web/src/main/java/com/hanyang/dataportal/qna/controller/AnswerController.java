@@ -3,7 +3,6 @@ package com.hanyang.dataportal.qna.controller;
 import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.qna.domain.Answer;
 import com.hanyang.dataportal.qna.dto.req.ReqAnswerDto;
-import com.hanyang.dataportal.qna.dto.res.ResAnswerDetailDto;
 import com.hanyang.dataportal.qna.dto.res.ResAnswerDto;
 import com.hanyang.dataportal.qna.dto.res.ResAnswerListDto;
 import com.hanyang.dataportal.qna.service.AnswerService;
@@ -16,57 +15,46 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "답변(Answer) API")
+@Tag(name = "답변 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/answer")
+@RequestMapping("/api")
 public class AnswerController {
     private final AnswerService answerService;
 
-    @Operation(summary = "질문에 대한 답변생성")
-    @PostMapping(value = "/")
-    public ResponseEntity<ApiResponse<?>> saveAnswer(@RequestBody ReqAnswerDto reqAnswerDto, Long questionId, @AuthenticationPrincipal UserDetails userDetails) {
-        Answer answer = reqAnswerDto.toEntity();
+    @Operation(summary = "질문에 대한 답변 생성")
+    @PostMapping("/answer")
+    public ResponseEntity<ApiResponse<ResAnswerDto>> saveAnswer(@RequestBody ReqAnswerDto reqAnswerDto, Long questionId, @AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();
-        answerService.save(answer, questionId, username);
-     ResAnswerDto resAnswerDto = ResAnswerDto.toDto(answer);
-     return ResponseEntity.ok(ApiResponse.ok(resAnswerDto));
+        Answer answer = answerService.save(reqAnswerDto, questionId, username);
+        return ResponseEntity.ok(ApiResponse.ok(new ResAnswerDto(answer)));
     }
 
-    @Operation(summary = "질문에 대한 답변수정")
-    @PutMapping(value = "/{answerId}")
-    public ResponseEntity<ApiResponse<?>> update(@RequestParam ReqAnswerDto reqAnswerDto, @PathVariable Long answerId, @AuthenticationPrincipal UserDetails userDetails) {
-
-        Answer answer = reqAnswerDto.toEntity();
-        String username = userDetails.getUsername();
-
-        Answer res_answer = answerService.update(answer, answerId, username);
-        ResAnswerDto resAnswerDto = ResAnswerDto.toDto(res_answer);
-        return ResponseEntity.ok(ApiResponse.ok(resAnswerDto));
+    @Operation(summary = "답변 수정")
+    @PutMapping( "/answer/{answerId}")
+    public ResponseEntity<ApiResponse<?>> update(@RequestParam ReqAnswerDto reqAnswerDto, @PathVariable Long answerId) {
+        Answer answer = answerService.update(reqAnswerDto,answerId);
+        return ResponseEntity.ok(ApiResponse.ok(new ResAnswerDto(answer)));
     }
 
-    @Operation(summary = "질문에 대한 답변삭제")
-    @DeleteMapping(value = "/{answerId}" )
-    public ResponseEntity<ApiResponse<?>> delete(@PathVariable long answerId, @AuthenticationPrincipal UserDetails userDetails) {
-        String userName = userDetails.getUsername();
-        answerService.delete(answerId, userName);
-        return null;
-
+    @Operation(summary = "답변 삭제")
+    @DeleteMapping( "/answer/{answerId}" )
+    public ResponseEntity<ApiResponse<?>> delete(@PathVariable long answerId) {
+        answerService.delete(answerId);
+        return ResponseEntity.ok(null);
     }
 
     @Operation(summary = "질문에 대한 답변상세 보기")
-    @GetMapping(value = "/{answerId}")
+    @GetMapping("/answer/{answerId}")
     public ResponseEntity<ApiResponse<?>> getDetailAnswer(@PathVariable Long answerId) {
-        Answer answer = answerService.getDetailAnswer(answerId);
-        ResAnswerDetailDto resAnswerDto = ResAnswerDetailDto.toDetailDto(answer);
-        return ResponseEntity.ok(ApiResponse.ok(resAnswerDto));
+        Answer answer = answerService.findById(answerId);
+        return ResponseEntity.ok(ApiResponse.ok(new ResAnswerDto(answer)));
     }
 
     @Operation(summary = "질문글 리스트조회")
-    @GetMapping(value = "/list")
-    public ResponseEntity<ApiResponse<?>> getTodoAnswerList(@RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
-                                                            @RequestParam(value =  "size", defaultValue = "10")int listSize)  {
-        Page<ResAnswerListDto> answerList = answerService.getAnswerList(pageNum, listSize);
-        return ResponseEntity.ok(ApiResponse.ok(answerList));
+    @GetMapping("/answers")
+    public ResponseEntity<ApiResponse<?>> getTodoAnswerList(@RequestParam int page)  {
+        Page<Answer> answers = answerService.getAnswerList(page);
+        return ResponseEntity.ok(ApiResponse.ok(new ResAnswerListDto(answers)));
     }
 }

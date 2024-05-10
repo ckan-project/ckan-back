@@ -12,20 +12,14 @@ import java.time.LocalDate;
 @Setter
 
 public class ReqAnswerDto {
-    private Question questionId;
-    private Long answerId;
-    private String answerTitle;
-    private String answerContent;
-    private LocalDate answerDate;
-    private User user;
+    private Long questionId;
+    private String title;
+    private String content;
 
     public Answer toEntity(){
         return Answer.builder()
-                .question(questionId)
-                .answerId(answerId)
-                .answerTitle(answerTitle)
-                .answerContent(answerContent)
-                .answerdate(LocalDate.now())
+                .title(title)
+                .content(content)
                 .build();
     }
 }

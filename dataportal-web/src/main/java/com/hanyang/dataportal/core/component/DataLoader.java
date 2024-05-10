@@ -21,12 +21,12 @@ public class DataLoader implements CommandLineRunner {
 
         String rawPassword = "1234";
 
-        if (!userRepository.existsByEmail("testAdmin")) {
+        if (userRepository.findByEmail("testAdmin").isEmpty()) {
             User testAdmin = User.builder().name("관리자").email("testAdmin").password(passwordEncoder.encode(rawPassword)).role(ROLE_ADMIN).build();
             userRepository.save(testAdmin);
         }
 
-        if (!userRepository.existsByEmail("testUser")) {
+        if (userRepository.findByEmail("testUser").isEmpty()) {
             User testUser = User.builder().name("유저").email("testUser").password(passwordEncoder.encode(rawPassword)).role(ROLE_USER).build();
             userRepository.save(testUser);
         }

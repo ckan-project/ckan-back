@@ -1,6 +1,5 @@
-package com.hanyang.dataportal.user.service;
+package com.hanyang.dataportal.user.provider;
 
-import com.hanyang.dataportal.user.domain.Provider;
 import com.hanyang.dataportal.user.dto.OauthUserDto;
 import com.hanyang.dataportal.user.repository.OauthProvider;
 import org.json.simple.JSONObject;

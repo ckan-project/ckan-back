@@ -1,7 +1,7 @@
 package com.hanyang.dataportal.core.jwt.component;
 
 import com.hanyang.dataportal.core.jwt.dto.TokenDto;
-import com.hanyang.dataportal.user.service.RedisService;
+import com.hanyang.dataportal.user.infrastructure.RedisManager;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.Nullable;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     private final JwtSecretKey jwtSecretKey;
-    private final RedisService redisService;
+    private final RedisManager redisManager;
 
     public static final Long SESSION_COOKIE_MAX_AGE = -1L;
     public static final String REFRESH_COOKIE_KEY = "refreshToken";
@@ -64,7 +64,7 @@ public class JwtTokenProvider {
             final Long expiredInMillisecond
     ) {
         final String refreshToken = generateToken(authentication, isAutoLogin, expiredInMillisecond);
-        redisService.setCode(authentication.getName(), refreshToken, expiredInMillisecond);
+        redisManager.setCode(authentication.getName(), refreshToken, expiredInMillisecond);
         return refreshToken;
     }
 

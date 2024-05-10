@@ -7,30 +7,36 @@ import lombok.Data;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class ResAnswerListDto {
-    private Long answerId;
-    private String answerTitle;
-    private String answerContent;
-    private LocalDate date;
-    private Question question;
-    private User admin;
 
+    private Integer totalPage;
+    private Long totalElement;
+    private List<SimpleAnswer> data;
+    public ResAnswerListDto(Page<Answer> answers) {
+        this.totalPage = answers.getTotalPages();
+        this.totalElement = answers.getTotalElements();
+        this.data = answers.getContent().stream().map(SimpleAnswer::new).toList();
+    }
+    @Data
+    public static class SimpleAnswer{
+        private Long answerId;
+        private Long questionId;
+        private String title;
+        private String content;
+        private LocalDate createDate;
+        private String adminName;
 
-    private Page page;
-
-    public ResAnswerListDto() {
-
+        public SimpleAnswer(Answer answer) {
+            this.answerId = answer.getAnswerId();
+            this.title = answer.getTitle();
+            this.content = answer.getContent();
+            this.createDate = answer.getCreatDate();
+            this.questionId = answer.getQuestion().getQuestionId();
+            this.adminName = answer.getAdmin().getName();
+        }
     }
 
-    public static ResAnswerListDto toDto(Answer answer){
-        ResAnswerListDto resAnswerListDto = new ResAnswerListDto();
-        resAnswerListDto.setAnswerId(answer.getAnswerId());
-        resAnswerListDto.setAnswerTitle(answer.getAnswerTitle());
-        resAnswerListDto.setAnswerContent(answer.getAnswerContent());
-        resAnswerListDto.setAdmin(answer.getAdmin());
-//        resAnswerListDto.date = Question.builder(); ..질문... 날짜를 보여줘야하는데 어떻게하지?
-        return resAnswerListDto;
-    }
 }

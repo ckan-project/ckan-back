@@ -5,24 +5,13 @@ import lombok.Data;
 
 @Data
 public class ResAnswerDto {
-    //레포의 내용을 컨트롤러로
     private Long answerId;
-    private String answerTitle;
-    private String contentTitle;
+    private String title;
+    private String content;
 
-    public ResAnswerDto() {
-        this.answerId = answerId;
-        this.answerTitle = answerTitle;
-        this.contentTitle = contentTitle;
+    public ResAnswerDto(Answer answer) {
+        this.answerId = answer.getAnswerId();
+        this.title = answer.getTitle();
+        this.content = answer.getContent();
     }
-
-    public static ResAnswerDto toDto(Answer answer) {
-        ResAnswerDto resAnswerDto = new ResAnswerDto();
-        resAnswerDto.setAnswerId(answer.getAnswerId());
-        resAnswerDto.setAnswerTitle(answer.getAnswerTitle());
-        resAnswerDto.setContentTitle(answer.getAnswerContent());
-        return resAnswerDto;
-    }
-
-
 }
