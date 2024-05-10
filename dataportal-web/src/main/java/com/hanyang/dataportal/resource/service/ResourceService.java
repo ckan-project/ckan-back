@@ -15,6 +15,7 @@ import com.hanyang.dataportal.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
@@ -25,6 +26,7 @@ import static com.hanyang.dataportal.dataset.domain.vo.Type.findByType;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ResourceService {
 
     private final S3StorageManager s3StorageManager;
