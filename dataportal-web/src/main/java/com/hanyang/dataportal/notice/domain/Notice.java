@@ -49,7 +49,7 @@ public class Notice {
         this.title = reqNoticeDto.getTitle();
     }
 
-    public void updateView(Integer view) {
-        this.view = view;
+    public void updateView() {
+        this.view++;
     }
 }

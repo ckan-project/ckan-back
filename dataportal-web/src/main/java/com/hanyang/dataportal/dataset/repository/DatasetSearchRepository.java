@@ -67,14 +67,7 @@ public class DatasetSearchRepository {
         return new PageImpl<>(content, pageable, count);
     }
 
-    //TODO 개발 어느정도 완료 됐을땐 match로 적용해 보고 TEST
     private BooleanExpression titleLike(String keyword) {
-//        if(keyword == null){
-//            return null;
-//        }
-//        NumberTemplate<Double> booleanTemplateTitle = Expressions.numberTemplate(Double.class,
-//                "function('match',{0},{1})", dataset.title,keyword+"*");
-        //  dataset.title.like(keyword);
         return keyword != null ? dataset.title.contains(keyword) : null;
     }
 
