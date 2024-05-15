@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @Setter
 
 public class ReqAnswerDto {
-    private Long questionId;
     private String title;
     private String content;
 

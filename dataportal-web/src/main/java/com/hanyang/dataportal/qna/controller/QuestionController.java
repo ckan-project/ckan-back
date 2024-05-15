@@ -2,6 +2,7 @@ package com.hanyang.dataportal.qna.controller;
 
 import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.qna.domain.Question;
+import com.hanyang.dataportal.qna.domain.QuestionCategory;
 import com.hanyang.dataportal.qna.dto.req.ReqQuestionDto;
 import com.hanyang.dataportal.qna.dto.res.ResQuestionDto;
 import com.hanyang.dataportal.qna.dto.res.ResQuestionListDto;
@@ -41,10 +42,12 @@ public class QuestionController {
         questionService.delete(questionId);
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
-    @Operation(summary = "질문글 조회")
+    @Operation(summary = "카테고리별 질문글 조회")
     @GetMapping("/questions")
-    public ResponseEntity<ApiResponse<ResQuestionListDto>> getQuestionList(@RequestParam int page) {
-        Page<Question> questions = questionService.getQuestionList(page);
+    public ResponseEntity<ApiResponse<ResQuestionListDto>> getQuestionList(@RequestParam Integer page,
+                                                                           @RequestParam(required = false) String category,
+                                                                           @RequestParam(required = false) String answerStatus) {
+        Page<Question> questions = questionService.getQuestionList(page,category,answerStatus);
         return ResponseEntity.ok(ApiResponse.ok(new ResQuestionListDto(questions)));
    }
     @Operation(summary = "나의 질문글 내역리스트")
@@ -57,7 +60,7 @@ public class QuestionController {
     @Operation(summary = "질문글 상세 조회")
     @GetMapping("/question/{questionId}")
     public ResponseEntity<ApiResponse<ResQuestionDto>> getQuestion(@PathVariable Long questionId) {
-        Question question = questionService.findById(questionId);
+        Question question = questionService.getDetail(questionId);
         return ResponseEntity.ok(ApiResponse.ok(new ResQuestionDto(question)));
     }
 }

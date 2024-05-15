@@ -42,7 +42,7 @@ public class NoticeService {
 
     public Notice getNoticeDetail(Long noticeId) {
         Notice notice = findById(noticeId);
-        notice.updateView(notice.getView()+1);
+        notice.updateView();
         return notice;
     }
 

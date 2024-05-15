@@ -23,8 +23,8 @@ public class AnswerController {
     private final AnswerService answerService;
 
     @Operation(summary = "질문에 대한 답변 생성")
-    @PostMapping("/answer")
-    public ResponseEntity<ApiResponse<ResAnswerDto>> saveAnswer(@RequestBody ReqAnswerDto reqAnswerDto, Long questionId, @AuthenticationPrincipal UserDetails userDetails) {
+    @PostMapping("/question/{questionId}/answer")
+    public ResponseEntity<ApiResponse<ResAnswerDto>> save(@PathVariable Long questionId,@RequestBody ReqAnswerDto reqAnswerDto, @AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();
         Answer answer = answerService.save(reqAnswerDto, questionId, username);
         return ResponseEntity.ok(ApiResponse.ok(new ResAnswerDto(answer)));
@@ -45,16 +45,10 @@ public class AnswerController {
     }
 
     @Operation(summary = "질문에 대한 답변상세 보기")
-    @GetMapping("/answer/{answerId}")
-    public ResponseEntity<ApiResponse<?>> getDetailAnswer(@PathVariable Long answerId) {
-        Answer answer = answerService.findById(answerId);
+    @GetMapping("/question/{questionId}/answer")
+    public ResponseEntity<ApiResponse<ResAnswerDto>> getDetailAnswer(@PathVariable Long questionId) {
+        Answer answer = answerService.findByQuestionId(questionId);
         return ResponseEntity.ok(ApiResponse.ok(new ResAnswerDto(answer)));
     }
 
-    @Operation(summary = "질문글 리스트조회")
-    @GetMapping("/answers")
-    public ResponseEntity<ApiResponse<?>> getTodoAnswerList(@RequestParam int page)  {
-        Page<Answer> answers = answerService.getAnswerList(page);
-        return ResponseEntity.ok(ApiResponse.ok(new ResAnswerListDto(answers)));
-    }
 }
