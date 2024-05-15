@@ -3,6 +3,7 @@ package com.hanyang.dataportal.qna.domain;
 import com.hanyang.dataportal.qna.dto.req.ReqQuestionDto;
 import com.hanyang.dataportal.user.domain.User;
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -24,6 +25,8 @@ public class Question {
     private Integer view;
     @Enumerated(EnumType.STRING)
     private AnswerStatus answerStatus;
+    @Enumerated(EnumType.STRING)
+    private QuestionCategory category;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
@@ -34,8 +37,13 @@ public class Question {
     }
 
     public void update(ReqQuestionDto reqQuestionDto){
-        this.title = reqQuestionDto.getContent();
+        this.category = reqQuestionDto.getCategory();
+        this.title = reqQuestionDto.getTitle();
         this.content = reqQuestionDto.getContent();
+    }
+
+    public void updateView(){
+        this.view++;
     }
 
 }

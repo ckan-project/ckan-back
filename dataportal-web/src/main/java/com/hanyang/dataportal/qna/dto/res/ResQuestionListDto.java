@@ -36,6 +36,7 @@ public class ResQuestionListDto {
             this.createDate = question.getCreateDate();
             this.view = question.getView();
             this.userName = question.getUser().getName();
+            this.answerStatus = question.getAnswerStatus();
         }
     }
 }

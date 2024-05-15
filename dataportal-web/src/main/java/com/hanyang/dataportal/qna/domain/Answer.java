@@ -39,5 +39,10 @@ public class Answer {
         this.content = reqAnswerDto.getContent();
         this.title = reqAnswerDto.getTitle();
     }
+
+    @PrePersist
+    public void onPrePersist() {
+        creatDate = LocalDate.now();
+    }
 }
 
