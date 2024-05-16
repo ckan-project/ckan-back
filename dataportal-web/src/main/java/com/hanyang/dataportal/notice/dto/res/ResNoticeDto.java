@@ -1,6 +1,5 @@
 package com.hanyang.dataportal.notice.dto.res;
 
-
 import com.hanyang.dataportal.notice.domain.Notice;
 import lombok.Data;
 
