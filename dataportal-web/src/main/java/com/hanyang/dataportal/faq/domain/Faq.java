@@ -1,10 +1,9 @@
 package com.hanyang.dataportal.faq.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.hanyang.dataportal.faq.dto.ReqFaqDto;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,14 +11,23 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+
 public class Faq {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long faqId;
 
-    private String faqTitle;
-    private String faqContent;
+    @Enumerated(EnumType.STRING)
+    private FaqCategory faqCategory;
 
+    private String question;
+    private String answer;
+
+    public void updateFaq(ReqFaqDto reqFaqDto){
+        this.answer = reqFaqDto.getAnswer();
+        this.question = reqFaqDto.getQuestion();
+    }
 
 }
