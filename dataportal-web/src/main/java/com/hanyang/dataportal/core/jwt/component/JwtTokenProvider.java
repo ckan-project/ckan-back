@@ -90,31 +90,21 @@ public class JwtTokenProvider {
      * @return
      */
     public ResponseCookie generateRefreshCookie(final String refreshToken, @Nullable final Boolean autoLogin) {
-        if (autoLogin == null) {
-            return ResponseCookie.from(REFRESH_COOKIE_KEY, refreshToken)
-                    .maxAge(0) // 쿠키 삭제
-                    .httpOnly(true)
-                    .secure(true)
-                    .sameSite("None")
-                    .path("/")
-                    .build();
-        }
-        if (!autoLogin) {
-            return ResponseCookie.from(REFRESH_COOKIE_KEY, refreshToken)
-                    .maxAge(SESSION_COOKIE_MAX_AGE) // 세션쿠키
-                    .httpOnly(true)
-                    .secure(true)
-                    .sameSite("None")
-                    .path("/")
-                    .build();
-        }
-        final Duration duration = Duration.ofMillis(refreshExpire);
-        return ResponseCookie.from(REFRESH_COOKIE_KEY, refreshToken)
-                .maxAge(duration)
+        ResponseCookie.ResponseCookieBuilder cookieBuilder = ResponseCookie.from(REFRESH_COOKIE_KEY, refreshToken)
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("None")
+                .sameSite("Strict")
                 .path("/")
-                .build();
+                .domain("hy-data.site");
+        // logout
+        if (autoLogin == null) {
+            cookieBuilder.maxAge(0);
+        } else if (!autoLogin) {
+            cookieBuilder.maxAge(SESSION_COOKIE_MAX_AGE);
+        } else {
+            final Duration duration = Duration.ofMillis(refreshExpire);
+            cookieBuilder.maxAge(duration);
+        }
+        return cookieBuilder.build();
     }
 }
