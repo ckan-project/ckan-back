@@ -28,6 +28,7 @@ public class Faq {
     public void updateFaq(ReqFaqDto reqFaqDto){
         this.answer = reqFaqDto.getAnswer();
         this.question = reqFaqDto.getQuestion();
+        this.faqCategory = reqFaqDto.getCategory();
     }
 
 }
