@@ -95,7 +95,7 @@ public class JwtTokenProvider {
                 .secure(true)
                 .sameSite("Strict")
                 .path("/")
-                .domain("hy-data.site");
+                .domain(".hy-data.site");
         // logout
         if (autoLogin == null) {
             cookieBuilder.maxAge(0);
