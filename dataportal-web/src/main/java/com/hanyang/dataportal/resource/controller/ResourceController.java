@@ -1,13 +1,10 @@
 package com.hanyang.dataportal.resource.controller;
 
 import com.hanyang.dataportal.core.response.ApiResponse;
-import com.hanyang.dataportal.dataset.domain.Dataset;
-import com.hanyang.dataportal.dataset.dto.res.ResDatasetListDto;
 import com.hanyang.dataportal.resource.service.ResourceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
