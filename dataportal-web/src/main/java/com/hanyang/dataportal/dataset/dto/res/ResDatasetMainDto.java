@@ -1,7 +1,9 @@
 package com.hanyang.dataportal.dataset.dto.res;
 
 import com.hanyang.dataportal.dataset.domain.Dataset;
+import com.hanyang.dataportal.dataset.domain.DatasetTheme;
 import com.hanyang.dataportal.dataset.domain.vo.Organization;
+import com.hanyang.dataportal.dataset.domain.vo.Theme;
 import com.hanyang.dataportal.dataset.domain.vo.Type;
 import lombok.Data;
 
@@ -22,6 +24,8 @@ public class ResDatasetMainDto {
         private String title;
         private Type type;
         private Organization organization;
+        private List<Theme> themeList;
+        private Integer scrap;
 
         public SimpleDatasetMain(Dataset dataset) {
             this.datasetId = dataset.getDatasetId();
@@ -30,6 +34,8 @@ public class ResDatasetMainDto {
                 this.type = dataset.getResource().getType();
             }
             this.organization = dataset.getOrganization();
+            this.themeList = dataset.getDatasetThemeList().stream().map(DatasetTheme::getTheme).toList();
+            this.scrap = dataset.getScrapList().size();
         }
     }
 }
