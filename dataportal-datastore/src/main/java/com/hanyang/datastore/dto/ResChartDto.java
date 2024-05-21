@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class ResTableLabelDto {
+public class ResChartDto {
     private String x_axis_name;
     private List<String> x_label;
     private List<String> dataName;
