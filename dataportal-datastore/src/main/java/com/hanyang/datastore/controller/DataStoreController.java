@@ -4,7 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hanyang.datastore.core.response.ApiResponse;
 import com.hanyang.datastore.core.response.ResponseMessage;
 import com.hanyang.datastore.dto.ResAxisDto;
-import com.hanyang.datastore.dto.ResTableLabelDto;
+import com.hanyang.datastore.dto.ResChartDto;
+import com.hanyang.datastore.dto.ResChartTableDto;
 import com.hanyang.datastore.service.TableService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,11 +33,9 @@ public class DataStoreController {
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
-
-
     @Operation(summary = "파일 데이터 시각화 차트 데이터")
     @GetMapping("/dataset/{datasetId}/chart")
-    public ResponseEntity<ApiResponse<ResTableLabelDto>> chart(@PathVariable String datasetId, @RequestParam String colName) throws JsonProcessingException {
+    public ResponseEntity<ApiResponse<ResChartDto>> chart(@PathVariable String datasetId, @RequestParam String colName) throws JsonProcessingException {
         return ResponseEntity.ok(ApiResponse.ok(tableService.getAggregationLabel(datasetId,colName)));
     }
 
@@ -44,6 +43,12 @@ public class DataStoreController {
     @GetMapping("/dataset/{datasetId}/axis")
     public ResponseEntity<ApiResponse<ResAxisDto>> chartAxis(@PathVariable String datasetId) {
         return ResponseEntity.ok(ApiResponse.ok(new ResAxisDto(tableService.getAxis(datasetId))));
+    }
+
+    @Operation(summary = "파일 데이터 시각화 차트 데이터(테이블)")
+    @GetMapping("/dataset/{datasetId}/chart/table")
+    public ResponseEntity<ApiResponse<ResChartTableDto>> chart(@PathVariable String datasetId) {
+        return ResponseEntity.ok(ApiResponse.ok(tableService.getChartTable(datasetId)));
     }
 
     @ExceptionHandler(EntityNotFoundException.class)

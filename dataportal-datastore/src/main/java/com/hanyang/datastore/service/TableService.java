@@ -4,10 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanyang.datastore.core.exception.LabelNotFoundException;
+import com.hanyang.datastore.core.exception.ResourceNotFoundException;
 import com.hanyang.datastore.domain.MetaData;
 import com.hanyang.datastore.domain.TableData;
 import com.hanyang.datastore.dto.DatasetMetaDataDto;
-import com.hanyang.datastore.dto.ResTableLabelDto;
+import com.hanyang.datastore.dto.ResChartDto;
+import com.hanyang.datastore.dto.ResChartTableDto;
 import com.hanyang.datastore.repository.MetaDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
@@ -93,13 +95,17 @@ public class TableService {
         metaDataRepository.save(metaData);
     }
 
-    public ResTableLabelDto getAggregationLabel(String datasetId, String colName) throws JsonProcessingException {
+    public ResChartDto getAggregationLabel(String datasetId, String colName) throws JsonProcessingException {
 
-        //Meta data만 조회
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(datasetId));
-        query.fields().include("title").include("description").slice("dataList", 1);;
+        query.fields().include("title").include("description").slice("dataList", 1);
 
+        List<MetaData> metaData = mongoTemplate.find(query, MetaData.class, "metaData");
+        //datasetId랑 일치하는 리소스가 없다
+        if(metaData.size() == 0){
+            throw new ResourceNotFoundException("해당 데이터셋이 없거나 파일이 존재하지 않습니다");
+        }
         MetaData meta = mongoTemplate.find(query, MetaData.class, "metaData").get(0);
 
         //aggregation 함수
@@ -163,12 +169,12 @@ public class TableService {
             }
 
         }
-        ResTableLabelDto resTableLabelDto = new ResTableLabelDto();
-        resTableLabelDto.setX_axis_name(colName);
-        resTableLabelDto.setX_label(xLabel);
-        resTableLabelDto.setDataName(dataName);
-        resTableLabelDto.setDataList(dataList);
-        return resTableLabelDto;
+        ResChartDto resChartDto = new ResChartDto();
+        resChartDto.setX_axis_name(colName);
+        resChartDto.setX_label(xLabel);
+        resChartDto.setDataName(dataName);
+        resChartDto.setDataList(dataList);
+        return resChartDto;
     }
 
     public List<String> getAxis(String datasetId){
@@ -178,7 +184,12 @@ public class TableService {
         query.addCriteria(Criteria.where("_id").is(datasetId));
         query.fields().slice("dataList", 1);;
 
-        MetaData meta = mongoTemplate.find(query, MetaData.class, "metaData").get(0);
+        List<MetaData> metaData = mongoTemplate.find(query, MetaData.class, "metaData");
+        //datasetId랑 일치하는 리소스가 없다
+        if(metaData.size() == 0){
+            throw new ResourceNotFoundException("해당 데이터셋이 없거나 파일이 존재하지 않습니다");
+        }
+        MetaData meta = metaData.get(0);
 
         //순서보장을 위해 LinkedHashSet으로
         Set<Map.Entry<String, Object>> entries = new LinkedHashSet<>(meta.getDataList().get(0).getData().entrySet());
@@ -192,6 +203,34 @@ public class TableService {
 
         return dataName;
 
+    }
+
+    public ResChartTableDto getChartTable(String datasetId){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(datasetId));
+
+        List<MetaData> metaData = mongoTemplate.find(query, MetaData.class, "metaData");
+        //datasetId랑 일치하는 리소스가 없다
+        if(metaData.size() == 0){
+            throw new ResourceNotFoundException("해당 데이터셋이 없거나 파일이 존재하지 않습니다");
+        }
+        MetaData meta = metaData.get(0);
+        Set<Map.Entry<String, Object>> entries = new LinkedHashSet<>(meta.getDataList().get(0).getData().entrySet());
+
+        ArrayList<String> labelList = new ArrayList<>();
+        for (Map.Entry<String, Object> map :entries) {
+            labelList.add(map.getKey());
+        }
+
+        List<List<String>> dataList = new ArrayList<>();
+        for(TableData tableData:meta.getDataList()){
+            List<String> data = new ArrayList<>();
+            for (Map.Entry<String, Object> map :tableData.getData().entrySet()) {
+                data.add(map.getValue().toString());
+            }
+            dataList.add(data);
+        }
+        return new ResChartTableDto(labelList,dataList);
     }
 
 
