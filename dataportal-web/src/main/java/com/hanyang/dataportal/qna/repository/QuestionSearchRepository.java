@@ -25,7 +25,7 @@ public class QuestionSearchRepository {
     public Page<Question> searchQuestionList(String category,String answerStatus,int page){
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         JPAQuery<Question> query = queryFactory.selectFrom(question)
-                .where(categoryEq(category), answerStatusEq(answerStatus));
+                .where(categoryEq(category), answerStatusEq(answerStatus),question.isOpen.eq(true));
 
         List<Question> content = query
                 .offset(pageable.getOffset())

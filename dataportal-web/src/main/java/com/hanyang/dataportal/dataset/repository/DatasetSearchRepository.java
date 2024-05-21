@@ -6,6 +6,7 @@ import com.hanyang.dataportal.dataset.domain.vo.Theme;
 import com.hanyang.dataportal.dataset.domain.vo.Type;
 import com.hanyang.dataportal.dataset.dto.DataSearch;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,9 @@ public class DatasetSearchRepository {
             }
             case "다운로드" -> {
                 query.orderBy(dataset.download.desc());
+            }
+            case "인기" ->{
+                query.orderBy(Expressions.numberTemplate(Integer.class, "{0} + 5 * size({1})", dataset.view, dataset.scrapList).desc());
             }
             default -> {
                 query.orderBy(dataset.createdDate.desc());

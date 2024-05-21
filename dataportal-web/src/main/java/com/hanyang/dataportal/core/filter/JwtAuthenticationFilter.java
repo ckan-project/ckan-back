@@ -29,7 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final ApiResponseBuilder apiResponseBuilder;
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request){
         final String[] excludes = {
                 "/api/user/login",
                 "/api/user/signup",

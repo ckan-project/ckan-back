@@ -1,5 +1,6 @@
 package com.hanyang.dataportal.dataset.domain;
 
+import com.hanyang.dataportal.dataset.domain.vo.License;
 import com.hanyang.dataportal.dataset.domain.vo.Organization;
 import com.hanyang.dataportal.dataset.domain.vo.Theme;
 import com.hanyang.dataportal.dataset.dto.req.ReqDatasetDto;
@@ -30,6 +31,8 @@ public class Dataset {
     private String description;
     @Enumerated(EnumType.STRING)
     private Organization organization;
+    @Enumerated(EnumType.STRING)
+    private License license;
     private LocalDate createdDate;
     private LocalDate updateDate;
     private Integer view;

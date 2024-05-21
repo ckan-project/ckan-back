@@ -47,7 +47,11 @@ public class User{
     @OneToMany(mappedBy = "admin", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Answer> answers = new ArrayList<>();
 
-    public void changePassword(String password) {
+    public void updatePassword(String password) {
         this.password = password;
+    }
+
+    public void updateName(String name) {
+        this.name = name;
     }
 }
