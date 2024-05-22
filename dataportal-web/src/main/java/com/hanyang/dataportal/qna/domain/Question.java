@@ -3,7 +3,6 @@ package com.hanyang.dataportal.qna.domain;
 import com.hanyang.dataportal.qna.dto.req.ReqQuestionDto;
 import com.hanyang.dataportal.user.domain.User;
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -32,6 +31,8 @@ public class Question {
     private User user;
     @OneToOne(mappedBy = "question", cascade = CascadeType.ALL)
     private Answer answer;
+
+    private boolean isOpen;
     public void setUser(User user) {
         this.user = user;
     }

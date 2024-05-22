@@ -6,16 +6,16 @@ import com.hanyang.dataportal.dataset.dto.req.ReqDataSearchDto;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetDetailDto;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetListDto;
 import com.hanyang.dataportal.dataset.dto.res.ResDatasetMainDto;
-import com.hanyang.dataportal.dataset.dto.res.ResDatasetTitleDto;
 import com.hanyang.dataportal.dataset.service.DatasetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import static com.hanyang.dataportal.core.response.ApiResponse.ok;
 
@@ -28,8 +28,8 @@ public class DatasetController {
 
     @Operation(summary = "dataset 리스트 보기")
     @GetMapping("/datasets")
-    public ResponseEntity<ApiResponse<ResDatasetListDto>> getDatasetList(ReqDataSearchDto datasearch){
-        Page<Dataset> datasetList = datasetService.getDatasetList(datasearch);
+    public ResponseEntity<ApiResponse<ResDatasetListDto>> getDatasetList(ReqDataSearchDto reqDataSearchDto){
+        Page<Dataset> datasetList = datasetService.getDatasetList(reqDataSearchDto);
         return ResponseEntity.ok(ok(new ResDatasetListDto(datasetList)));
     }
 

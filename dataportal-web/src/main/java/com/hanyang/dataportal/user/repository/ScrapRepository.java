@@ -17,4 +17,5 @@ public interface ScrapRepository extends JpaRepository<Scrap, Long> {
     @Query("select s from Scrap s join fetch s.user u join fetch s.dataset d left join fetch d.resource where u.email=:email")
     List<Scrap> findAllByUserEmail(String email);
     Long countByDataset(Dataset dataset);
+    int countByUser(User user);
 }

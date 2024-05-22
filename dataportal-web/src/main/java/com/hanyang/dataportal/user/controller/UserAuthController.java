@@ -4,10 +4,12 @@ import com.hanyang.dataportal.core.jwt.component.AuthorizationExtractor;
 import com.hanyang.dataportal.core.jwt.component.JwtTokenProvider;
 import com.hanyang.dataportal.core.jwt.dto.TokenDto;
 import com.hanyang.dataportal.core.response.ApiResponse;
+import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.dto.req.*;
 import com.hanyang.dataportal.user.dto.res.ResCodeDto;
 import com.hanyang.dataportal.user.dto.res.ResLoginDto;
 import com.hanyang.dataportal.user.dto.res.ResUserDto;
+import com.hanyang.dataportal.user.dto.res.ResUserInfoDto;
 import com.hanyang.dataportal.user.infrastructure.EmailManager;
 import com.hanyang.dataportal.user.service.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -94,5 +96,18 @@ public class UserAuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(ApiResponse.ok(new ResLoginDto(AuthorizationExtractor.AUTH_TYPE, tokenDto.getAccessToken())));
+    }
+
+    @Operation(summary = "유저 내정보 확인")
+    @GetMapping("/")
+    public ResponseEntity<ApiResponse<ResUserInfoDto>> myInfo(@AuthenticationPrincipal UserDetails userDetail){
+        return ResponseEntity.ok(ApiResponse.ok(userService.findLoginUserInfo(userDetail.getUsername())));
+    }
+
+    @Operation(summary = "유저 이름 변경")
+    @PutMapping("/name")
+    public ResponseEntity<ApiResponse<ResUserDto>> nameUpdate(@AuthenticationPrincipal UserDetails userDetail,@RequestBody String userName) {
+        User user = userService.updateName(userDetail.getUsername(), userName);
+        return ResponseEntity.ok(ApiResponse.ok(new ResUserDto(user)));
     }
 }

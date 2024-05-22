@@ -2,6 +2,7 @@ package com.hanyang.dataportal.dataset.dto.res;
 
 import com.hanyang.dataportal.dataset.domain.Dataset;
 import com.hanyang.dataportal.dataset.domain.DatasetTheme;
+import com.hanyang.dataportal.dataset.domain.vo.License;
 import com.hanyang.dataportal.dataset.domain.vo.Organization;
 import com.hanyang.dataportal.dataset.domain.vo.Theme;
 import com.hanyang.dataportal.dataset.domain.vo.Type;
@@ -24,6 +25,7 @@ public class ResDatasetDto {
     private String resourceName;
     private String resourceUrl;
     private Type type;
+    private License license;
 
     public ResDatasetDto(Dataset dataset) {
         this.datasetId = dataset.getDatasetId();
@@ -35,6 +37,7 @@ public class ResDatasetDto {
         this.updateDate = dataset.getUpdateDate();
         this.view = dataset.getView();
         this.download = dataset.getDownload();
+        this.license = dataset.getLicense();
         if(dataset.getResource() != null){
             this.resourceName = dataset.getResource().getResourceName();
             this.resourceUrl = dataset.getResource().getResourceUrl();
