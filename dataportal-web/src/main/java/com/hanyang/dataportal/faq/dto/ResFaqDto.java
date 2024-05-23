@@ -1,7 +1,7 @@
 package com.hanyang.dataportal.faq.dto;
 
 import com.hanyang.dataportal.faq.domain.Faq;
-import com.hanyang.dataportal.faq.domain.FaqCategory;
+import com.hanyang.dataportal.qna.domain.QuestionCategory;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,19 +15,11 @@ public class ResFaqDto {
     private Long faqId;
     private String faqTitle;
     private String faqContent;
-    private FaqCategory category;
-
-
-
+    private QuestionCategory category;
     public ResFaqDto(Faq faq) {
         this.faqId = faq.getFaqId();
         this.faqTitle = faq.getQuestion();
         this.faqContent = faq.getAnswer();
-        this.category = faq.getFaqCategory();
+        this.category = faq.getQuestionCategory();
     }
-
-    public void setFaqId(Long faqId) {
-        this.faqId = faqId;
-    }
-
 }

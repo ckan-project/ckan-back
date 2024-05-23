@@ -1,6 +1,7 @@
 package com.hanyang.dataportal.faq.domain;
 
 import com.hanyang.dataportal.faq.dto.ReqFaqDto;
+import com.hanyang.dataportal.qna.domain.QuestionCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public class Faq {
     private Long faqId;
 
     @Enumerated(EnumType.STRING)
-    private FaqCategory faqCategory;
+    private QuestionCategory questionCategory;
 
     private String question;
     private String answer;
@@ -28,7 +29,7 @@ public class Faq {
     public void updateFaq(ReqFaqDto reqFaqDto){
         this.answer = reqFaqDto.getAnswer();
         this.question = reqFaqDto.getQuestion();
-        this.faqCategory = reqFaqDto.getCategory();
+        this.questionCategory = reqFaqDto.getCategory();
     }
 
 }

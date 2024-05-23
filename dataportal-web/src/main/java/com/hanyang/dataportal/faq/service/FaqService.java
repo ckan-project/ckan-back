@@ -3,9 +3,9 @@ package com.hanyang.dataportal.faq.service;
 
 import com.hanyang.dataportal.core.exception.ResourceNotFoundException;
 import com.hanyang.dataportal.faq.domain.Faq;
-import com.hanyang.dataportal.faq.domain.FaqCategory;
 import com.hanyang.dataportal.faq.dto.ReqFaqDto;
 import com.hanyang.dataportal.faq.repository.FaqRepository;
+import com.hanyang.dataportal.qna.domain.QuestionCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,9 +29,9 @@ public class FaqService {
         return faq;
 
     }
-    public Page<Faq> getFaqsByCategory(FaqCategory category) {
+    public Page<Faq> getFaqsByCategory(QuestionCategory questionCategory) {
         Pageable pageable = PageRequest.of(0, 10);
-         return faqRepository.findByFaqCategory(category, pageable);
+         return faqRepository.findByQuestionCategory(questionCategory, pageable);
     }
     public void delete(Long faqId) {
         faqRepository.delete(faqRepository.findById(faqId).orElseThrow(()->new ResourceNotFoundException("삭제할 FAQ가 없습니다.")));
