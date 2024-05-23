@@ -72,6 +72,6 @@ public class ResourceService {
             Dataset dataset = datasetRepository.findByIdWithTheme(datasetId).orElseThrow(() -> new ResourceNotFoundException("해당 데이터셋은 존재하지 않습니다"));
             Download download = Download.builder().dataset(dataset).user(user).build();
             downloadRepository.save(download);
-        }
+        } else System.out.println("~~~~~~~~ 다운로드 미기록");
     }
 }

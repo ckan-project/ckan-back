@@ -19,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class FaqService {
     private final FaqRepository faqRepository;
-
-
     public Faq create(ReqFaqDto reqFaqDto) {
         Faq faq = reqFaqDto.toEntity();
         return faqRepository.save(faq);
@@ -31,16 +29,13 @@ public class FaqService {
         return faq;
 
     }
-
     public Page<Faq> getFaqsByCategory(FaqCategory category) {
         Pageable pageable = PageRequest.of(0, 10);
          return faqRepository.findByFaqCategory(category, pageable);
-        // return faqRepository.findByFaqCategory(pageable);
     }
     public void delete(Long faqId) {
         faqRepository.delete(faqRepository.findById(faqId).orElseThrow(()->new ResourceNotFoundException("삭제할 FAQ가 없습니다.")));
     }
-
     @Transactional(readOnly = true)
     public Page<Faq> getFaqList(Integer page) {
         Pageable pageable = PageRequest.of(page, 10);
