@@ -2,6 +2,7 @@ package com.hanyang.dataportal.faq.controller;
 
 import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.faq.domain.Faq;
+import com.hanyang.dataportal.faq.domain.FaqCategory;
 import com.hanyang.dataportal.faq.dto.ReqFaqDto;
 import com.hanyang.dataportal.faq.dto.ResFaqDto;
 import com.hanyang.dataportal.faq.dto.ResFaqListDto;
@@ -19,14 +20,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class FaqController {
     private final FaqService faqService;
-
     @Operation(summary = "FAQ 등록")
     @PostMapping("/faq")
     public ResponseEntity<ApiResponse<ResFaqDto>> createQuestion(@RequestBody ReqFaqDto reqFaqDto) {
         Faq faq = faqService.create(reqFaqDto);
         return ResponseEntity.ok(ApiResponse.ok(new ResFaqDto(faq)));
     }
-
     @Operation(summary = "FAQ 수정")
     @PutMapping("/faq/{faqId}")
     public ResponseEntity<ApiResponse<ResFaqDto>> updateFaq(@PathVariable Long faqId, @RequestBody ReqFaqDto reqFaqDto) {
@@ -39,16 +38,18 @@ public class FaqController {
         Page<Faq> faqListDto = faqService.getFaqList(page);
         return ResponseEntity.ok(ApiResponse.ok(new ResFaqListDto(faqListDto)));
     }
+    @Operation(summary = "FAQ 카테고리별 조회")
+    @GetMapping("/category/{category}")
+    public ResponseEntity<ApiResponse<ResFaqListDto>> getFaqsByCategory(@PathVariable FaqCategory category) {
+        Page<Faq> faqCategoryList = faqService.getFaqsByCategory(category);
+        // List<Faq> faqs = faqCategoryList.getContent();
+        return ResponseEntity.ok(ApiResponse.ok(new ResFaqListDto(faqCategoryList)));
 
-
+    }
     @Operation(summary = "FAQ 삭제")
     @DeleteMapping("/faq/{faqId}")
     public ResponseEntity<ApiResponse<?>> deleteFaq(@PathVariable Long faqId){
         faqService.delete(faqId);
-
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
-
-
-
 }
