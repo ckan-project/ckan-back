@@ -20,6 +20,8 @@ public class Notice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long noticeId;
 
+    private String label;
+
     private String title;
 
     private String content;
@@ -30,6 +32,8 @@ public class Notice {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User admin;
+
+    private NoticeLabel noticeLabel;
 
     @PrePersist
     public void onPrePersist() {

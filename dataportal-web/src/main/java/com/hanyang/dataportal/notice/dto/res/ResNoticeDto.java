@@ -9,6 +9,9 @@ import java.time.LocalDate;
 public class ResNoticeDto {
 
     private Long noticeId;
+
+    private String label;
+
     private String title;
     private String content;
     private LocalDate createDate;
@@ -18,6 +21,7 @@ public class ResNoticeDto {
 
     public ResNoticeDto(Notice notice) {
         this.noticeId = notice.getNoticeId();
+        this.label = notice.getLabel();
         this.title = notice.getTitle();
         this.content = notice.getContent();
         this.createDate = notice.getCreateDate();
