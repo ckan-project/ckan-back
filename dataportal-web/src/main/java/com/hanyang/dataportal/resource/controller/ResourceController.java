@@ -14,19 +14,20 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "파일데이터 API")
 @RestController
-@RequestMapping("/api/dataset")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class ResourceController {
     private final ResourceService resourceService;
     @Operation(summary = "파일 데이터 저장 및 수정")
-    @PutMapping(value = "/{datasetId}/resource", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/dataset/{datasetId}/resource", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> saveResource(@PathVariable Long datasetId, @RequestPart(value = "file") MultipartFile multipartFile) {
         resourceService.save(datasetId, multipartFile);
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
     @Operation(summary = "유저 리소스 다운로드")
-    @PostMapping(value = "/{datasetId}/resource/download")
+    @PostMapping(value = "/download/{datasetId}")
+   // api/download/dataset/(datasetId)
     public ResponseEntity<?> downloadResource(@AuthenticationPrincipal UserDetails userDetail, @PathVariable Long datasetId) {
         resourceService.download(userDetail, datasetId);
         return ResponseEntity.ok(ApiResponse.ok(null));

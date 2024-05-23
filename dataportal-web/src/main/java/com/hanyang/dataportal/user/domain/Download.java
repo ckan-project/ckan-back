@@ -23,4 +23,8 @@ public class Download {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "datasetId")
     private Dataset dataset;
+    public Long getDatasetId() {
+        return dataset.getDatasetId();
+    }
+
 }
