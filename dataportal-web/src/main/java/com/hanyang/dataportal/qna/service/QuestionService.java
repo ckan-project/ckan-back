@@ -6,6 +6,8 @@ import com.hanyang.dataportal.qna.domain.QuestionCategory;
 import com.hanyang.dataportal.qna.dto.req.ReqQuestionDto;
 import com.hanyang.dataportal.qna.repository.QuestionRepository;
 import com.hanyang.dataportal.qna.repository.QuestionSearchRepository;
+import com.hanyang.dataportal.resource.infrastructure.S3StorageManager;
+import com.hanyang.dataportal.resource.infrastructure.dto.FileInfoDto;
 import com.hanyang.dataportal.user.domain.User;
 import com.hanyang.dataportal.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,12 +29,21 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final UserService userService;
     private final QuestionSearchRepository questionSearchRepository;
+    private final S3StorageManager s3StorageManager;
     private final int PAGE_SIZE = 10;
 
-    public Question save(ReqQuestionDto reqQuestionDto, String email) {
+    public Question save(ReqQuestionDto reqQuestionDto, String email, MultipartFile file) {
         User user = userService.findByEmail(email);
         Question question = reqQuestionDto.toEntity();
         question.setUser(user);
+
+        if (file != null ) {
+            // MultipartFile file = (MultipartFile) reqQuestionDto.getFile();
+            FileInfoDto fileInfoDto = s3StorageManager.uploadFile(question.getQuestionId(), file);
+            question.setS3Url(fileInfoDto.getUrl()); // 업로드된 파일의 S3 키 저장
+            System.out.println("s3 ~ 저장완료 ");
+        }
+
         return questionRepository.save(question);
     }
 

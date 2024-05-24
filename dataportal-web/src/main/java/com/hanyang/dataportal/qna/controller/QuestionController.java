@@ -2,7 +2,6 @@ package com.hanyang.dataportal.qna.controller;
 
 import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.qna.domain.Question;
-import com.hanyang.dataportal.qna.domain.QuestionCategory;
 import com.hanyang.dataportal.qna.dto.req.ReqQuestionDto;
 import com.hanyang.dataportal.qna.dto.res.ResQuestionDto;
 import com.hanyang.dataportal.qna.dto.res.ResQuestionListDto;
@@ -11,12 +10,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "질문 API")
 @RestController
@@ -25,9 +24,12 @@ import java.util.List;
 public class QuestionController {
     private final QuestionService questionService;
     @Operation(summary = "질문글 작성")
-    @PostMapping("/question")
-    public ResponseEntity<ApiResponse<ResQuestionDto>> createQuestion(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ReqQuestionDto reqQuestionDto) {
-        Question question = questionService.save(reqQuestionDto, userDetails.getUsername());
+    @PostMapping(value = "/question", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<ResQuestionDto>> createQuestion(@AuthenticationPrincipal UserDetails userDetails,
+                                                                      @RequestPart ReqQuestionDto reqQuestionDto,
+                                                                      @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
+
+        Question question = questionService.save(reqQuestionDto, userDetails.getUsername(), multipartFile);
         return ResponseEntity.ok(ApiResponse.ok(new ResQuestionDto(question)));
     }
     @Operation(summary = "질문글 수정")
