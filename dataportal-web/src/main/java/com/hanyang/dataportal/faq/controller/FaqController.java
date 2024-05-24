@@ -2,11 +2,11 @@ package com.hanyang.dataportal.faq.controller;
 
 import com.hanyang.dataportal.core.response.ApiResponse;
 import com.hanyang.dataportal.faq.domain.Faq;
-import com.hanyang.dataportal.faq.domain.FaqCategory;
 import com.hanyang.dataportal.faq.dto.ReqFaqDto;
 import com.hanyang.dataportal.faq.dto.ResFaqDto;
 import com.hanyang.dataportal.faq.dto.ResFaqListDto;
 import com.hanyang.dataportal.faq.service.FaqService;
+import com.hanyang.dataportal.qna.domain.QuestionCategory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +40,8 @@ public class FaqController {
     }
     @Operation(summary = "FAQ 카테고리별 조회")
     @GetMapping("/category/{category}")
-    public ResponseEntity<ApiResponse<ResFaqListDto>> getFaqsByCategory(@PathVariable FaqCategory category) {
-        Page<Faq> faqCategoryList = faqService.getFaqsByCategory(category);
+    public ResponseEntity<ApiResponse<ResFaqListDto>> getFaqsByCategory(@PathVariable QuestionCategory questionCategory) {
+        Page<Faq> faqCategoryList = faqService.getFaqsByCategory(questionCategory);
         // List<Faq> faqs = faqCategoryList.getContent();
         return ResponseEntity.ok(ApiResponse.ok(new ResFaqListDto(faqCategoryList)));
 

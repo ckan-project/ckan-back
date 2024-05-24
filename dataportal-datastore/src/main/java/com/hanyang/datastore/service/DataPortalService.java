@@ -22,7 +22,7 @@ public class DataPortalService {
         try {
             WebClient webClient = WebClient.create(host+":8080");
             return webClient.get()
-                    .uri("/dataset?resourceId=" + datasetId)
+                    .uri("/dataset?datasetId=" + datasetId)
                     .retrieve()
                     .onStatus(HttpStatus.NOT_FOUND::equals, response -> {
                         throw WebClientResponseException.create(HttpStatus.NOT_FOUND.value(),

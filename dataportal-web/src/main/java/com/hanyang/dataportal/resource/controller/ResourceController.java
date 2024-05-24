@@ -20,7 +20,8 @@ public class ResourceController {
     private final ResourceService resourceService;
     @Operation(summary = "파일 데이터 저장 및 수정")
     @PutMapping(value = "/dataset/{datasetId}/resource", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> saveResource(@PathVariable Long datasetId, @RequestPart(value = "file") MultipartFile multipartFile) {
+    public ResponseEntity<?> saveResource(@PathVariable Long datasetId,
+                                          @RequestPart(value = "file") MultipartFile multipartFile) {
         resourceService.save(datasetId, multipartFile);
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
