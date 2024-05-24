@@ -46,6 +46,6 @@ kakao:
   redirect_uri: http://localhost:8080/login/oauth2/kakao
   token_url: https://kauth.kakao.com/oauth/token
   userInfo_url: https://kapi.kakao.com/v2/user/me
-
+  client_secret: test
 
 host: http://localhost

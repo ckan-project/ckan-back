@@ -31,6 +31,9 @@ public class KakaoProvider implements OauthProvider {
     @Value("${kakao.userInfo_url}")
     private String userInfo_url;
 
+    @Value("${kakao.client_secret}")
+    private String client_secret;
+
     private final JSONParser jsonParser = new JSONParser();
 
     @Override
@@ -77,6 +80,7 @@ public class KakaoProvider implements OauthProvider {
         formData.add("client_id", client_id);
         formData.add("redirect_uri", redirect_uri);
         formData.add("code", code);
+        formData.add("client_secret", client_secret);
 
         WebClient webClient = WebClient.create(token_url);
         String response = webClient.post()
