@@ -20,6 +20,6 @@ public class ResFaqDto {
         this.faqId = faq.getFaqId();
         this.faqTitle = faq.getQuestion();
         this.faqContent = faq.getAnswer();
-        this.category = faq.getQuestionCategory();
+        this.category = faq.getCategory();
     }
 }

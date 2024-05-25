@@ -15,21 +15,17 @@ import lombok.NoArgsConstructor;
 @Builder
 
 public class Faq {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long faqId;
-
     @Enumerated(EnumType.STRING)
-    private QuestionCategory questionCategory;
-
+    private QuestionCategory category;
     private String question;
     private String answer;
-
     public void updateFaq(ReqFaqDto reqFaqDto){
         this.answer = reqFaqDto.getAnswer();
         this.question = reqFaqDto.getQuestion();
-        this.questionCategory = reqFaqDto.getCategory();
+        this.category = reqFaqDto.getCategory();
     }
 
 }

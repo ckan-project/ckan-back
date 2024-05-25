@@ -10,6 +10,7 @@ import com.hanyang.datastore.domain.TableData;
 import com.hanyang.datastore.dto.DatasetMetaDataDto;
 import com.hanyang.datastore.dto.ResChartDto;
 import com.hanyang.datastore.dto.ResChartTableDto;
+import com.hanyang.datastore.infrastructure.S3StorageManager;
 import com.hanyang.datastore.repository.MetaDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
@@ -32,7 +33,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwi
 @RequiredArgsConstructor
 @Transactional
 public class TableService {
-    private final S3Service s3Service;
+    private final S3StorageManager s3StorageManager;
     private final DataPortalService dataPortalService;
     private final MetaDataRepository metaDataRepository;
     private final MongoTemplate mongoTemplate;
@@ -45,7 +46,7 @@ public class TableService {
 
         DatasetMetaDataDto datasetMetaDataDto = dataPortalService.findDataset(datasetId);
 
-        InputStream file = s3Service.getFile(datasetId);
+        InputStream file = s3StorageManager.getFile(datasetId);
 
         Workbook workbook = new XSSFWorkbook(file);
         DataFormatter dataFormatter = new DataFormatter();

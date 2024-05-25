@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FaqRepository extends JpaRepository<Faq, Long> {
     Page<Faq> findAll(Pageable pageable);
-    Page<Faq> findByQuestionCategory(QuestionCategory questionCategory, Pageable pageable);
+    Page<Faq> findByCategory(QuestionCategory questionCategory, Pageable pageable);
 
 }
 

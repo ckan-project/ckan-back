@@ -13,7 +13,7 @@ public class ReqFaqDto {
 
     public Faq toEntity() {
         return Faq.builder()
-                .questionCategory(category)
+                .category(category)
                 .question(question)
                 .answer(answer)
                 .build();

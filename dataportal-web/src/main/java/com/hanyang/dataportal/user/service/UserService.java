@@ -57,6 +57,11 @@ public class UserService {
         return user;
     }
 
+    public void delete(String email){
+        User user = findByEmail(email);
+        user.withdraw();
+    }
+
     private boolean isExistByName(String name){
         return userRepository.findByName(name).isPresent();
     }
