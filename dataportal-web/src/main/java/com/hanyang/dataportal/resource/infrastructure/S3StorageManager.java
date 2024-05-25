@@ -22,12 +22,12 @@ public class S3StorageManager {
     private String bucket;
     private final S3Client s3Client;
 
-    public FileInfoDto uploadFile(Long datasetId, MultipartFile multipartFile){
+    public FileInfoDto uploadFile(String folderName,Long id, MultipartFile multipartFile){
 
         String fileName = multipartFile.getOriginalFilename();
 
         assert fileName != null;
-        String s3ObjectPath = datasetId + "/" + fileName;
+        String s3ObjectPath = folderName + "/" + id + "/" + fileName;
         String type = fileName.split("\\.")[1];
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -52,10 +52,10 @@ public class S3StorageManager {
         return fileInfoDto;
     }
 
-    public void deleteFolder(Long datasetId) {
+    public void deleteFolder(String folderName,Long id) {
         ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder()
                 .bucket(bucket)
-                .prefix(datasetId+"/")
+                .prefix(folderName+"/"+id+"/")
                 .build();
         ListObjectsV2Response listObjectsResponse = s3Client.listObjectsV2(listObjectsRequest);
 

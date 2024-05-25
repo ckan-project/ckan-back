@@ -110,4 +110,11 @@ public class UserAuthController {
         User user = userService.updateName(userDetail.getUsername(), userName);
         return ResponseEntity.ok(ApiResponse.ok(new ResUserDto(user)));
     }
+
+    @Operation(summary = "유저 탈퇴")
+    @DeleteMapping
+    public ResponseEntity<ApiResponse<?>> delete(@AuthenticationPrincipal UserDetails userDetail) {
+        userService.delete(userDetail.getUsername());
+        return ResponseEntity.ok(ApiResponse.ok(null));
+    }
 }

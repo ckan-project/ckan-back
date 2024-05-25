@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Service
 @RequiredArgsConstructor
-
 public class FaqService {
     private final FaqRepository faqRepository;
     public Faq create(ReqFaqDto reqFaqDto) {
@@ -31,7 +30,7 @@ public class FaqService {
     }
     public Page<Faq> getFaqsByCategory(QuestionCategory questionCategory) {
         Pageable pageable = PageRequest.of(0, 10);
-         return faqRepository.findByQuestionCategory(questionCategory, pageable);
+         return faqRepository.findByCategory(questionCategory, pageable);
     }
     public void delete(Long faqId) {
         faqRepository.delete(faqRepository.findById(faqId).orElseThrow(()->new ResourceNotFoundException("삭제할 FAQ가 없습니다.")));

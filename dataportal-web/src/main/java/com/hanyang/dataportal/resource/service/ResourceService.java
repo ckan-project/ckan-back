@@ -34,6 +34,7 @@ public class ResourceService {
     private final DownloadRepository downloadRepository;
     private final DatasetRepository datasetRepository;
     private final ResourceRepository resourceRepository;
+    private final static String folderName = "Resource";
 
     public void save(Long datasetId, MultipartFile multipartFile){
         Dataset dataset = datasetRepository.findByIdWithTheme(datasetId).orElseThrow(() -> new ResourceNotFoundException("해당 데이터셋은 존재하지 않습니다"));
@@ -47,13 +48,13 @@ public class ResourceService {
 
         //해당 리소스가 존재하면 s3에서 폴더 삭제 후 생성
         if(optionalResource.isPresent()){
-            s3StorageManager.deleteFolder(datasetId);
+            s3StorageManager.deleteFolder(folderName,datasetId);
             Resource resource = optionalResource.get();
-            FileInfoDto fileInfoDto = s3StorageManager.uploadFile(datasetId, multipartFile);
+            FileInfoDto fileInfoDto = s3StorageManager.uploadFile(folderName,datasetId, multipartFile);
             resource.updateResource(fileInfoDto.getUrl(),fileInfoDto.getType(),fileName);
         }
         else{
-            FileInfoDto fileInfoDto = s3StorageManager.uploadFile(datasetId, multipartFile);
+            FileInfoDto fileInfoDto = s3StorageManager.uploadFile(folderName,datasetId, multipartFile);
             Resource resource = Resource.builder().
                     resourceUrl(fileInfoDto.getUrl()).
                     type(fileInfoDto.getType()).
@@ -72,6 +73,6 @@ public class ResourceService {
             Dataset dataset = datasetRepository.findByIdWithTheme(datasetId).orElseThrow(() -> new ResourceNotFoundException("해당 데이터셋은 존재하지 않습니다"));
             Download download = Download.builder().dataset(dataset).user(user).build();
             downloadRepository.save(download);
-        } else System.out.println("~~~~~~~~ 다운로드 미기록");
+        }
     }
 }
