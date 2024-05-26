@@ -99,7 +99,7 @@ public class UserAuthController {
     }
 
     @Operation(summary = "유저 내정보 확인")
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<ApiResponse<ResUserInfoDto>> myInfo(@AuthenticationPrincipal UserDetails userDetail){
         return ResponseEntity.ok(ApiResponse.ok(userService.findLoginUserInfo(userDetail.getUsername())));
     }
