@@ -48,7 +48,7 @@ public class UserService {
         User user = findByEmail(email);
         int scrapCount =  scrapRepository.countByUser(user);
         int downloadCount = downloadRepository.countByUser(user);
-        return new ResUserInfoDto(email,scrapCount,downloadCount);
+        return new ResUserInfoDto(user,scrapCount,downloadCount);
     }
 
     public User updateName(String email,String name){

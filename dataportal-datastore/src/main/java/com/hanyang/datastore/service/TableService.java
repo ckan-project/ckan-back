@@ -227,11 +227,18 @@ public class TableService {
         for(TableData tableData:meta.getDataList()){
             List<String> data = new ArrayList<>();
             for (Map.Entry<String, Object> map :tableData.getData().entrySet()) {
-                data.add(map.getValue().toString());
+                data.add(removeTrailingPointZero(map.getValue().toString()));
             }
             dataList.add(data);
         }
         return new ResChartTableDto(labelList,dataList);
+    }
+
+    private String removeTrailingPointZero(String str) {
+        if (str != null && str.matches("\\d+\\.0$")) {
+            return str.substring(0, str.length() - 2);
+        }
+        return str;
     }
 
 

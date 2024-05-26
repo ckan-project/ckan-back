@@ -32,6 +32,7 @@ public class DatasetSearchRepository {
         Pageable pageable = PageRequest.of(dataSearch.getPage(), 10);
         JPAQuery<Dataset> query = queryFactory.selectFrom(dataset)
                 .leftJoin(dataset.resource, resource).fetchJoin()
+                .leftJoin(dataset.scrapList, scrap).fetchJoin()
                 .where(titleLike(dataSearch.getKeyword()),
                         organizationIn(dataSearch.getOrganization()),
                         typeIn(dataSearch.getType()),
@@ -39,8 +40,7 @@ public class DatasetSearchRepository {
 
         switch (dataSearch.getSort().name()) {
             case "스크랩" -> {
-                query.leftJoin(dataset.scrapList, scrap).
-                        orderBy(dataset.scrapList.size().desc());
+                query.orderBy(dataset.scrapList.size().desc());
             }
             case "조회" -> {
                 query.orderBy(dataset.view.desc());
