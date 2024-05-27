@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class DatasetService {
     private final DatasetRepository datasetRepository;
     private final DatasetSearchRepository datasetSearchRepository;
