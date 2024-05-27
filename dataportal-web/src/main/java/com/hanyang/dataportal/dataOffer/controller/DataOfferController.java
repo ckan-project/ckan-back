@@ -45,8 +45,8 @@ public class DataOfferController {
 
     @Operation(summary = "데이터 요청 상세조회")
     @GetMapping("/dataOffer/{dataOfferId}")
-    public ResponseEntity<ApiResponse<ResDataOfferDto>> getDataOffer(@PathVariable Long dataofferId){
-        DataOffer dataOffer = dataOfferService.getDataOffer(dataofferId);
+    public ResponseEntity<ApiResponse<ResDataOfferDto>> getDataOffer(@PathVariable Long dataOfferId){
+        DataOffer dataOffer = dataOfferService.getDataOffer(dataOfferId);
         return ResponseEntity.ok(ApiResponse.ok(new ResDataOfferDto(dataOffer)));
     }
 
