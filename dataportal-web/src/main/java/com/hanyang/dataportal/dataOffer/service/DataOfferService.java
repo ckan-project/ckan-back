@@ -22,12 +22,18 @@ public class DataOfferService {
     private final UserService userService;
 
     public DataOffer create(ReqDataOfferDto reqDataOfferDto, String email) {
+
+        if (email == null) {
+          throw new ResourceNotFoundException("로그인후 쓰세요~");
+        }
+
         DataOffer dataOffer = reqDataOfferDto.toEntity();
         User user = userService.findByEmail(email);
         dataOffer.setAdmin(user);
         return dataOfferRepository.save(dataOffer);
 
     }
+
     public DataOffer getDataOffer(Long id) {
         return dataOfferRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("해당하는 요청글은 존재하지 않습니다."));
