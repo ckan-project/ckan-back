@@ -31,8 +31,8 @@ public class DatasetSearchRepository {
     public Page<Dataset> searchDatasetList(DataSearch dataSearch){
         Pageable pageable = PageRequest.of(dataSearch.getPage(), 10);
         JPAQuery<Dataset> query = queryFactory.selectFrom(dataset)
-                .leftJoin(dataset.resource, resource).fetchJoin()
-                .leftJoin(dataset.scrapList, scrap).fetchJoin()
+                .leftJoin(dataset.resource, resource)
+                .leftJoin(dataset.scrapList, scrap)
                 .where(titleLike(dataSearch.getKeyword()),
                         organizationIn(dataSearch.getOrganization()),
                         typeIn(dataSearch.getType()),
