@@ -56,6 +56,7 @@ public class TableService {
         MetaData metaData;
         if(findMeta.isPresent()){
             metaData = findMeta.get();
+            metaData.updateDataset(datasetMetaDataDto);
             metaData.setDataListClean();
         }
         else{
