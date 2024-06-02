@@ -28,7 +28,6 @@ public class ResourceController {
 
     @Operation(summary = "유저 리소스 다운로드")
     @PostMapping(value = "/download/{datasetId}")
-   // api/download/dataset/(datasetId)
     public ResponseEntity<?> downloadResource(@AuthenticationPrincipal UserDetails userDetail, @PathVariable Long datasetId) {
         resourceService.download(userDetail, datasetId);
         return ResponseEntity.ok(ApiResponse.ok(null));
