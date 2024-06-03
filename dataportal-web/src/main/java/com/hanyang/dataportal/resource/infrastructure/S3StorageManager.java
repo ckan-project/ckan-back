@@ -30,12 +30,16 @@ public class S3StorageManager {
         String s3ObjectPath = folderName + "/" + id + "/" + fileName;
         String type = fileName.split("\\.")[1];
 
-        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+        PutObjectRequest.Builder putObjectRequestBuilder = PutObjectRequest.builder()
                 .bucket(bucket)
-                .key(s3ObjectPath)
-                .build();
+                .key(s3ObjectPath);
+
+        if ("pdf".equalsIgnoreCase(type)) {
+            putObjectRequestBuilder.contentType(multipartFile.getContentType());
+        }
+
         try {
-            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(multipartFile.getBytes()));
+            s3Client.putObject(putObjectRequestBuilder.build(), RequestBody.fromBytes(multipartFile.getBytes()));
         } catch (IOException e) {
             throw new FileException("s3 서버 오류");
         }
