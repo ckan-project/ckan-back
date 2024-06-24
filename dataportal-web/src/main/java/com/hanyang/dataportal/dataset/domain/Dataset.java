@@ -36,8 +36,8 @@ public class Dataset {
     private LocalDate createdDate;
     private LocalDate updateDate;
     private Integer view;
-    private Integer download=0;
-    private Integer scrap=0;
+    private Integer download;
+    private Integer scrap;
     @OneToOne(mappedBy = "dataset")
     private Resource resource;
     @Builder.Default
