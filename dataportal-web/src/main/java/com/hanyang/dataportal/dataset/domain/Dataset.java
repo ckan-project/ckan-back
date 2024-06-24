@@ -58,10 +58,12 @@ public class Dataset {
         updateDate = LocalDate.now();
     }
     public void updateView() {
-        this.view += 1;
+        if(this.view == null) this.view = 1;
+        else this.view += 1;
     }
     public void updateScrap() {
-        this.scrap += 1;
+        if(this.scrap == null) this.scrap = 1;
+        else this.scrap += 1;
     }
     public void updateDataset(ReqDatasetDto reqDatasetDto){
        this.title = reqDatasetDto.getTitle();
