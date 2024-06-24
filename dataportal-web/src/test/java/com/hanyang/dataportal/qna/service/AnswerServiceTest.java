@@ -30,8 +30,6 @@ public class AnswerServiceTest {
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
-    private QuestionService questionService;
-    @Autowired
     private UserRepository userRepository;
 
     @Test

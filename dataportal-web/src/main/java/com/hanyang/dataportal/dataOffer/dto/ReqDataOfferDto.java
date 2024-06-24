@@ -28,8 +28,6 @@ public class ReqDataOfferDto {
     public DataOffer toEntity() {
         return DataOffer.builder()
                 .name(name)
-                .birthDay(birthDay)
-                .phoneNumber(phoneNumber)
                 .email(email)
                 .requestContent(requestTitle)
                 .dataName(dataName)

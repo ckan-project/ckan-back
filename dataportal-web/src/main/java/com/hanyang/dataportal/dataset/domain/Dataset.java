@@ -36,7 +36,8 @@ public class Dataset {
     private LocalDate createdDate;
     private LocalDate updateDate;
     private Integer view;
-    private Integer download;
+    private Integer download=0;
+    private Integer scrap=0;
     @OneToOne(mappedBy = "dataset")
     private Resource resource;
     @Builder.Default
@@ -56,8 +57,11 @@ public class Dataset {
     public void onPreUpdate() {
         updateDate = LocalDate.now();
     }
-    public void updateView(Integer view) {
-        this.view = view;
+    public void updateView() {
+        this.view += 1;
+    }
+    public void updateScrap() {
+        this.scrap += 1;
     }
     public void updateDataset(ReqDatasetDto reqDatasetDto){
        this.title = reqDatasetDto.getTitle();

@@ -22,8 +22,6 @@ public class ReqDatasetDto {
                 description(description).
                 organization(organization).
                 license(license).
-                view(0).
-                download(0).
                 build();
     }
 }

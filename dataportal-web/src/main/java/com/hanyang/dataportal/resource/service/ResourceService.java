@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -74,5 +75,11 @@ public class ResourceService {
             Download download = Download.builder().dataset(dataset).user(user).build();
             downloadRepository.save(download);
         }
+    }
+
+    public List<Dataset> getMyDownloadsList(String email) {
+        User user = userService.findByEmail(email);
+        List<Download> downloads = downloadRepository.findByUser(user);
+        return downloads.stream().map(Download::getDataset).toList();
     }
 }
